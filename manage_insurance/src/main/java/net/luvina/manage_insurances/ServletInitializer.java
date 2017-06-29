@@ -1,4 +1,4 @@
-package net.luvina.manage_insurance;
+package net.luvina.manageinsurances;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
