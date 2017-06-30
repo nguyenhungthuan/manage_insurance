@@ -21,13 +21,13 @@ import net.luvina.manageinsurances.utils.Common;
 public class CompanyLogicImpl implements CompanyLogic{
 	@Autowired
 	private CompanyDao companyDao;
-//	/*
-//	 * (non-Javadoc)
-//	 * @see net.luvina.manageinsurances.logic.CompanyLogic#getAllCom()
-//	 */
-//	public List<CompanyDto> getAllCom() {
-//		return Common.castListCom(companyDao.getAllCom());
-//	}
+	/*
+	 * (non-Javadoc)
+	 * @see net.luvina.manageinsurances.logic.CompanyLogic#getAllCom()
+	 */
+	public List<CompanyDto> getAllCom() {
+		return null;//Common.castListCom(companyDao.findAll());
+	}
 //	
 //	/*
 //	 * (non-Javadoc)
@@ -61,13 +61,6 @@ public class CompanyLogicImpl implements CompanyLogic{
 //		return companyDao.checkExistedTel(tel);
 //	}
 //	
-
-	@Override
-	public List<CompanyDto> getAllCom() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	@Override
 	public CompanyDto getCompanyByID(int id) {
 		// TODO Auto-generated method stub

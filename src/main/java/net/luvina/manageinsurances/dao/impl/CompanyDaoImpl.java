@@ -3,6 +3,7 @@ package net.luvina.manageinsurances.dao.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import net.luvina.manageinsurances.dao.CompanyDao;
 import net.luvina.manageinsurances.entities.CompanyBean;
@@ -25,13 +27,16 @@ import net.luvina.manageinsurances.entities.CompanyBean;
  *
  */
 @Transactional
-@Component
+@Service
 public class CompanyDaoImpl implements CompanyDao {
-
+	@Autowired
+	private CompanyDao companyDao;
+	
+	
 	@Override
 	public List<CompanyBean> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		List<CompanyBean> list = companyDao.findAll();
+		return companyDao.findAll();
 	}
 
 	@Override

@@ -23,7 +23,7 @@ import net.luvina.manageinsurances.validates.LoginValidator;
  *
  */
 @Controller
-@RequestMapping(value=Constant.LOGIN_URL)
+@RequestMapping()
 @SessionAttributes("accountSess")
 public class LoginController {
 	@Autowired
@@ -34,7 +34,7 @@ public class LoginController {
 	 * @param model model
 	 * @return MH01
 	 */
-	@RequestMapping(method=RequestMethod.GET)
+	@RequestMapping(value={Constant.LOGIN_URL, "/"},method=RequestMethod.GET)
 	public String login(ModelMap modelMap) {
 		modelMap.addAttribute("account", new AccountFormBean()); 
 		return Constant.MH01;
@@ -47,7 +47,7 @@ public class LoginController {
 	 * @param result mảng chữa lỗi
 	 * @return nếu có lỗi return MH01, nếu không có lỗi return MH02
 	 */
-	@RequestMapping(method=RequestMethod.POST)	
+	@RequestMapping(value=Constant.LOGIN_URL, method=RequestMethod.POST)	
 	public String login(ModelMap modelMap,@Valid @ModelAttribute("account") AccountFormBean accountFormBean, BindingResult result) {
 		try {
 			// validate account
