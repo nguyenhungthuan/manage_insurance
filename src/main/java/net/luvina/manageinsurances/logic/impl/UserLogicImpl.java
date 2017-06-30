@@ -39,8 +39,11 @@ public class UserLogicImpl implements UserLogic {
 	 * (non-Javadoc)
 	 * @see net.luvina.manageinsurances.logic.UserLogic#checkExistedAcc(java.lang.String, java.lang.String)
 	 */
-	public List<UserBean> checkExistedAcc(String userName, String password){
-		return userDao.findByUserNameAndPassword(userName, password);
+	public boolean checkExistedAcc(String userName, String password){
+		if(userDao.findByUserNameAndPassword(userName, password).size() > 0) {
+			return true;
+		}
+		return false;
 	}
 
 //	/*

@@ -3,6 +3,7 @@
  */
 package net.luvina.manageinsurances.controller;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,8 +24,6 @@ import net.luvina.manageinsurances.validates.LoginValidator;
  *
  */
 @Controller
-@RequestMapping(value=Constant.LOGIN_URL)
-@SessionAttributes("accountSess")
 public class LoginController {
 	@Autowired
 	private LoginValidator loginValidator;
@@ -34,7 +33,7 @@ public class LoginController {
 	 * @param model model
 	 * @return MH01
 	 */
-	@RequestMapping(method=RequestMethod.GET)
+	@RequestMapping(value={"/login", "/"},method=RequestMethod.GET)
 	public String login(ModelMap modelMap) {
 		modelMap.addAttribute("account", new AccountFormBean()); 
 		return Constant.MH01;
@@ -47,8 +46,8 @@ public class LoginController {
 	 * @param result mảng chữa lỗi
 	 * @return nếu có lỗi return MH01, nếu không có lỗi return MH02
 	 */
-	@RequestMapping(method=RequestMethod.POST)	
-	public String login(ModelMap modelMap,@Valid @ModelAttribute("account") AccountFormBean accountFormBean, BindingResult result) {
+	@RequestMapping(value="/login", method=RequestMethod.POST)	
+	public String login(ModelMap modelMap,@Valid @ModelAttribute("account") AccountFormBean accountFormBean, BindingResult result, HttpSession session) {
 		try {
 			// validate account
 			loginValidator.validate(accountFormBean, result);
@@ -62,7 +61,7 @@ public class LoginController {
 			// set lại password mã hóa để dùng khi insert
 			accountFormBean.setPassword(Common.encryptMD5(accountFormBean.getPassword()));
 			// đưa account lên session để dùng cho filter và đăng ký account
-			modelMap.addAttribute("accountSess", accountFormBean);
+			session.setAttribute("accountSess", accountFormBean);
 			return Constant.REDIR_MH02;
 		} catch (Exception ex) {
 			ex.printStackTrace();

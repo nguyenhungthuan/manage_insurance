@@ -15,8 +15,10 @@ import net.luvina.manageinsurances.entities.CompanyBean;
  * @author DELL
  *
  */
-@Repository
+
 public interface CompanyDao extends JpaRepository<CompanyBean, Integer> {
+	
+	public List<CompanyBean> findAll();
 	
 //	/**
 //	 * Phương thức lấy tất cả các công ty trong DB

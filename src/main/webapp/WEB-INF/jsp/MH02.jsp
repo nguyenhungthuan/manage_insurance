@@ -15,7 +15,7 @@
 <title><spring:message code="TITLE_02" /></title>
 </head>
 <body>
-
+<jsp:include page="header.jsp" />
 <h4><spring:message code="TITLE_02" /></h4>
 <input type="hidden" value="<%=Constant.BACK %>" id="backconst"/>
 <!-- Begin vung dieu kien tim kiem -->

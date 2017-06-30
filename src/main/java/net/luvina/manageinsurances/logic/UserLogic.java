@@ -27,7 +27,7 @@ public interface UserLogic {
 	 * @param password pass
 	 * @return true, false
 	 */
-	public List<UserBean> checkExistedAcc(String userName, String password);
+	public boolean checkExistedAcc(String userName, String password);
 	
 //	/**
 //	 * PhÆ°Æ¡ng thá»©c láº¥y ra 1 list User theo Ä‘iá»�u  kiá»‡n tÃ¬m kiáº¿m
