@@ -29,12 +29,8 @@ public class LogoutController {
 	 */
 	@RequestMapping(value="/logout", method=RequestMethod.GET)
 	public String logout(ModelMap modelMap, HttpSession session) {
-		// lấy tất cả tên các thuộc tính đưa lên session
-		Enumeration<?> eAttr = session.getAttributeNames();
-		while(eAttr.hasMoreElements()) {
-			// duyệt lần lượt để xóa
-			String ssName = (String) eAttr.nextElement();
-			session.removeAttribute(ssName);
+		if (session.getAttribute("accountSess") != null) {
+			session.invalidate(); 
 		}
 		modelMap.addAttribute("account", new AccountFormBean());
 		return Constant.MH01;
