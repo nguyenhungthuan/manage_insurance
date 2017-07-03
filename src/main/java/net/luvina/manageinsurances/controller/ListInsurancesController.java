@@ -63,18 +63,18 @@ public class ListInsurancesController {
 			if (action.isPresent()) {
 				String actionValue = action.get();
 				// nếu là search, set lại số trang và thứ tự sắp xếp
-				if (Constant.SEARCH.equals(actionValue)) {
+				if (actionValue.equals(Constant.SEARCH)) {
 					inforSearchFormBean.setCurrentPage("1");
 					inforSearchFormBean.setSortType(Constant.ASC);
 					// nếu là sort, set lại sortType
-				} else if (Constant.SORT.equals(actionValue)) {
+				} else if (actionValue.equals(Constant.SORT)) {
 					inforSearchFormBean.setSortType(Common.changeSortType(inforSearchFormBean.getSortType()));
 					// nếu là back, lấy object từ session
-				} else if (Constant.BACK.equals(actionValue)) {
+				} else if (actionValue.equals(Constant.BACK)) {
 					InforSearchFormBean search = ((InforSearchFormBean) session.getAttribute(request.getParameter("ssKey")));
 					inforSearchFormBean = (search == null ? new InforSearchFormBean() : search);
 					// trường hợp thay đổi công ty, set lại company ID
-				} else if (Constant.CHANGE.equals(actionValue)) {
+				} else if (actionValue.equals(Constant.CHANGE)) {
 					inforSearchFormBean = new InforSearchFormBean(inforSearchFormBean.getCompanyInternalID());
 				}
 			}

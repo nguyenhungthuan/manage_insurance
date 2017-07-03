@@ -89,7 +89,7 @@ public class UserDaoImpl implements UserDaoCustom {
 	@Transactional
 	public int getTotalRecords(int companyID, String fullName, String insuranceNumber, String registerPlace) {
 		StringBuilder sqlCommand = new StringBuilder();
-		Long result = (long) 0.0;
+		long result = 0;
 		try {
 		sqlCommand.append("SELECT count(*) ");
 		sqlCommand.append("FROM ");
@@ -137,6 +137,6 @@ public class UserDaoImpl implements UserDaoCustom {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		return result.intValue();
+		return (int) result;
 	}
 }

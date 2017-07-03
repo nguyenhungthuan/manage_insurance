@@ -28,7 +28,7 @@ public interface UserDao extends JpaRepository<UserBean, Integer>, UserDaoCustom
 	
 	
 	/**
-	 * PhÆ°Æ¡ng thá»©c kiá»ƒm tra tá»“n táº¡i user
+	 * Phương thức tìm kiếm user theo username và password
 	 * @param userName user name
 	 * @param password pass
 	 * @return true, false

@@ -22,7 +22,7 @@ import net.luvina.manageinsurances.logic.impl.dto.UserInsuranceDto;
 public interface UserLogic {
 	
 	/**
-	 * PhÆ°Æ¡ng thá»©c kiá»ƒm tra tá»“n táº¡i account trong DB
+	 * Phương thức kiểm tra tồn tại account 
 	 * @param userName user name
 	 * @param password pass
 	 * @return true, false
@@ -30,7 +30,7 @@ public interface UserLogic {
 	public boolean checkExistedAcc(String userName, String password);
 	
 	/**
-	 * PhÆ°Æ¡ng thá»©c láº¥y ra 1 list User theo Ä‘iá»�u  kiá»‡n tÃ¬m kiáº¿m
+	 * Phương thức lấy ra danh sách người dùng theo tiêu chí tìm kiếm
 	 * @param inforSearchDto InforSearchDto
 	 * @param sortType sortType
 	 * @param limit limit
@@ -40,7 +40,7 @@ public interface UserLogic {
 	public List<UserInsuranceDto> getListInfor(InforSearchDto inforSearchDto, String sortType, int limit, int offset);
 	
 	/**
-	 * PhÆ°Æ¡ng thá»©c láº¥y tá»•ng sá»‘ user theo Ä‘iá»�u kiá»‡n tÃ¬m kiáº¿m
+	 * Phương thức lấy ra số kết quả phù hợp
 	 * @param companyID companyID
 	 * @param inforSearchDto InforSearchDto
 	 * @return total users
