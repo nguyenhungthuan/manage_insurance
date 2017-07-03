@@ -26,62 +26,6 @@ public class CompanyLogicImpl implements CompanyLogic{
 	 * @see net.luvina.manageinsurances.logic.CompanyLogic#getAllCom()
 	 */
 	public List<CompanyDto> getAllCom() {
-		return null;//Common.castListCom(companyDao.findAll());
-	}
-//	
-//	/*
-//	 * (non-Javadoc)
-//	 * @see net.luvina.manageinsurances.logic.CompanyLogic#getCompanyByID(int)
-//	 */
-//	public CompanyDto getCompanyByID(int id) {
-//		return Common.copyProCom(companyDao.getCompanyByID(id));
-//	}
-//
-//	/*
-//	 * (non-Javadoc)
-//	 * @see net.luvina.manageinsurances.logic.CompanyLogic#checkExistedCom(int)
-//	 */
-//	public Boolean checkExistedCom(int id) {
-//		return companyDao.checkExistedCom(id);
-//	}
-//
-//	/*
-//	 * (non-Javadoc)
-//	 * @see net.luvina.manageinsurances.logic.CompanyLogic#checkExistedEmail(java.lang.String)
-//	 */
-//	public Boolean checkExistedEmail(String email) {
-//		return companyDao.checkExistedEmail(email);
-//	}
-//	
-//	/*
-//	 * (non-Javadoc)
-//	 * @see net.luvina.manageinsurances.logic.CompanyLogic#checkExistedTel(java.lang.String)
-//	 */
-//	public Boolean checkExistedTel(String tel) {
-//		return companyDao.checkExistedTel(tel);
-//	}
-//	
-	@Override
-	public CompanyDto getCompanyByID(int id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Boolean checkExistedCom(int id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Boolean checkExistedEmail(String email) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Boolean checkExistedTel(String tel) {
-		// TODO Auto-generated method stub
-		return null;
+		return Common.castListCom(companyDao.findAll());
 	}
 }

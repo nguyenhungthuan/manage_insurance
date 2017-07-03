@@ -205,7 +205,7 @@ public class Common {
      * @return icon
      */
     public static String getIcon(String orderBy) {
-    	return orderBy.equals(Constant.ASC) ? "â–²â–½" : "â–³â–¼";
+    	return orderBy.equals(Constant.ASC) ? "▲▽" : "△▼";
     }
     
     /**
