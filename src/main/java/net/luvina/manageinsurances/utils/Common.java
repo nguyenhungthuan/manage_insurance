@@ -32,25 +32,25 @@ import net.luvina.manageinsurances.controller.formbean.AccountFormBean;
 import net.luvina.manageinsurances.controller.formbean.InforSearchFormBean;
 import net.luvina.manageinsurances.controller.formbean.UserInsuranceFormBean;
 /**
- * Class chá»©a cÃ¡c method dÃ¹ng chung
+ * Class chứa các method dùng chung
  * @author DELL
  *
  */
 public class Common {
 	
 	/**
-	 * PhÆ°Æ¡ng thá»©c kiá»ƒm tra Ä‘Äƒng nháº­p
+	 * Phương thức kiểm tra đăng nhập
 	 * @param session
-	 * @return tráº£ vá»� mÃ n hÃ¬nh ADM001 náº¿u chÆ°a Ä‘Äƒng nháº­p
+	 * @return trả về màn hình login nếu chưa đăng nhập
 	 */
 	public static String checkLogin(HttpSession session) {
         return (session.getAttribute("accountSess") == null) ? Constant.MH01 : "";
     }
 
 	/**
-	 * PhÆ°Æ¡ng thá»©c mÃ£ hÃ³a máº­t kháº©u
-	 * @param input máº­t kháº©u
-	 * @return chuá»—i Ä‘Ã£ mÃ£ hÃ³a
+	 * Phương thức mã hóa mật khẩu
+	 * @param mật khẩu
+	 * @return mật khẩu đã mã hóa
 	 */
 	public static String encryptMD5(String input) {
         try {
@@ -68,18 +68,18 @@ public class Common {
     }
 
 	/**
-	 * PhÆ°Æ¡ng thá»©c tráº£ vá»� giá»›i tÃ­nh lÃ  1 chuá»—i
-	 * @param sexCode mÃ£ giá»›i tÃ­nh láº¥y tá»« DB
-	 * @return Nam náº¿u sexCode lÃ  1, Ná»¯ náº¿u sexCode lÃ  2
+	 * Phương thức chuyển đổi giới tính từ số sang chuỗi
+	 * @param sexCode giá trị lấy từ DB
+	 * @return Nam nếu sexCode là  1, Nữ nếu sexCode là  2
 	 */
 	public static String sexByString(int sexCode) {
-		return sexCode == 1 ? "Nam" : "Ná»¯";
+		return sexCode == 1 ? "Nam" : "Nữ";
 	}
 
 	/**
-	 * PhÆ°Æ¡ng thá»©c xá»­ lÃ½ cÃ¡c kÃ½ tá»± Ä‘áº·c biá»‡t trong sql
-	 * @param inputString chuá»—i vÃ o
-	 * @return chuá»—i tráº£ vá»�
+	 * Phương thức xử lý các ký tự đặc biệt trong sql
+	 * @param inputString chuỗi vào
+	 * @return chuỗi đã thay đổi
 	 */
 	public static String processWildcard(String inputString) {
 		String result = inputString.replace("\\", "\\\\");
@@ -89,9 +89,9 @@ public class Common {
 	}
 
 	/**
-	 * PhÆ°Æ¡ng thá»©c xá»­ lÃ½ chuá»—i cÃ³ cÃ¡c kÃ½ tá»± HTML
-	 * @param content chuá»—i cáº§n xá»­ lÃ½
-	 * @return chuá»—i Ä‘Ã£ xá»­ lÃ½
+	 * Phương thức xử lý các ký tự đặc biệt trong HTMl
+	 * @param content chuẩn truyền vào
+	 * @return chuỗi đã xử lý
 	 */
 	public static String escapeHTML(String content) {
 	if(content != null) {
@@ -121,10 +121,10 @@ public class Common {
     }
 
 	/**
-     * Táº¡o chuá»—i paging
-     * @param totalUsers tá»•ng sÃ´ user
-     * @param limit sá»‘ lÆ°á»£ng cáº§n hiá»ƒn thá»‹ trÃªn 1 trang
-     * @param currentPage trang hiá»‡n táº¡i
+     * Tạo chuỗi paging
+     * @param totalUsers tổng số user
+     * @param limit số bản ghi trên 1 trang
+     * @param currentPage trang hiện tại
      * @return
      */
     public static List<Integer> getListPaging (int totalRecords, int limit, int currentPage) {
@@ -153,8 +153,8 @@ public class Common {
     }
 
     /**
-     * Láº¥y sá»‘ lÆ°á»£ng hiá»ƒn thá»‹ báº£n ghi trÃªn 1 trang
-     * @return sá»‘ lÆ°á»£ng records cáº§n láº¥y
+     * Lấy số lượng bản ghi trên 1 trang lưu trong file properties
+     * @return số bản ghi trên 1 trang
      */
     public static int getLimit() {
     	int recordPerPage = 1;
@@ -167,29 +167,29 @@ public class Common {
     }
 
     /**
-     * TÃ­nh tá»•ng sá»‘ trang
-     * @param totalUsers tá»•ng sá»‘ User
-     * @param limit sá»‘ lÆ°á»£ng cáº§n hiá»ƒn thá»‹ trÃªn 1 trang
-     * @return tá»•ng sá»‘ trang
+     * Tổng số trang
+     * @param totalUsers tổng số User
+     * @param limit số bản ghi trên 1 trang
+     * @return tổng số trang
      */
     public static int getTotalPage(int totalUsers, int limit) {
     	return (int) Math.ceil((double) totalUsers / limit);
     }
 
     /**
-     * Láº¥y vá»‹ trÃ­ data cáº§n láº¥y
-     * @param currentPage Trang hiá»‡n táº¡i
-     * @param limit sá»‘ lÆ°á»£ng cáº§n hiá»ƒn thá»‹ trÃªn 1 trang
-     * @return vá»‹ trÃ­ cáº§n láº¥y
+     * Lấy vị trí bắt đầu lấy dữ liệu trong DB
+     * @param currentPage Trang hiện tại
+     * @param limit số bản ghi trên 1 trang
+     * @return vị trí bắt đầu
      */
     public static int getOffset(int currentPage,int limit) {
     	return limit * (currentPage - 1);
     }
     
     /**
-     * PhÆ°Æ¡ng thá»©c chuyá»ƒn Ä‘á»‹nh dáº¡ng chuá»—i ngÃ y thÃ¡ng 
-     * @param date ngÃ y thÃ¡ng 
-     * @return chuá»—i theo format
+     * Phương thức chuyển định dạng ngày tháng
+     * @param date chuỗi ngày tháng vào
+     * @return chuỗi theo format
      */
     public static String formatDate(String date) {
     	if(date != null) {
@@ -200,19 +200,19 @@ public class Common {
     }
     
     /**
-     * PhÆ°Æ¡ng thá»©c láº¥y icon cho tá»«ng tÆ°á»�ng
-     * @param orderBy trÃ¬nh tá»± sáº¯p xáº¿p cá»§a trÆ°á»�ng
+     * Lấy ra icon theo thứ tự sắp xếp
+     * @param orderBy trạng thái sắp xếp hiện tại
      * @return icon
      */
     public static String getIcon(String orderBy) {
-    	return orderBy.equals(Constant.ASC) ? "â–²â–½" : "â–³â–¼";
+    	return orderBy.equals(Constant.ASC) ? "▲▽" : "△▼";
     }
     
     /**
-     * PhÆ°Æ¡ng thá»©c so sÃ¡nh 2 ngÃ y 
-     * @param date1 ngÃ y thá»© 1 
-     * @param date2 ngÃ y thá»© 2
-     * @return true náº¿u ngÃ y thá»© 1 sá»›m hÆ¡n ngÃ y thá»© 2 vÃ  ngÆ°á»£c láº¡i
+     * So sánh 2 chuỗi ngày tháng
+     * @param date1 ngày tháng 1 
+     * @param date2 ngày tháng 2
+     * @return true nếu ngày thứ 1 sớm hơn ngày thứ 2 và ngược lại
      */
     public static Boolean compareDate(String date1, String date2) {
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/DD");
@@ -231,9 +231,9 @@ public class Common {
     }
     
     /**
-     * Convert láº¡i ngÃ y Ä‘á»ƒ Ä‘Æ°a vÃ o DB
-     * @param date ngÃ y
-     * @return ngÃ y Ä‘Ã£ convert
+     * Convert lại ngày tháng để đưa vào DB
+     * @param date ngày
+     * @return ngày đã convert
      */
     public static String convertDateHQL(String date) {
     	if(date.length() > 0) {
@@ -244,9 +244,9 @@ public class Common {
     }
     
     /**
-     * PhÆ°Æ¡ng thá»©c kiá»ƒm tra chuá»—i ngÃ y thÃ¡ng nháº­p vÃ o
-     * @param date chuá»—i ngÃ y thÃ¡ng
-     * @return return 1 náº¿u ngÃ y cÃ³ tá»“n táº¡i, 0 náº¿u ngÃ y khÃ´ng tá»“n táº¡i vÃ  return 2 náº¿u sai format
+     * Phương thức kiểm tra tồn tại ngày
+     * @param date chuỗi ngày nhập vào
+     * @return return 1 nếu có tồn tại, 0 nếu không tồn tại và  return 2 nếu sai format
      */
 	public static int checkExistDate(String date) {
 		if(date.length() != 0) { 
@@ -287,7 +287,7 @@ public class Common {
 				}
 				}
 			} catch(ArrayIndexOutOfBoundsException ex) {
-				System.out.println("Lá»—i nháº­p ngÃ y khÃ´ng Ä‘Ãºng Ä‘á»‹nh dáº¡ng");
+				System.out.println("Lỗi ngày nhập vào không đúng định dạng");
 				return 2;
 			}
 			return 0;
@@ -296,9 +296,9 @@ public class Common {
 	}
 	
 	/**
-	 * PhÆ°Æ¡ng thá»©c mÃ£ hÃ³a tÃªn theo Ä‘á»‹nh dáº¡ng yÃªu cáº§u
-	 * @param name tÃªn do ngÆ°á»�i dÃ¹ng nháº­p vÃ o
-	 * @return tÃªn Ä‘Ã£ mÃ£ hÃ³a
+	 * Phương thức chuyển hóa tên người dùng theo yêu cầu
+	 * @param name tên người dùng
+	 * @return chuỗi đã chuyển hóa 
 	 */
 	public static String convertStringName(String name) {
 		String convertedName = VNCharacterUtils.removeAccent(name);
@@ -314,7 +314,7 @@ public class Common {
 	}
 	
 	/**
-	 * PhÆ°Æ¡ng thá»©c láº¥y key báº¥t ká»³ Ä‘á»ƒ Ä‘áº·t tÃªn cho Ä‘á»‘i tÆ°á»£ng truyá»�n lÃªn session
+	 * Phương thức lấy ra key bất kỳ để đưa lên session
 	 * @return String key
 	 */
 	public static String getKey() {
@@ -329,25 +329,25 @@ public class Common {
 	}
 	
 	/**
-	 * PhÆ°Æ¡ng thá»©c thay Ä‘á»•i kiá»ƒu sáº¯p xáº¿p
-	 * @param crSortType sortType hiá»‡n táº¡i
-	 * @return sortType má»›i
+	 * Phương thức thay đổi trang thái sắp xếp
+	 * @param crSortType sortType hiện tại
+	 * @return sortType mới
 	 */
 	public static String changeSortType(String crSortType) {
 		return crSortType.equals(Constant.ASC) ? Constant.DESC : Constant.ASC;
 	}
 	
 	/**
-	 * PhÆ°Æ¡ng thá»©c kiá»ƒm tra kiá»ƒu sáº¯p xáº¿p
-	 * @param sortType kiá»ƒu sáº¯p xáº¿p
-	 * @return kiá»ƒu sáº¯p xáº¿p
+	 * Phương thức kiểm tra thứ tự sắp xếp
+	 * @param sortType kiểu sắp xếp
+	 * @return kiểu sắp xếp
 	 */
 	public static String checkSortType(String sortType) {
 		return sortType.equals(Constant.DESC) ? Constant.DESC : Constant.ASC;
 	}
 	
 	/**
-	 * PhÆ°Æ¡ng thá»©c escape xss cho 1 Ä‘á»‘i tÆ°á»£ng 
+	 * Phương thức escape xss
 	 * @param userInsuranceFormBean UserInsuranceFormBean
 	 * @return UserInsuranceFormBean
 	 */
@@ -360,7 +360,7 @@ public class Common {
 	}
 	
 	/**
-	 * PhÆ°Æ¡ng thá»©c escape xss cho 1 list UserInsuranceFormBean
+	 * Escape xss cho 1 list UserInsuranceFormBean
 	 * @param listUser List<UserInsuranceFormBean>
 	 * @return List<UserInsuranceFormBean>
 	 */
@@ -373,7 +373,7 @@ public class Common {
 	}
 	
 	/**
-	 * PhÆ°Æ¡ng thá»©c xá»­ lÃ½ cÃ¡c kÃ½ tá»± Ä‘áº·c biá»‡t cho Ä‘á»‘i tÆ°á»£ng chá»©a thÃ´ng tin tÃ¬m kiáº¿m
+	 * Phương thức xử lý các ký tự đặc biệt cho 1 đối tượng
 	 * @param inforSearchDto InforSearchDto
 	 * @return inforSearchDto
 	 */
@@ -385,7 +385,7 @@ public class Common {
 	}
 	
 	/**
-	 * Copy thuá»™c tÃ­nh sang 1 Ä‘á»‘i tÆ°á»£ng má»›i
+	 * Copy thuộc tính
 	 * @param userInsuranceBean UserInsuranceBean
 	 * @return UserInsuranceDto
 	 */
@@ -400,7 +400,7 @@ public class Common {
 	}
 	
 	/**
-	 * Copy thuá»™c tÃ­nh 1 list Ä‘á»‘i tÆ°á»£ng 
+	 * Copy thuộc tính
 	 * @param list List<UserInsuranceBean>
 	 * @return List<UserInsuranceDto>
 	 */
@@ -413,7 +413,7 @@ public class Common {
 	}
 	
 	/**
-	 * Copy thuá»™c tÃ­nh má»™t Ä‘á»‘i tÆ°á»£ng 
+	 * Copy thuộc tính
 	 * @param userInsuranceFormBean UserInsuranceFormBean
 	 * @return UserInsuranceDto
 	 */
@@ -427,7 +427,7 @@ public class Common {
 		return userInsuranceDto;
 	}
 	/**
-	 * Copy thuá»™c tÃ­nh má»™t Ä‘á»‘i tÆ°á»£ng 
+	 * Copy thuộc tính
 	 * @param userInsuranceDto UserInsuranceDto
 	 * @return UserInsuranceFormBean
 	 */
@@ -442,7 +442,7 @@ public class Common {
 	}
 	
 	/**
-	 * copy thuá»™c tÃ­nh 1 Ä‘á»‘i tÆ°á»£ng
+	 * Copy thuộc tính
 	 * @param accountFormBean AccountFormBean
 	 * @return AccountDto
 	 */
@@ -456,7 +456,7 @@ public class Common {
 		return accountDto;
 	}
 	/**
-	 * Copy thuá»™c tÃ­nh 1 list
+	 * Copy thuộc tính 1 list
 	 * @param lstcompanyBean List<CompanyBean>
 	 * @return List<CompanyDto>
 	 */
@@ -469,7 +469,7 @@ public class Common {
 	}
 	
 	/**
-	 * Copy thuá»™c tÃ­nh 1 Ä‘á»‘i tÆ°á»£ng
+	 * Copy thuộc tính
 	 * @param companyBean CompanyBean
 	 * @return CompanyDto
 	 */
@@ -484,7 +484,7 @@ public class Common {
 	}
 	
 	/**
-	 * Copy thuá»™c tÃ­nh 1 Ä‘á»‘i tÆ°á»£ng
+	 * Copy thuộc tính
 	 * @param inforSearchFormBean InforSearchFormBean
 	 * @return InforSearchDto
 	 */

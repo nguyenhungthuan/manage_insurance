@@ -1,0 +1,124 @@
+@CHARSET "UTF-8";
+
+.tbl {
+	font-size: 17px;
+	border: 1px solid black;
+}
+
+.tbl_input {
+	border: none;
+}
+
+.td1 {
+	padding: 10px;
+}
+
+.lbl_left {
+	text-align: left;
+	width: 150px;
+	padding-left: 20px;
+}
+
+.tbl_list {
+	font-size: 15px;
+	border: 1px solid black;
+	border-collapse: collapse;
+	empty-cells: show;
+}
+
+.tbl_display, .td {
+	border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.td {
+	border: 1px solid black;
+	padding: 5px;
+}
+
+.errMsg {
+	color: #FF0000;
+	text-align: center;
+	font-size: 15;
+}
+
+th{
+	text-align: center;
+	padding: 5px;
+}
+
+.th{
+	text-align: center;
+}
+.txBox {
+	padding: 2px;
+	border: 1px solid black;
+	font-size: 17px;
+	width: 150px;
+}
+.tr2, .td2 {
+	border: 1px solid black;
+    border-collapse: collapse;
+	font-weight: normal;
+	padding: 3px;
+}
+
+.td3 {
+	background-color: #FED9D3;
+	border: 1px solid black;
+	padding: 8px;
+}
+.btn {
+	font-size: 14px;
+	font-weight: normal;
+	width: 90px;
+	height: 25px;
+	border: 1px solid black;
+	cursor: pointer;
+	text-decoration:underline;
+	color: blue;
+	background-color: #D8D8D8;
+}
+
+.btn_02 {
+	font-size: 14px;
+	font-weight: normal;
+	width: 90px;
+	height: 25px;
+	border: 2px solid black;
+	cursor: pointer;
+	text-decoration:underline;
+	color: blue;
+	background-color: #D8D8D8;
+}
+
+.algn-l{
+	text-align: left;
+}
+
+.algn-r{
+	text-align: right;
+}
+
+.algn-c{
+	text-align: center;
+}
+
+
+
+.lbl_paging {
+	color: #000000;
+	text-align: left;
+	font-size: 12px;
+}
+
+.lbl_footer {
+	font-size: 11px;
+	font-weight: bold;
+	color: #000000;
+	text-align: center;
+	width: 850px;
+}
+
+
+
