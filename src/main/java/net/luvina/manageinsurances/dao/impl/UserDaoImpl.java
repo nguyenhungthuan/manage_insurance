@@ -71,7 +71,11 @@ public class UserDaoImpl implements UserDaoCustom {
 				int i = 1;
 				while (iterator.hasNext()) {
 					Map.Entry mapEntry = (Map.Entry) iterator.next();
-					query.setParameter(i++, "%"+mapEntry.getValue()+"%");
+					if(mapEntry.getKey().equals("i.insuranceNumber")) {
+						query.setParameter(i++, mapEntry.getValue());
+					} else {
+						query.setParameter(i++, "%"+mapEntry.getValue()+"%");
+					}
 				}
 			}
 			listUserIn = query.getResultList();
@@ -129,7 +133,11 @@ public class UserDaoImpl implements UserDaoCustom {
 			int i = 1;
 			while (iterator.hasNext()) {
 				Map.Entry mapEntry = (Map.Entry) iterator.next();
-				query.setParameter(i++, "%"+mapEntry.getValue()+"%");
+				if(mapEntry.getKey().equals("i.insuranceNumber")) {
+					query.setParameter(i++, mapEntry.getValue());
+				} else {
+					query.setParameter(i++, "%"+mapEntry.getValue()+"%");
+				}
 			}
 		}
 		// lấy số lượng bản ghi phù hợp

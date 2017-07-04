@@ -78,18 +78,23 @@ public class ListInsurancesController {
 					inforSearchFormBean = new InforSearchFormBean(inforSearchFormBean.getCompanyInternalID());
 				}
 			}
-			// convert page
-			currentPage = Integer.parseInt(inforSearchFormBean.getCurrentPage());
 			// số bản ghi trên 1 trang
 			limit = Common.getLimit();
-			// vị trí bản ghi phục vụ phân trang
-			offset = Common.getOffset(currentPage, limit);
 			// tổng số bản ghi phù hợp
 			InforSearchDto searchDto = Common.copProISFBToISDto(inforSearchFormBean);
 			// tổng số bản ghi
 			totalRecords = userLogic.getTotalRecords(searchDto);
 			// tổng số trang
 			int totalPage = Common.getTotalPage(totalRecords, limit);
+			if(Integer.parseInt(inforSearchFormBean.getCurrentPage()) > totalPage) {
+				inforSearchFormBean.setCurrentPage(String.valueOf(totalPage));
+			} else if (Integer.parseInt(inforSearchFormBean.getCurrentPage()) < 0) {
+				inforSearchFormBean.setCurrentPage("1");
+			}
+			// convert page
+			currentPage = Integer.parseInt(inforSearchFormBean.getCurrentPage());
+			// vị trí bản ghi phục vụ phân trang
+			offset = Common.getOffset(currentPage, limit);
 			// list paging
 			List<Integer> listPaging = Common.getListPaging(totalRecords, limit, currentPage);
 			// list user infor

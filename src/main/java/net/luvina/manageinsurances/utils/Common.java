@@ -130,19 +130,15 @@ public class Common {
     public static List<Integer> getListPaging (int totalRecords, int limit, int currentPage) {
     	List<Integer> lstPaging = new ArrayList<Integer>();
     	int totalPages = getTotalPage(totalRecords, limit);
-    	int range = Integer.parseInt(ConfigProperties.getMessage("range"));
-    	int startPage = 1;
-    	int endPage = totalPages;
-    	int space = (int) Math.floor(range/2);
-    	if(currentPage > space && currentPage <= totalPages - space){
-    		startPage = currentPage - range/2;
-    		endPage = currentPage + range/2;
-    	} else if(currentPage <= space) {
-	    	endPage = startPage + range - 1;
-    	} else if(totalPages > range) {
-    		startPage = totalPages - (range - 1);
+    	float range = Integer.parseInt(ConfigProperties.getMessage("range"));
+    	int space = (int) Math.ceil(range/2);
+    	int startPage = currentPage - (space - 1);
+    	if(startPage <= 0) {
+    		startPage = 1;
+    	} else if(totalPages - currentPage < space) {
+    		startPage = totalPages - ((int)range - 1);
     	}
-    	for(int i = startPage; i <= endPage; i++) {
+    	for(int i = startPage; i < startPage + range; i++) {
     		if(i <= totalPages) {
     			lstPaging.add(i);
     		} else {
