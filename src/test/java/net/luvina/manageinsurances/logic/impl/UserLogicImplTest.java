@@ -1,14 +1,17 @@
 package net.luvina.manageinsurances.logic.impl;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
-
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,7 +20,6 @@ import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
-
 import net.luvina.manageinsurances.dao.UserDao;
 import net.luvina.manageinsurances.entities.UserBean;
 import net.luvina.manageinsurances.entities.UserInsuranceBean;
@@ -37,7 +39,7 @@ public class UserLogicImplTest {
 	public void setUp() {
 
 		// Test method checkExistedAccount
-		when(userDao.findByUserNameAndPassword("1", Common.encryptMD5("1"))).thenAnswer(new Answer<List<UserBean>>() {
+		when(userDao.findByUserNameAndPassword(anyString(), anyString())).thenAnswer(new Answer<List<UserBean>>() {
 
 			@Override
 			public List<UserBean> answer(InvocationOnMock invocation) throws Throwable {
@@ -48,7 +50,7 @@ public class UserLogicImplTest {
 		});
 		
 		// Test method getListInfor
-		when(userDao.getListInfor(1, "", "", "", "ASC", "u.fullName", 5, 0)).thenAnswer(new Answer<List<UserInsuranceBean>>() {
+		when(userDao.getListInfor(anyInt(), anyString(), anyString(), anyString(), anyString(), anyString(), anyInt(), anyInt())).thenAnswer(new Answer<List<UserInsuranceBean>>() {
 
 			@Override
 			public List<UserInsuranceBean> answer(InvocationOnMock invocation) throws Throwable {
@@ -61,7 +63,7 @@ public class UserLogicImplTest {
 		});		
 		
 		// Test method getTotalRecords
-		when(userDao.getTotalRecords(1, "", "", "")).thenReturn(1);
+		when(userDao.getTotalRecords(anyInt(), anyString(), anyString(), anyString())).thenReturn(1);
 	}
 	
 	@Test
@@ -72,7 +74,6 @@ public class UserLogicImplTest {
 		assertThat(list, containsInAnyOrder(new UserInsuranceDto(2, "Nam"), new UserInsuranceDto(1, "Thuan")));
 	}
 	
-	
 	@Test
 	public void getTotalRecords(){
 		InforSearchDto inforSearchDto = new InforSearchDto("1","","","","ASC");
@@ -82,7 +83,14 @@ public class UserLogicImplTest {
 	
 	@Test
 	public void checkExistedAccount() {
-		boolean rsCheck = userLogicImpl.checkExistedAcc("1", Common.encryptMD5("1"));
+		boolean rsCheck = userLogicImpl.checkExistedAcc("1", "1");
 		assertTrue(rsCheck == true);
+	}
+	
+	@Test
+	public void testPaging() {
+		List<Integer> listPaging = Common.getListPaging(10, 1, 4);
+		List<Integer> list = Arrays.asList(2,3,4,5,6);
+		assertThat(listPaging, is(list));
 	}
 }
