@@ -3,6 +3,8 @@
  */
 package net.luvina.manageinsurances.logic.impl.dto;
 
+import java.util.Objects;
+
 /**
  * @author DELL
  *
@@ -33,6 +35,11 @@ private int userInternalID;
 	private String insuranceEndDate;
 	
 	private int companyInternalID;
+	
+	public UserInsuranceDto(){}
+	public UserInsuranceDto(String fullName) {
+		this.fullName = fullName;
+	}
 	/**
 	 * @return the userInternalID
 	 */
@@ -189,4 +196,19 @@ private int userInternalID;
 	public void setCompanyInternalID(int companyInternalID) {
 		this.companyInternalID = companyInternalID;
 	}
+	
+
+
+@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserInsuranceDto userInsuranceDto = (UserInsuranceDto) o;
+        return Objects.equals(fullName, userInsuranceDto.fullName);
+	}
+	
+	@Override
+    public int hashCode() {
+        return Objects.hash(fullName);
+    }
 }
