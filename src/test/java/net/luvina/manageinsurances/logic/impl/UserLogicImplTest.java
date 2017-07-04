@@ -14,7 +14,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 
 import net.luvina.manageinsurances.dao.UserDao;
 import net.luvina.manageinsurances.entities.UserBean;
@@ -33,43 +35,47 @@ public class UserLogicImplTest {
 	
 	@Before
 	public void setUp() {
-		List<UserBean> listAccount = new ArrayList<>();
-		listAccount.add(new UserBean());
-		when(userDao.findByUserNameAndPassword("1", Common.encryptMD5("1"))).thenReturn(listAccount);
+
+		// Test method checkExistedAccount
+		when(userDao.findByUserNameAndPassword("1", Common.encryptMD5("1"))).thenAnswer(new Answer<List<UserBean>>() {
+
+			@Override
+			public List<UserBean> answer(InvocationOnMock invocation) throws Throwable {
+				List<UserBean> listAccount = new ArrayList<>();
+				listAccount.add(new UserBean());
+				return listAccount;
+			}
+		});
 		
-		List<UserInsuranceBean> listUserInsuranceBean = new ArrayList<>();
-		UserInsuranceBean userInsuranceBean1 = new UserInsuranceBean();
-		UserInsuranceBean userInsuranceBean2 = new UserInsuranceBean();
-		userInsuranceBean1.setFullName("Thuan");
-		userInsuranceBean2.setFullName("Nam");
-		listUserInsuranceBean.add(userInsuranceBean1);
-		listUserInsuranceBean.add(userInsuranceBean2);
-		when(userDao.getListInfor(1, "", "", "", "ASC", "u.fullName", 5, 0)).thenReturn(listUserInsuranceBean);
+		// Test method getListInfor
+		when(userDao.getListInfor(1, "", "", "", "ASC", "u.fullName", 5, 0)).thenAnswer(new Answer<List<UserInsuranceBean>>() {
+
+			@Override
+			public List<UserInsuranceBean> answer(InvocationOnMock invocation) throws Throwable {
+				List<UserInsuranceBean> listUserInsuranceBean = new ArrayList<>();
+				listUserInsuranceBean.add(new UserInsuranceBean(1, "Thuan"));
+				listUserInsuranceBean.add(new UserInsuranceBean(2, "Nam"));
+				return listUserInsuranceBean;
+			}
+			
+		});		
 		
+		// Test method getTotalRecords
 		when(userDao.getTotalRecords(1, "", "", "")).thenReturn(1);
 	}
 	
 	@Test
 	public void getListInfor(){
-		InforSearchDto inforSearchDto = new InforSearchDto();
-		inforSearchDto.setCompanyInternalID("1");
-		inforSearchDto.setFullName("");
-		inforSearchDto.setInsuranceNumber("");
-		inforSearchDto.setPlaceOfRegister("");
-		inforSearchDto.setSortType("ASC");
+		InforSearchDto inforSearchDto = new InforSearchDto("1","","","","ASC");
 		
 		List<UserInsuranceDto> list = userLogicImpl.getListInfor(inforSearchDto, "u.fullName", 5, 0);
-		assertThat(list, containsInAnyOrder(new UserInsuranceDto("Thuan"), new UserInsuranceDto("Nam")));
+		assertThat(list, containsInAnyOrder(new UserInsuranceDto(2, "Nam"), new UserInsuranceDto(1, "Thuan")));
 	}
 	
 	
 	@Test
 	public void getTotalRecords(){
-		InforSearchDto inforSearchDto = new InforSearchDto();
-		inforSearchDto.setCompanyInternalID("1");
-		inforSearchDto.setFullName("");
-		inforSearchDto.setInsuranceNumber("");
-		inforSearchDto.setPlaceOfRegister("");
+		InforSearchDto inforSearchDto = new InforSearchDto("1","","","","ASC");
 		int count = userLogicImpl.getTotalRecords(inforSearchDto);
 		assertEquals(1, count);
 	}

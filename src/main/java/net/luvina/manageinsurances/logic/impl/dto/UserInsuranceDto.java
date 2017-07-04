@@ -37,7 +37,8 @@ private int userInternalID;
 	private int companyInternalID;
 	
 	public UserInsuranceDto(){}
-	public UserInsuranceDto(String fullName) {
+	public UserInsuranceDto(int userInternalID, String fullName) {
+		this.userInternalID = userInternalID;
 		this.fullName = fullName;
 	}
 	/**
@@ -204,11 +205,12 @@ private int userInternalID;
 		if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserInsuranceDto userInsuranceDto = (UserInsuranceDto) o;
-        return Objects.equals(fullName, userInsuranceDto.fullName);
+        return userInternalID == userInsuranceDto.userInternalID && 
+        		Objects.equals(fullName, userInsuranceDto.fullName);
 	}
 	
 	@Override
     public int hashCode() {
-        return Objects.hash(fullName);
+        return Objects.hash(userInternalID, fullName);
     }
 }
