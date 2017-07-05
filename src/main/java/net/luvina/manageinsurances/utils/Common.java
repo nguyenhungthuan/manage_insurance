@@ -136,7 +136,7 @@ public class Common {
     	if(startPage <= 0) {
     		startPage = 1;
     	} else if(totalPages - currentPage < space) {
-    		startPage = totalPages - ((int)range - 1);
+    		startPage = totalPages - ((int)range - 1) > 0 ? totalPages - ((int)range - 1) : 1;
     	}
     	for(int i = startPage; i < startPage + range; i++) {
     		if(i <= totalPages) {
@@ -146,6 +146,21 @@ public class Common {
     		}
     	}
     	return lstPaging;
+    }
+    
+    /**
+     * Thay đổi giá trị currentPage nếu input không hợp lệ
+     * @param currentPage trang hiện tại
+     * @param totalPages tổng số trang
+     * @return trang hợp lệ
+     */
+    public static int exchangeCurrentPage(int currentPage, int totalPages) {
+    	if(currentPage > totalPages) {
+    		return totalPages;
+    	} else if(currentPage <= 0) {
+    		return 1;
+    	}
+    	return currentPage;
     }
 
     /**

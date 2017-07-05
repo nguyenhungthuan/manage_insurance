@@ -86,13 +86,8 @@ public class ListInsurancesController {
 			totalRecords = userLogic.getTotalRecords(searchDto);
 			// tổng số trang
 			int totalPage = Common.getTotalPage(totalRecords, limit);
-			if(Integer.parseInt(inforSearchFormBean.getCurrentPage()) > totalPage) {
-				inforSearchFormBean.setCurrentPage(String.valueOf(totalPage));
-			} else if (Integer.parseInt(inforSearchFormBean.getCurrentPage()) < 0) {
-				inforSearchFormBean.setCurrentPage("1");
-			}
 			// convert page
-			currentPage = Integer.parseInt(inforSearchFormBean.getCurrentPage());
+			currentPage = Common.exchangeCurrentPage(Integer.parseInt(inforSearchFormBean.getCurrentPage()), totalPage);
 			// vị trí bản ghi phục vụ phân trang
 			offset = Common.getOffset(currentPage, limit);
 			// list paging
@@ -111,6 +106,7 @@ public class ListInsurancesController {
 			modelMap.addAttribute("listPaging", listPaging);
 			modelMap.addAttribute("iconSort", Common.getIcon(inforSearchFormBean.getSortType()));
 			modelMap.addAttribute("totalPages", totalPage);
+			modelMap.addAttribute("crPage", currentPage);
 		} catch (NumberFormatException e) {
 			modelMap.addAttribute("error", env.getProperty("InvalidInput"));
 		} catch (Exception ex) {
