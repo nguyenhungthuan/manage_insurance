@@ -39,6 +39,12 @@ public class UserInsuranceBean {
 	private int insuranceInternalID;
 	
 	public UserInsuranceBean(){};
+
+	public UserInsuranceBean(int userInternalID,String fullName){
+		this.userInternalID = userInternalID;
+		this.fullName = fullName;
+	};
+
 	/**
 	 * Phương thức khởi tạo có tham số
 	 * @param userInternalID user id 

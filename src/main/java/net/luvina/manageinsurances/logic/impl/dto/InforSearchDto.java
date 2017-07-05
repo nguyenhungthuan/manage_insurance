@@ -14,6 +14,20 @@ public class InforSearchDto {
 	private String placeOfRegister;
 	private String sortType;
 	
+	public InforSearchDto(){}
+	
+	
+	public InforSearchDto(String companyInternalID, String fullName, String insuranceNumber, String placeOfRegister,
+			String sortType) {
+		super();
+		this.companyInternalID = companyInternalID;
+		this.fullName = fullName;
+		this.insuranceNumber = insuranceNumber;
+		this.placeOfRegister = placeOfRegister;
+		this.sortType = sortType;
+	}
+
+
 	/**
 	 * @return the companyInternalID
 	 */
