@@ -24,49 +24,49 @@ public class CommonTest {
 	
 	/**
 	 * [IN]
-	 * currentPage: trang hiện tại
-	 * totalPage: tổng số trang
+	 * currentPage: 1000
+	 * totalPage: 10
 	 * [OUT]
-	 * trang hiện tại đã chuyển đổi
+	 * currentPage = 10
 	 */
 	@Test
 	public void testCurrentPageBiggerThanTotalPage() {
 		// setup
-		int expect = 10, currentPage = 1000, totalPage = 10;
+		int currentPage = 1000, totalPage = 10;
 		
 		//exercise
 		int actual = Common.exchangeCurrentPage(currentPage, totalPage);
 		
 		//verify
-		assertEquals(expect, actual);
+		assertEquals(actual, 10);
 	}
 	
 	/**
 	 * [IN]
-	 * currentPage: trang hiện tại
-	 * totalPage: tổng số trang
+	 * currentPage: -10
+	 * totalPage: 10
 	 * [OUT]
-	 * trang hiện tại đã chuyển đổi
+	 * currentPage = 1
 	 */
 	@Test
 	public void testCurrentPageLessThanTotalPage() {
 		// setup
-		int expect = 1, currentPage = -10, totalPage = 10;
+		int currentPage = -10, totalPage = 10;
 		
 		//exercise
 		int actual = Common.exchangeCurrentPage(currentPage, totalPage);
 		
 		//verify
-		assertEquals(expect, actual);
+		assertEquals(actual, 1);
 	}
 	
 	/**
 	 * [IN]
-	 * currentPage: trang hiện tại
-	 * totalPage: tổng số trang
-	 * limit: số bản ghi trên 1 trang
+	 * currentPage: 4
+	 * totalRecord: 20
+	 * limit: 5
 	 * [OUT]
-	 * danh sách trang hiển thị
+	 * expect = [1,2,3,4]
 	 */
 	@Test
 	public void getListPagingTrue() {
@@ -83,11 +83,11 @@ public class CommonTest {
 	
 	/**
 	 * [IN]
-	 * currentPage: trang hiện tại
-	 * totalPage: tổng số trang
-	 * limit: số bản ghi trên 1 trang
+	 * currentPage: 15
+	 * totalRecord: 100
+	 * limit: 5
 	 * [OUT]
-	 * danh sách trang hiển thị
+	 * expect = [13,14,15,16,17]
 	 */
 	@Test
 	public void getListPagingFailure() {
