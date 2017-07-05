@@ -86,46 +86,4 @@ public class UserLogicImplTest {
 		boolean rsCheck = userLogicImpl.checkExistedAcc("1", "1");
 		assertTrue(rsCheck == true);
 	}
-	
-	/**
-	 * Test method paging - getListPaging(int totalRecords, int limit, int currentPage)
-	 * @param totalRecords tổng số bản ghi
-	 * @param limit số bản ghi trên 1 trang
-	 * @param currentPage trang hiện tại
-	 * @return List<Integer> danh sách các trang sẽ hiển thị
-	 */
-	@Test
-	public void testPaging() {
-		List<Integer> listPaging = Common.getListPaging(10, 1, 4);
-		List<Integer> list = Arrays.asList(2,3,4,5,6);
-		assertThat(listPaging, is(list));
-	}
-	
-	/**
-	 * Test method paging - getListPaging(int totalRecords, int limit, int currentPage)
-	 * @param totalRecords tổng số bản ghi
-	 * @param limit số bản ghi trên 1 trang
-	 * @param currentPage trang hiện tại
-	 * @return List<Integer> danh sách các trang sẽ hiển thị
-	 */
-	@Test
-	public void testPagingFailure() {
-		List<Integer> listPaging = Common.getListPaging(20, 5, 3);
-		List<Integer> list = Arrays.asList(2,3,4,5,6);
-		assertThat(listPaging, is(list));
-	}
-	
-	/**
-	 * Test method paging - getListPaging(int totalRecords, int limit, int currentPage)
-	 * @param totalRecords tổng số bản ghi
-	 * @param limit số bản ghi trên 1 trang
-	 * @param currentPage trang hiện tại
-	 * @return List<Integer> danh sách các trang sẽ hiển thị
-	 */
-	@Test
-	public void testPagingTrue() {
-		List<Integer> listPaging = Common.getListPaging(20, 5, 3);
-		List<Integer> list = Arrays.asList(1,2,3,4);
-		assertThat(listPaging, is(list));
-	}
 }
