@@ -89,7 +89,6 @@ public class UserDaoImpl implements UserDaoCustom {
 	 * (non-Javadoc)
 	 * @see net.luvina.manageinsurances.dao.UserDao#getTotalUser(int, java.lang.String, java.lang.String, java.lang.String)
 	 */
-	@SuppressWarnings("unchecked")
 	@Transactional
 	public int getTotalRecords(int companyID, String fullName, String insuranceNumber, String registerPlace) {
 		StringBuilder sqlCommand = new StringBuilder();
