@@ -1,4 +1,4 @@
-package net.luvina.manage_insurance;
+package net.luvina.manageinsurances;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

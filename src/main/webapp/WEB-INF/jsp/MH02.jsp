@@ -131,16 +131,16 @@
 			<td class = "lbl_paging">
 			<c:forEach items="${listPaging}" var="num" varStatus="loop">
 				<c:if test="${loop.first && num != 1}">
-				<a href = "javascript: actionMH02('currentPage','${inforSearchFormBean.currentPage - 1}')"><<</a> &nbsp;
+				<a href = "javascript: actionMH02('currentPage','${crPage - 1}')"><<</a> &nbsp;
 				</c:if>
-				<c:if test="${inforSearchFormBean.currentPage != num}">
+				<c:if test="${crPage != num}">
 				<a href = "javascript: actionMH02('currentPage','${num}')">| ${num}</a> &nbsp;
 				</c:if>
-				<c:if test="${inforSearchFormBean.currentPage == num}">
+				<c:if test="${crPage == num}">
 				<b><c:out value="| ${num}" /></b> &nbsp;
 				</c:if>
 				<c:if test="${loop.last && num < totalPages}">
-				<a href = "javascript: actionMH02('currentPage','${inforSearchFormBean.currentPage + 1}')">>></a> &nbsp;
+				<a href = "javascript: actionMH02('currentPage','${crPage + 1}')">>></a> &nbsp;
 				</c:if>
 			</c:forEach>
 			</td>
