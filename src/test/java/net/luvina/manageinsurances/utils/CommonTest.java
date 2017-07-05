@@ -5,12 +5,11 @@
 package net.luvina.manageinsurances.utils;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.core.IsNot.*;
-import static org.junit.Assert.*;
-
+import static org.hamcrest.core.IsNot.not;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import java.util.Arrays;
 import java.util.List;
-
 import org.hamcrest.core.IsNot;
 import org.junit.Test;
 import org.junit.runner.RunWith;
