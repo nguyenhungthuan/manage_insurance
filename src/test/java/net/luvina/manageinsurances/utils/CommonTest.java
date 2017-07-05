@@ -5,11 +5,13 @@
 package net.luvina.manageinsurances.utils;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.core.IsNot.*;
 import static org.junit.Assert.*;
 
 import java.util.Arrays;
 import java.util.List;
 
+import org.hamcrest.core.IsNot;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -99,6 +101,6 @@ public class CommonTest {
 		List<Integer> actual = Common.getListPaging(totalRecord, limit, currentPage); 
 		
 		//verify
-		assertThat(actual, is(list));
+		assertThat(actual, not(list));
 	}
 }
