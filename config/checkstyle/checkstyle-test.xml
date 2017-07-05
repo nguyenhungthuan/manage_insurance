@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+          "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
+          "http://checkstyle.sourceforge.net/dtds/configuration_1_3.dtd">
+
+<module name="Checker">
+  <!-- see https://github.com/checkstyle/checkstyle/blob/master/config/checkstyle_checks.xml -->
+  <!--
+      If you set the basedir property below, then all reported file
+      names will be relative to the specified directory. See
+      http://checkstyle.sourceforge.net/config.html#Checker
+      <property name="basedir" value="${basedir}"/>
+  -->
+  <module name="TreeWalker">
+    <property name="tabWidth" value="4"/>
+  </module>
+</module>

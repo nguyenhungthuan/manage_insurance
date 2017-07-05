@@ -1,0 +1,30 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/manage_insurance
+    docker:
+      - image: java:openjdk-8-jdk
+    environment:
+      _JAVA_OPTIONS: -Xmx1G
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - manage_insurance-{{ .Branch }}-{{ checksum ".circleci/config.yml" }}-{{ checksum "build.gradle" }}-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+            - manage_insurance-{{ .Branch }}
+            - manage_insurance-master
+
+      - run:
+          name: Run tests
+          command: ./gradlew check jacocoTestReport
+      - store_artifacts:
+          name: Store artifacts
+          path: build/reports
+          destination: artifacts
+      - store_test_results:
+          path: build/test-results
+      - save_cache:
+          key: manage_insurance-{{ .Branch }}-{{ checksum ".circleci/config.yml" }}-{{ checksum "build.gradle" }}-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+          paths:
+            - "~/.gradle"
+            - "~/.m2"
