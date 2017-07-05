@@ -14,6 +14,8 @@ apply plugin: 'java'
 apply plugin: 'eclipse-wtp'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'war'
+apply plugin: "checkstyle"
+apply plugin: "jacoco"
 
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
@@ -44,4 +46,32 @@ dependencies {
 	testCompile('junit:junit:4.12')
 	testCompile('org.mockito:mockito-core:2.+')
 	
+}
+
+jacoco {
+    toolVersion = "0.7.6.201602180812"
+    reportsDir = file("$buildDir/reports/jacoco")
+}
+
+jacocoTestReport {
+	reports {
+		xml.enabled false
+		csv.enabled false
+	}
+}
+
+checkstyle {
+	toolVersion = "7.5.1"
+	showViolations = true
+	configFile = rootProject.file('config/checkstyle/checkstyle.xml')
+}
+
+checkstyleTest {
+    configFile = rootProject.file('config/checkstyle/checkstyle-test.xml')
+}
+
+tasks.withType(Checkstyle) {
+  reports {
+    html.enabled = true
+  }
 }

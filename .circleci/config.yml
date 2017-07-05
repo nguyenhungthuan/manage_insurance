@@ -1,0 +1,30 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/Quan_ly_BH_QuanTH_
+    docker:
+      - image: java:openjdk-8-jdk
+    environment:
+      _JAVA_OPTIONS: -Xmx1G
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - Quan_ly_BH_QuanTH_-{{ .Branch }}-{{ checksum ".circleci/config.yml" }}-{{ checksum "build.gradle" }}-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+            - Quan_ly_BH_QuanTH_-{{ .Branch }}
+            - Quan_ly_BH_QuanTH_-master
+
+      - run:
+          name: Run tests
+          command: ./gradlew check jacocoTestReport
+      - store_artifacts:
+          name: Store artifacts
+          path: build/reports
+          destination: artifacts
+      - store_test_results:
+          path: build/test-results
+      - save_cache:
+          key: Quan_ly_BH_QuanTH_-{{ .Branch }}-{{ checksum ".circleci/config.yml" }}-{{ checksum "build.gradle" }}-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+          paths:
+            - "~/.gradle"
+            - "~/.m2"
