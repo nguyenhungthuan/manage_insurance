@@ -25,13 +25,21 @@ import net.luvina.manageinsurances.dao.custom.UserDaoCustom;
  */
 @Repository
 public interface UserDao extends JpaRepository<UserBean, Integer>, UserDaoCustom {
-	
-	
+
 	/**
 	 * Phương thức tìm kiếm user theo username và password
 	 * @param userName user name
 	 * @param password pass
-	 * @return true, false
+	 * @return List<UserBean>
 	 */
 	public List<UserBean> findByUserNameAndPassword(String userName, String password);
+	
+	/**
+	 * Phương thức lấy ra user theo id
+	 * @param userInternalID userInternalID
+	 * @return UserBean
+	 */
+	public UserBean findByUserInternalID(int userInternalID);
+	
+	public UserBean findByInsuranceInternalId(int insuranceInternalId);
 }

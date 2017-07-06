@@ -51,7 +51,7 @@ public class ListInsurancesController {
 	 * @param session HttpSession
 	 * @return MH02
 	 */
-	@RequestMapping(value={"ListUser.do","/ListUser/{action}.do"}, method=RequestMethod.GET)
+	@RequestMapping(value={"ListUser.do","/ListUser/{action}.do"}, method={RequestMethod.GET, RequestMethod.POST})
 	public String manageInsu(ModelMap modelMap,InforSearchFormBean inforSearchFormBean, @ModelAttribute("lstCompany") List<CompanyDto> lstCompany, HttpSession session, @PathVariable Optional<String> action, HttpServletRequest request){
 		try {
 			// nếu có lỗi trong quá trình lấy công ty, đưa đến màn hình lỗi

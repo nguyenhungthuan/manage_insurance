@@ -19,4 +19,9 @@ public interface CompanyDao extends JpaRepository<CompanyBean, Integer> {
 	
 	public List<CompanyBean> findAll();
 	
+	public CompanyBean findByCompanyInternalId(int companyInternalId);
+	
+	public CompanyBean findByEmail(String email);
+	
+	public CompanyBean findByTel(String tel);
 }

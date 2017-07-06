@@ -21,11 +21,44 @@ import net.luvina.manageinsurances.utils.Common;
 public class CompanyLogicImpl implements CompanyLogic{
 	@Autowired
 	private CompanyDao companyDao;
+	
 	/*
 	 * (non-Javadoc)
 	 * @see net.luvina.manageinsurances.logic.CompanyLogic#getAllCom()
 	 */
 	public List<CompanyDto> getAllCom() {
 		return Common.castListCom(companyDao.findAll());
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see net.luvina.manageinsurances.logic.CompanyLogic#getCompanyByID(int)
+	 */
+	public CompanyDto getCompanyByID(int companyInternalId) {
+		return Common.copyProCom(companyDao.findByCompanyInternalId(companyInternalId));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see net.luvina.manageinsurances.logic.CompanyLogic#checkExistedCom(int)
+	 */
+	public Boolean checkExistedCom(int companyInternalId) {
+		return companyDao.findByCompanyInternalId(companyInternalId) != null ? true : false;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see net.luvina.manageinsurances.logic.CompanyLogic#checkExistedEmail(java.lang.String)
+	 */
+	public Boolean checkExistedEmail(String email) {
+		return companyDao.findByEmail(email) != null ? true : false;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see net.luvina.manageinsurances.logic.CompanyLogic#checkExistedTel(java.lang.String)
+	 */
+	public Boolean checkExistedTel(String tel) {
+		return companyDao.findByTel(tel) != null ? true : false;
 	}
 }

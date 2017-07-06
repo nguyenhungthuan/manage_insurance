@@ -65,8 +65,3 @@ function disableTB() {
 		}
 	})
 }
-
-
-
-
-

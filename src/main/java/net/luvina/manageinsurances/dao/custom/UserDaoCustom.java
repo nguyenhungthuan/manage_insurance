@@ -6,6 +6,9 @@ package net.luvina.manageinsurances.dao.custom;
 import java.util.List;
 
 import net.luvina.manageinsurances.entities.UserInsuranceBean;
+import net.luvina.manageinsurances.entities.CompanyBean;
+import net.luvina.manageinsurances.entities.InsuranceBean;
+import net.luvina.manageinsurances.entities.UserBean;
 
 /**
  * @author nguyenhungthuan
@@ -35,4 +38,36 @@ public interface UserDaoCustom {
 	 * @return total users
 	 */
 	public int getTotalRecords(int companyID, String fullName, String insuranceNumber, String registerPlace);
+	
+	/**
+	 * Phương thức kiểm tra tồn tại mã số thẻ bảo hiểm
+	 * @param insuranceNumber mã số thẻ bảo hiểm
+	 * @param userInternalId id user
+	 * @return true nếu đã tồn tại và ngược lại
+	 */
+	public Boolean checkExistedInsuNum(String insuranceNumber, int userInternalId);
+	
+	/**
+	 * Phương thức lấy ra insuranceInternalID theo userInternalID
+	 * @param userID userInternalID
+	 * @return insuranceInternalID
+	 */
+	public int getInsuranceInternalID(int userID);
+	
+	/**
+	 * Phương thức insert, update thông tin user
+	 * @param user user
+	 * @param insurance insurance
+	 * @param company company
+	 * @return
+	 * @throws Exception 
+	 */
+	public Boolean insertOrUpdateUser(UserBean user, InsuranceBean insurance, CompanyBean company) throws Exception;
+	
+	/**
+	 * Phương thức lấy thông tin chi tiết hiển thị MH03
+	 * @param userID userInternalID
+	 * @return UserInsuranceBean
+	 */
+	public UserInsuranceBean getDetailsInfor(int userID);
 }

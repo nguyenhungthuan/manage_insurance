@@ -23,6 +23,8 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.beanutils.PropertyUtils;
 
 import net.luvina.manageinsurances.entities.CompanyBean;
+import net.luvina.manageinsurances.entities.InsuranceBean;
+import net.luvina.manageinsurances.entities.UserBean;
 import net.luvina.manageinsurances.entities.UserInsuranceBean;
 import net.luvina.manageinsurances.logic.impl.dto.AccountDto;
 import net.luvina.manageinsurances.logic.impl.dto.CompanyDto;

@@ -188,7 +188,7 @@ public class UserBean {
 	/**
 	 * @return the insurance
 	 */
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
+	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	public InsuranceBean getInsurance() {
 		return insurance;
 	}
@@ -199,6 +199,4 @@ public class UserBean {
 	public void setInsurance(InsuranceBean insurance) {
 		this.insurance = insurance;
 	}
-	
-
 }
