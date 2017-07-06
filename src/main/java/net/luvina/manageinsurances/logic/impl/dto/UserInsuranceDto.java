@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
  * @author DELL
  *
  */
-@EqualsAndHashCode()
+@EqualsAndHashCode
 public class UserInsuranceDto {
 	private int userInternalID;
 	
