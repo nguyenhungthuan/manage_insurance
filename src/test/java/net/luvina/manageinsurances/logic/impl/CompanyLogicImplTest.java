@@ -1,6 +1,8 @@
 package net.luvina.manageinsurances.logic.impl;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
 import java.util.ArrayList;
@@ -22,7 +24,7 @@ import net.luvina.manageinsurances.logic.impl.dto.CompanyDto;
 public class CompanyLogicImplTest {
 	
 	@InjectMocks
-	private CompanyLogicImpl  companyLogicImpl;
+	private CompanyLogicImpl  sut;
 	
 	@Mock
 	private CompanyDao companyDao;
@@ -42,14 +44,94 @@ public class CompanyLogicImplTest {
 				return listCompany;
 			}
 		});
+		
+		when(companyDao.findByCompanyInternalId(anyInt())).thenReturn(new CompanyBean());
 	}
 	
+	/**
+	 * [OUT]
+	 * true
+	 */
 	@Test
 	public void getAllCom() {
-		List<CompanyDto> listCompany = companyLogicImpl.getAllCom();
+		// setup
 		List<CompanyDto> listCompanyDto = new ArrayList<>();
 		listCompanyDto.add(new CompanyDto(1, "Luvina"));
 		listCompanyDto.add(new CompanyDto(2, "HQV"));
+		
+		// exercise
+		List<CompanyDto> listCompany = sut.getAllCom();
+		
+		//verify
 		assertTrue(listCompany.equals(listCompanyDto));
-	}	
+	}
+	
+	/**
+	 * [IN]
+	 * companyInternalID = 1
+	 * [OUT]
+	 * true
+	 */
+	@Test
+	public void checkExistedCom() {
+		// exercise
+		Boolean rsCheck = sut.checkExistedCom(1);
+		
+		// verify
+		assertTrue(rsCheck);
+	}
+	
+	/**
+	 * [IN]
+	 * companyInternalID = 1
+	 * [OUT]
+	 * false
+	 */
+	@Test
+	public void checkExistedComFailure() {
+		// setup
+		when(companyDao.findByCompanyInternalId(anyInt())).thenReturn(null);
+		
+		// exercise
+		Boolean rsCheck = sut.checkExistedCom(1);
+		
+		// verify
+		assertFalse(rsCheck);
+	}
+	
+	/**
+	 * [IN]
+	 * email = "example@gmail.com
+	 * [OUT]
+	 * true
+	 */
+	@Test
+	public void checkExistedEmail() {
+		// setup
+		when(companyDao.findByEmail(anyString())).thenReturn(new CompanyBean());
+		
+		// exercise
+		Boolean rsCheck = sut.checkExistedEmail("example@gmail.com");
+		
+		// verify
+		assertTrue(rsCheck);
+	}
+	
+	/**
+	 * [IN]
+	 * tel = "0903320395"
+	 * [OUT]
+	 * true
+	 */
+	@Test
+	public void checkExistedTel() {
+		// setup
+		when(companyDao.findByTel(anyString())).thenReturn(new CompanyBean());
+		
+		// exercise
+		Boolean rsCheck = sut.checkExistedTel("0903320395");
+		
+		// verify
+		assertTrue(rsCheck);
+	}
 }

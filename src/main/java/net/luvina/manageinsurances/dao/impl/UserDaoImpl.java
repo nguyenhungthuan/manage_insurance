@@ -221,19 +221,17 @@ public class UserDaoImpl implements UserDaoCustom {
 	public UserInsuranceBean getDetailsInfor(int userID) {
 		StringBuilder sql = new StringBuilder();
 		UserInsuranceBean userInsuranceBean = new UserInsuranceBean();
-		try{ 
-			sql.append("SELECT new "+UserInsuranceBean.class.getName()+"(u.userInternalID, c.companyInternalId, c.companyName, u.fullName, u.sex, u.birthday, i.insuranceNumber, i.insuranceStartDate, i.insuranceEndDate, i.placeOfRegister) ");
-			sql.append(" FROM ");
-			sql.append(UserBean.class.getName()+" u ,");
-			sql.append(CompanyBean.class.getName()+" c ,");
-			sql.append(InsuranceBean.class.getName()+ " i ");
-			sql.append("WHERE u.company.companyInternalId = c.companyInternalId AND u.insuranceInternalId = i.insuranceInternalId AND u.userInternalID = ?");
-			Query query = entityManager.createQuery(sql.toString(), UserInsuranceBean.class);
-			query.setParameter(0, userID);
-			userInsuranceBean = (UserInsuranceBean) query.getSingleResult();			
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+		sql.append("SELECT new " + UserInsuranceBean.class.getName()
+				+ "(u.userInternalID, c.companyInternalId, c.companyName, u.fullName, u.sex, u.birthday, i.insuranceNumber, i.insuranceStartDate, i.insuranceEndDate, i.placeOfRegister) ");
+		sql.append(" FROM ");
+		sql.append(UserBean.class.getName() + " u ,");
+		sql.append(CompanyBean.class.getName() + " c ,");
+		sql.append(InsuranceBean.class.getName() + " i ");
+		sql.append(
+				"WHERE u.company.companyInternalId = c.companyInternalId AND u.insuranceInternalId = i.insuranceInternalId AND u.userInternalID = ?");
+		Query query = entityManager.createQuery(sql.toString(), UserInsuranceBean.class);
+		query.setParameter(0, userID);
+		userInsuranceBean = (UserInsuranceBean) query.getSingleResult();
 		return userInsuranceBean;
 	}
 }

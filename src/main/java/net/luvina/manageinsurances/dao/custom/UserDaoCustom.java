@@ -62,7 +62,7 @@ public interface UserDaoCustom {
 	 * @return
 	 * @throws Exception 
 	 */
-	public Boolean insertOrUpdateUser(UserBean user, InsuranceBean insurance, CompanyBean company) throws Exception;
+	public Boolean insertOrUpdateUser(UserBean user, InsuranceBean insurance, CompanyBean company);
 	
 	/**
 	 * Phương thức lấy thông tin chi tiết hiển thị MH03
