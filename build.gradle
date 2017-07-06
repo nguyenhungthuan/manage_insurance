@@ -41,6 +41,7 @@ dependencies {
 	compile group: 'org.springframework', name: 'spring-orm', version:'4.3.3.RELEASE'
 	compile group: 'org.eclipse.jdt.core.compiler', name: 'ecj', version: '4.4.2'
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '1.5.3.RELEASE'
+	compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.16.18'
 	providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('junit:junit:4.12')
