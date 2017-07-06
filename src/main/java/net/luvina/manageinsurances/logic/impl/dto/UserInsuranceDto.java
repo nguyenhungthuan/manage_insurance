@@ -3,13 +3,12 @@
  */
 package net.luvina.manageinsurances.logic.impl.dto;
 
-import lombok.EqualsAndHashCode;
 
 /**
  * @author DELL
  *
  */
-@EqualsAndHashCode
+@lombok.EqualsAndHashCode
 public class UserInsuranceDto {
 	private int userInternalID;
 	
