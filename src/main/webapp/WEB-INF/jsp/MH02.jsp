@@ -19,7 +19,7 @@
 <h4><spring:message code="TITLE_02" /></h4>
 <input type="hidden" value="<%=Constant.BACK %>" id="backconst"/>
 <!-- Begin vung dieu kien tim kiem -->
-<form:form modelAttribute="inforSearchFormBean" action="${pageContext.servletContext.contextPath}/ListUser/search.do" method="GET"  id="listMain">
+<form:form modelAttribute="inforSearch" action="${pageContext.servletContext.contextPath}/ListUser/search.do" method="GET"  id="listMain">
 <form:hidden path="sortType" />
 <form:hidden path="currentPage" />
 <input type="hidden" id="ssKey" name="ssKey" value="${ssKey}"/>
@@ -36,7 +36,7 @@
                <tr>
                <td><div id="ajax"></div></td>
                <td class="lbl_left">
-                   <form:select id="selectCom" path="companyInternalID" items="${lstCompany}" itemValue="companyInternalId" itemLabel="companyName" />
+                   <form:select id="selectCom" path="companyInternalID" items="${companies}" itemValue="companyInternalId" itemLabel="companyName" />
                 </td>
                </tr>
             </table>
@@ -95,7 +95,7 @@
 		<tr>
 			<th width="110px">
 				<spring:message code="NAME_SEARCH"></spring:message>
-				<a href = "javascript: actionMH02('sortType','${inforSearchFormBean.sortType}')">${iconSort}</a>
+				<a href = "javascript: actionMH02('sortType','${inforSearch.sortType}')">${iconSort}</a>
 			</th>
 			<th width="55px" align="center">
 				<spring:message code="SEX"></spring:message>

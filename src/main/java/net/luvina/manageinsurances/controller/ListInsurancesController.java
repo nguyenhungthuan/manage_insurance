@@ -46,18 +46,18 @@ public class ListInsurancesController {
 	/**
 	 * Sử dụng cho MH02
 	 * @param modelMap ModelMap
-	 * @param inforSearchFormBean Thông tin tìm kiếm nhập từ màn hình
-	 * @param lstCompany Danh sách công ty lấy từ DB
+	 * @param inforSearch Thông tin tìm kiếm nhập từ màn hình
+	 * @param companies Danh sách công ty lấy từ DB
 	 * @param session HttpSession
 	 * @param action Action của người dùng
 	 * @param request HttpServletRequest
 	 * @return MH02
 	 */
 	@RequestMapping(value={"ListUser.do","/ListUser/{action}.do"}, method={RequestMethod.GET})
-	public String showListUser(ModelMap modelMap,InforSearchFormBean inforSearchFormBean, @ModelAttribute("lstCompany") List<CompanyDto> lstCompany, HttpSession session, @PathVariable Optional<String> action, HttpServletRequest request){
+	public String showListUser(ModelMap modelMap,InforSearchFormBean inforSearch, @ModelAttribute("companies") List<CompanyDto> companies, HttpSession session, @PathVariable Optional<String> action, HttpServletRequest request){
 		try {
 			// nếu có lỗi trong quá trình lấy công ty, đưa đến màn hình lỗi
-			if(lstCompany.size() == 0) throw new Exception();
+			if(companies.size() == 0) throw new Exception();
 			int limit, offset, totalRecords;
 			int currentPage = 1;
 			String sortBy = Constant.SORTBY;
@@ -66,30 +66,30 @@ public class ListInsurancesController {
 				String actionValue = action.get();
 				// nếu là search, set lại số trang và thứ tự sắp xếp
 				if (actionValue.equals(Constant.SEARCH)) {
-					inforSearchFormBean.setCurrentPage("1");
-					inforSearchFormBean.setSortType(Constant.ASC);
+					inforSearch.setCurrentPage("1");
+					inforSearch.setSortType(Constant.ASC);
 					// nếu là sort, set lại sortType
 				} else if (actionValue.equals(Constant.SORT)) {
-					inforSearchFormBean.setSortType(Common.changeSortType(inforSearchFormBean.getSortType()));
+					inforSearch.setSortType(Common.changeSortType(inforSearch.getSortType()));
 					// nếu là back, lấy object từ session
 				} else if (actionValue.equals(Constant.BACK)) {
 					InforSearchFormBean search = ((InforSearchFormBean) session.getAttribute(request.getParameter("ssKey")));
-					inforSearchFormBean = (search == null ? new InforSearchFormBean() : search);
+					inforSearch = (search == null ? new InforSearchFormBean() : search);
 					// trường hợp thay đổi công ty, set lại company ID
 				} else if (actionValue.equals(Constant.CHANGE)) {
-					inforSearchFormBean = new InforSearchFormBean(inforSearchFormBean.getCompanyInternalID());
+					inforSearch = new InforSearchFormBean(inforSearch.getCompanyInternalID());
 				}
 			}
 			// số bản ghi trên 1 trang
 			limit = Common.getLimit();
 			// tổng số bản ghi phù hợp
-			InforSearchDto searchDto = Common.copProISFBToISDto(inforSearchFormBean);
+			InforSearchDto searchDto = Common.copProISFBToISDto(inforSearch);
 			// tổng số bản ghi
 			totalRecords = userLogic.getTotalRecords(searchDto);
 			// tổng số trang
 			int totalPage = Common.getTotalPage(totalRecords, limit);
 			// convert page
-			currentPage = Common.exchangeCurrentPage(Integer.parseInt(inforSearchFormBean.getCurrentPage()), totalPage);
+			currentPage = Common.exchangeCurrentPage(Integer.parseInt(inforSearch.getCurrentPage()), totalPage);
 			// vị trí bản ghi phục vụ phân trang
 			offset = Common.getOffset(currentPage, limit);
 			// list paging
@@ -100,13 +100,13 @@ public class ListInsurancesController {
 			// tạo mới session hoặc lấy từ request
 			String key = ssKey == null ? Common.getKey() : ssKey;
 			// đưa đối tượng lên session
-			session.setAttribute(key, inforSearchFormBean);
+			session.setAttribute(key, inforSearch);
 			// đưa lên request
 			modelMap.addAttribute("ssKey", key);
-			modelMap.addAttribute("inforSearchFormBean", inforSearchFormBean);
+			modelMap.addAttribute("inforSearch", inforSearch);
 			modelMap.addAttribute("listInfor",listInfor);
 			modelMap.addAttribute("listPaging", listPaging);
-			modelMap.addAttribute("iconSort", Common.getIcon(inforSearchFormBean.getSortType()));
+			modelMap.addAttribute("iconSort", Common.getIcon(inforSearch.getSortType()));
 			modelMap.addAttribute("totalPages", totalPage);
 			modelMap.addAttribute("crPage", currentPage);
 		} catch (NumberFormatException e) {
@@ -121,24 +121,24 @@ public class ListInsurancesController {
 	/**
 	 * Thay đổi công ty với mehthod Post
 	 * @param modelMap ModelMap
-	 * @param inforSearchFormBean Thông tin tìm kiếm nhập từ màn hình
-	 * @param lstCompany Danh sách công ty lấy từ DB
+	 * @param inforSearch Thông tin tìm kiếm nhập từ màn hình
+	 * @param companies Danh sách công ty lấy từ DB
 	 * @param session HttpSession
 	 * @param action Action của người dùng
 	 * @param request HttpServletRequest
 	 * @return showListUser()
 	 */
 	@RequestMapping(value={"/ListUser/change.do"}, method={RequestMethod.POST})
-	public String changeCompany(ModelMap modelMap,InforSearchFormBean inforSearchFormBean, @ModelAttribute("lstCompany") List<CompanyDto> lstCompany, HttpSession session, @PathVariable Optional<String> action, HttpServletRequest request){
-		inforSearchFormBean = new InforSearchFormBean(inforSearchFormBean.getCompanyInternalID());
-		return showListUser(modelMap, inforSearchFormBean, lstCompany, session, action, request);
+	public String changeCompany(ModelMap modelMap,InforSearchFormBean inforSearch, @ModelAttribute("companies") List<CompanyDto> companies, HttpSession session, @PathVariable Optional<String> action, HttpServletRequest request){
+		inforSearch = new InforSearchFormBean(inforSearch.getCompanyInternalID());
+		return showListUser(modelMap, inforSearch, companies, session, action, request);
 	}
 	
 	/**
 	 * Phương thức lấy tất cả công ty có trong DB để đưa sang jsp
 	 * @return list<CompanyBean>
 	 */
-	@ModelAttribute("lstCompany")
+	@ModelAttribute("companies")
 	public List<CompanyDto> getListCompany() {
 		try {
 			return companyLogic.getAllCom();

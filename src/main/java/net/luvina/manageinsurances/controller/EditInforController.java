@@ -131,7 +131,6 @@ public class EditInforController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Constant.RE_SYSTEM_ERROR;
-		}
-		
+		}		
 	}
 }
