@@ -4,6 +4,12 @@ package net.luvina.manageinsurances.logic.impl.dto;
 public class AccountDto {
 	private String userName;
 	private String password;
+	
+	public AccountDto(){}
+	public AccountDto(String userName, String password) {
+		this.userName = userName;
+		this.password = password;
+	}
 	/**
 	 * @return the userName
 	 */

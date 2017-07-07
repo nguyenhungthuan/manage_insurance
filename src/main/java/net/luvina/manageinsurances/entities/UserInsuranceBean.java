@@ -49,6 +49,7 @@ public class UserInsuranceBean {
 	 * Phương thức khởi tạo có tham số
 	 * @param userInternalID user id 
 	 * @param companyInternalID id nội bộ công ty
+	 * @param companyName tên công ty
 	 * @param fullName tên đầy đủ
 	 * @param sex giới tính
 	 * @param birthday ngày sinh

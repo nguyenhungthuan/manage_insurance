@@ -3,24 +3,24 @@
  */
 package net.luvina.manageinsurances.logic.impl;
 
-
-import java.util.ArrayList;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-import java.util.stream.Stream;
 
-import org.hibernate.ScrollableResults;
+import org.apache.commons.beanutils.PropertyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
 import net.luvina.manageinsurances.dao.CompanyDao;
 import net.luvina.manageinsurances.dao.UserDao;
-import net.luvina.manageinsurances.entities.CompanyBean;
-import net.luvina.manageinsurances.entities.InsuranceBean;
 import net.luvina.manageinsurances.entities.UserBean;
 import net.luvina.manageinsurances.entities.UserInsuranceBean;
+import net.luvina.manageinsurances.entities.CompanyBean;
+import net.luvina.manageinsurances.entities.InsuranceBean;
 import net.luvina.manageinsurances.logic.impl.dto.AccountDto;
+import net.luvina.manageinsurances.logic.UserLogic;
 import net.luvina.manageinsurances.logic.impl.dto.InforSearchDto;
 import net.luvina.manageinsurances.logic.impl.dto.UserInsuranceDto;
-import net.luvina.manageinsurances.logic.UserLogic;
 import net.luvina.manageinsurances.utils.Common;
 
 /**
@@ -33,15 +33,15 @@ import net.luvina.manageinsurances.utils.Common;
 public class UserLogicImpl implements UserLogic {
 	@Autowired
 	private UserDao userDao;
+	@Autowired
+	private CompanyDao companyDao;
+	
 	/*
 	 * (non-Javadoc)
 	 * @see net.luvina.manageinsurances.logic.UserLogic#checkExistedAcc(java.lang.String, java.lang.String)
 	 */
 	public boolean checkExistedAcc(String userName, String password){
-		if(userDao.findByUserNameAndPassword(userName, password).size() > 0) {
-			return true;
-		}
-		return false;
+		return userDao.findByUserNameAndPassword(userName, password).size() > 0 ? true : false;
 	}
 
 	/*
@@ -53,7 +53,12 @@ public class UserLogicImpl implements UserLogic {
 		String insuranceNumber = Common.processWildcard(inforSearchDto.getInsuranceNumber());
 		String placeOfRegister = Common.processWildcard(inforSearchDto.getPlaceOfRegister());
 		int comID = Integer.parseInt(inforSearchDto.getCompanyInternalID());
-		return Common.copyProListDtoToBean(userDao.getListInfor(comID, fullName, insuranceNumber, placeOfRegister, inforSearchDto.getSortType(), sortBy, limit, offset));
+		try {
+			return Common.copyProListDtoToBean(userDao.getListInfor(comID, fullName, insuranceNumber, placeOfRegister, inforSearchDto.getSortType(), sortBy, limit, offset));
+		} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	/*
@@ -66,5 +71,57 @@ public class UserLogicImpl implements UserLogic {
 		String placeOfRegister = Common.processWildcard(inforSearchDto.getPlaceOfRegister());
 		int comID = Integer.parseInt(inforSearchDto.getCompanyInternalID());
 		return userDao.getTotalRecords(comID, fullName, insuranceNumber, placeOfRegister);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see net.luvina.manageinsurances.logic.UserLogic#checkExistUser(int)
+	 */
+	public Boolean checkExistUser(int userInternalID) {
+		return userDao.findByUserInternalID(userInternalID) != null ? true : false;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see net.luvina.manageinsurances.logic.UserLogic#getDetailsInfor(int)
+	 */
+	public UserInsuranceDto getDetailsInfor(int userInternalID) {
+		UserInsuranceBean userInsuranceBean = userDao.getDetailsInfor(userInternalID);
+		try {
+			return Common.copyPropertyUIBeanToUIDto(userInsuranceBean);
+		} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see net.luvina.manageinsurances.logic.UserLogic#checkExistedInsuNum(java.lang.String, int)
+	 */
+	public Boolean checkExistedInsuNum(String insuranceNumber, int userInternalId) {
+		return userDao.checkExistedInsuNum(insuranceNumber, userInternalId);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see net.luvina.manageinsurances.logic.UserLogic#insertOrUpdateUser(net.luvina.manageinsurances.entities.UserInsuranceFormBean, net.luvina.manageinsurances.entities.AccountFormBean)
+	 */
+	public Boolean insertOrUpdateUser(UserInsuranceDto userInsuranceDto, AccountDto accountDto) {
+		CompanyBean company = new CompanyBean(userInsuranceDto.getCompanyInternalID());
+		if (companyDao.findByCompanyInternalId(userInsuranceDto.getCompanyInternalID()) == null) {
+			company = new CompanyBean(userInsuranceDto.getCompanyInternalID(), userInsuranceDto.getCompanyName(),
+					userInsuranceDto.getCompanyAddress(), userInsuranceDto.getEmail(), userInsuranceDto.getTelephone());
+		}
+		InsuranceBean insurance = new InsuranceBean(
+				userDao.getInsuranceInternalID(userInsuranceDto.getUserInternalID()),
+				userInsuranceDto.getInsuranceNumber(), Common.convertDateHQL(userInsuranceDto.getInsuranceStartDate()),
+				Common.convertDateHQL(userInsuranceDto.getInsuranceEndDate()), userInsuranceDto.getPlaceOfRegister());
+		UserBean user = new UserBean(userInsuranceDto.getUserInternalID(),
+				Common.convertStringName(userInsuranceDto.getFullName()), String.valueOf(userInsuranceDto.getSex()),
+				Common.convertDateHQL(userInsuranceDto.getBirthday()), company, insurance);
+		user.setUserName(accountDto.getUserName());
+		user.setPassword(accountDto.getPassword());
+		return userDao.insertOrUpdateUser(user, insurance, company);
 	}
 }

@@ -3,14 +3,15 @@
  */
 package net.luvina.manageinsurances.logic.impl.dto;
 
-import java.util.Objects;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author DELL
  *
  */
+@EqualsAndHashCode
 public class UserInsuranceDto {
-private int userInternalID;
+	private int userInternalID;
 	
 	private String insuranceNumber;
 	
@@ -40,6 +41,21 @@ private int userInternalID;
 	public UserInsuranceDto(int userInternalID, String fullName) {
 		this.userInternalID = userInternalID;
 		this.fullName = fullName;
+	}
+	
+	
+	public UserInsuranceDto(int userInternalID,int companyInternalID,String companyName, String fullName, String sex, String birthday, String insuranceNumber,
+			String insuranceStartDate, String insuranceEndDate, String placeOfRegister) {
+		this.userInternalID = userInternalID;
+		this.insuranceNumber = insuranceNumber;
+		this.companyName = companyName;
+		this.fullName = fullName;
+		this.sex = sex;
+		this.birthday = birthday;
+		this.placeOfRegister = placeOfRegister;
+		this.insuranceStartDate = insuranceStartDate;
+		this.insuranceEndDate = insuranceEndDate;
+		this.companyInternalID = companyInternalID;
 	}
 	/**
 	 * @return the userInternalID
@@ -197,20 +213,4 @@ private int userInternalID;
 	public void setCompanyInternalID(int companyInternalID) {
 		this.companyInternalID = companyInternalID;
 	}
-	
-
-
-@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserInsuranceDto userInsuranceDto = (UserInsuranceDto) o;
-        return userInternalID == userInsuranceDto.userInternalID && 
-        		Objects.equals(fullName, userInsuranceDto.fullName);
-	}
-	
-	@Override
-    public int hashCode() {
-        return Objects.hash(userInternalID, fullName);
-    }
 }

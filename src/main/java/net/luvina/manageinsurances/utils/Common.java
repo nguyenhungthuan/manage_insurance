@@ -23,6 +23,8 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.beanutils.PropertyUtils;
 
 import net.luvina.manageinsurances.entities.CompanyBean;
+import net.luvina.manageinsurances.entities.InsuranceBean;
+import net.luvina.manageinsurances.entities.UserBean;
 import net.luvina.manageinsurances.entities.UserInsuranceBean;
 import net.luvina.manageinsurances.logic.impl.dto.AccountDto;
 import net.luvina.manageinsurances.logic.impl.dto.CompanyDto;
@@ -399,14 +401,13 @@ public class Common {
 	 * Copy thuộc tính
 	 * @param userInsuranceBean UserInsuranceBean
 	 * @return UserInsuranceDto
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalAccessException 
 	 */
-	public static UserInsuranceDto copyPropertyUIBeanToUIDto (UserInsuranceBean userInsuranceBean) {
+	public static UserInsuranceDto copyPropertyUIBeanToUIDto (UserInsuranceBean userInsuranceBean) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
 		UserInsuranceDto userInsuranceDto = new UserInsuranceDto();
-		try {
-			PropertyUtils.copyProperties(userInsuranceDto, userInsuranceBean);
-		} catch(Exception ex) {
-			ex.printStackTrace();
-		}
+		PropertyUtils.copyProperties(userInsuranceDto, userInsuranceBean);
 		return userInsuranceDto;
 	}
 	
@@ -414,8 +415,11 @@ public class Common {
 	 * Copy thuộc tính
 	 * @param list List<UserInsuranceBean>
 	 * @return List<UserInsuranceDto>
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalAccessException 
 	 */
-	public static List<UserInsuranceDto> copyProListDtoToBean(List<UserInsuranceBean> list) {
+	public static List<UserInsuranceDto> copyProListDtoToBean(List<UserInsuranceBean> list) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
 		List<UserInsuranceDto> lstuserInsuranceDto = new ArrayList<>();
 		for(UserInsuranceBean bean : list) {
 			lstuserInsuranceDto.add(copyPropertyUIBeanToUIDto(bean));
