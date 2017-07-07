@@ -5,6 +5,7 @@
 package net.luvina.manageinsurances.dao;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import net.luvina.manageinsurances.entities.CompanyBean;
 import net.luvina.manageinsurances.entities.InsuranceBean;
@@ -14,5 +15,6 @@ import net.luvina.manageinsurances.entities.InsuranceBean;
  *
  */
 public interface InsuranceDao extends JpaRepository<InsuranceBean, Integer> {
-	
+	@Transactional
+	public void deleteByInsuranceInternalId(int insuranceInternalId);
 }

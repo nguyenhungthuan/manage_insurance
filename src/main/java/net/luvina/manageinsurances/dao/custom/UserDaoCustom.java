@@ -5,6 +5,8 @@ package net.luvina.manageinsurances.dao.custom;
 
 import java.util.List;
 
+import org.hibernate.ScrollableResults;
+
 import net.luvina.manageinsurances.entities.UserInsuranceBean;
 import net.luvina.manageinsurances.entities.CompanyBean;
 import net.luvina.manageinsurances.entities.InsuranceBean;
@@ -65,9 +67,21 @@ public interface UserDaoCustom {
 	public Boolean insertOrUpdateUser(UserBean user, InsuranceBean insurance, CompanyBean company);
 	
 	/**
-	 * Phương thức lấy thông tin chi tiết hiển thị MH03
-	 * @param userID userInternalID
-	 * @return UserInsuranceBean
+	 * Phương thức xóa một user
+	 * @param userID user id
+	 * @return true nếu xóa thành công và ngược lại
 	 */
-	public UserInsuranceBean getDetailsInfor(int userID);
+	public Boolean deleteUser(int userID);
+	
+	/**
+	 * Phương thức lấy dữ liệu theo điều kiện tìm kiếm để export csv
+	 * @param companyID
+	 * @param fullName
+	 * @param insuranceNumber
+	 * @param registerPlace
+	 * @param sortType
+	 * @param sortBy
+	 * @return
+	 */
+	public ScrollableResults getListDataToExport(int companyID, String fullName, String insuranceNumber, String registerPlace, String sortType, String sortBy);
 }

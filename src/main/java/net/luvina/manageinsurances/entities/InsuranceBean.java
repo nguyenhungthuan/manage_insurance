@@ -121,8 +121,7 @@ public class InsuranceBean {
 	/**
 	 * @return the user
 	 */
-	@OneToOne
-	@PrimaryKeyJoinColumn
+	@OneToOne(mappedBy="insurance",cascade = CascadeType.ALL, orphanRemoval=true)
 	public UserBean getUser() {
 		return user;
 	}

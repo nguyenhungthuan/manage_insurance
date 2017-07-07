@@ -59,4 +59,35 @@ public class ViewDetailsController {
 		}
 		return Constant.MH03;
 	}
+	
+	/**
+	 * Phương thức được gọi khi xóa user
+	 * @param modelMap ModelMap
+	 * @param request HttpServletRequest
+	 * @param session HttpSession
+	 * @return MH02
+	 */
+	@RequestMapping(value="/DeleteUser.do", method=RequestMethod.POST)
+	public String deleteUser(ModelMap modelMap, HttpServletRequest request, HttpSession session) {
+		try{
+			String ssKey = request.getParameter("ssKey");
+			// thực hiện xóa user
+			boolean rs = userLogic.deleteUser(Integer.parseInt(request.getParameter("userInternalID")));
+			// nếu xóa thành công
+			if(rs) {
+				// lấy đối tượng lưu trên session xuống
+				InforSearchFormBean inforSearchFormBean = (InforSearchFormBean) session.getAttribute(ssKey);
+				// reset các giá trị theo yêu cầu, chỉ giữ lại companyID
+				inforSearchFormBean = new InforSearchFormBean(inforSearchFormBean.getCompanyInternalID());
+				// đưa lại lên session
+				session.setAttribute(ssKey, inforSearchFormBean);
+				// chuyển qua MH02
+				return "redirect:/ListUser/back.do?ssKey="+ssKey;
+			} else {
+				return Constant.RE_SYSTEM_ERROR;
+			}
+		}catch(NumberFormatException ex) {
+			return Constant.RE_NOTFOUND;
+		}		
+	}
 }

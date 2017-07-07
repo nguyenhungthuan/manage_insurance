@@ -15,7 +15,6 @@ import javax.persistence.*;
 @Table(name = "tbl_user", uniqueConstraints = { @UniqueConstraint(columnNames = { "username" }) })
 public class UserBean {
 	private int userInternalID;
-	private int insuranceInternalId;
 	private String userName;
 	private String password;
 	private String fullName;
@@ -39,7 +38,6 @@ public class UserBean {
 	public UserBean(int userInternalID, int insuranceInternalID, String userName, String password,
 			String fullName, String sex, String birthday) {
 		this.userInternalID = userInternalID;
-		this.insuranceInternalId = insuranceInternalID;
 		this.userName = userName;
 		this.password = password;
 		this.fullName = fullName;
@@ -89,19 +87,6 @@ public class UserBean {
 	 */
 	public void setUserInternalID(int userInternalID) {
 		this.userInternalID = userInternalID;
-	}
-	/**
-	 * @return the insuranceInternalID
-	 */
-	@Column(name = "insurance_internal_id", length = 10, nullable = false)
-	public int getInsuranceInternalId() {
-		return insuranceInternalId;
-	}
-	/**
-	 * @param insuranceInternalID the insuranceInternalID to set
-	 */
-	public void setInsuranceInternalId(int insuranceInternalID) {
-		this.insuranceInternalId = insuranceInternalID;
 	}
 	/**
 	 * @return the userName
@@ -188,7 +173,8 @@ public class UserBean {
 	/**
 	 * @return the insurance
 	 */
-	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToOne(cascade=CascadeType.ALL)
+	@JoinColumn(name="insurance_internal_id")
 	public InsuranceBean getInsurance() {
 		return insurance;
 	}

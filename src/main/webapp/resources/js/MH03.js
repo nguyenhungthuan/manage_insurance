@@ -1,5 +1,5 @@
 var getUrl = window.location;
-var baseUrl = getUrl .protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+var baseUrl = getUrl .protocol + "//" + getUrl.host;
 $(function(){	
 	window.localStorage.clear();
 	$('#delete').click(function() {

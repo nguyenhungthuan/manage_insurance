@@ -76,4 +76,26 @@ public interface UserLogic {
 	 * @return true nếu thêm thành công và ngược lại
 	 */
 	public Boolean insertOrUpdateUser(UserInsuranceDto userInsuranceDto, AccountDto accountDto);
+	
+	/**
+	 * Method delete user
+	 * @param userID userInternalID
+	 * @return true if complete
+	 */
+	public Boolean deleteUser(int userID);
+	
+	/**
+	 * Phương thức generic lấy ra thông tin user theo id
+	 * @param userId id
+	 * @return object
+	 */
+	public UserInsuranceDto getUserById(int userId);
+	
+	/**
+	 * Phương thức lấy dữ liệu theo điều kiện tìm kiếm để export csv
+	 * @param inforSearchDto InforSearchDto
+	 * @param sortBy sortBy
+	 * @return ScrollableResults
+	 */
+	public ScrollableResults getListDataToExport(InforSearchDto inforSearchDto, String sortBy);
 }

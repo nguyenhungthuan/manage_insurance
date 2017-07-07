@@ -10,6 +10,7 @@ import org.hibernate.ScrollableResults;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import net.luvina.manageinsurances.entities.CompanyBean;
 import net.luvina.manageinsurances.entities.InsuranceBean;
@@ -41,5 +42,6 @@ public interface UserDao extends JpaRepository<UserBean, Integer>, UserDaoCustom
 	 */
 	public UserBean findByUserInternalID(int userInternalID);
 	
-	public UserBean findByInsuranceInternalId(int insuranceInternalId);
+	@Transactional
+	public int deleteByUserInternalID(int userInternalID);
 }

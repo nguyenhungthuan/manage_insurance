@@ -9,6 +9,10 @@ import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+
+import org.hibernate.ScrollMode;
+import org.hibernate.ScrollableResults;
+import org.hibernate.StatelessSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import net.luvina.manageinsurances.dao.CompanyDao;
@@ -30,6 +34,8 @@ public class UserDaoImpl implements UserDaoCustom {
 	private UserDao userDao;
 	@Autowired
 	private InsuranceDao insuranceDao;
+	@Autowired
+    private StatelessSession statelessSession;
 	/*
 	 * (non-Javadoc)
 	 * @see net.luvina.manageinsurances.dao.UserDao#getListInfor(int, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
@@ -46,7 +52,7 @@ public class UserDaoImpl implements UserDaoCustom {
 			sqlCommand.append(UserBean.class.getName() + " u ,");
 			sqlCommand.append(InsuranceBean.class.getName() + " i ");
 			sqlCommand.append(
-					"WHERE u.insuranceInternalId = i.insuranceInternalId AND u.company.companyInternalId = ? ");
+					"WHERE u.insurance.insuranceInternalId = i.insuranceInternalId AND u.company.companyInternalId = ? ");
 			Map<String, Object> mapAttri = new HashMap<String, Object>();
 			Set set = mapAttri.entrySet();
 			Iterator iterator;
@@ -106,7 +112,7 @@ public class UserDaoImpl implements UserDaoCustom {
 		sqlCommand.append(UserBean.class.getName() + " u ,");
 		sqlCommand.append(InsuranceBean.class.getName() + " i ");
 		sqlCommand.append(
-				"WHERE u.insuranceInternalId = i.insuranceInternalId AND u.company.companyInternalId = ? ");
+				"WHERE u.insurance.insuranceInternalId = i.insuranceInternalId AND u.company.companyInternalId = ? ");
 		Map<String, Object> mapAttri = new HashMap<String, Object>();
 		Set set =  mapAttri.entrySet();
 		Iterator iterator;
@@ -166,7 +172,7 @@ public class UserDaoImpl implements UserDaoCustom {
 			hqlCommand.append(UserBean.class.getName() + " u, ");
 			hqlCommand.append(InsuranceBean.class.getName() + " i ");
 			hqlCommand.append(
-					"WHERE u.insuranceInternalId = i.insuranceInternalId AND u.userInternalID !=:userInternalId AND i.insuranceNumber =:insuranceNumber ");
+					"WHERE u.insuranceInternalId = i.insuranceInternalId AND u.userInternalID <> :userInternalId AND i.insuranceNumber = :insuranceNumber ");
 			Query query = entityManager.createQuery(hqlCommand.toString());
 			query.setParameter("userInternalId", userInternalId);
 			query.setParameter("insuranceNumber", insuranceNumber);
@@ -212,26 +218,26 @@ public class UserDaoImpl implements UserDaoCustom {
 			companyDao.save(company);
 		}
 		insuranceDao.save(insurance);
-		user.setInsuranceInternalId(insurance.getInsuranceInternalId());
+		user.setInsurance(insurance);
 		userDao.save(user);
 		return true;
 	}
-	
+
+	/*
+	 * (non-Javadoc)
+	 * @see net.luvina.manageinsurances.dao.custom.UserDaoCustom#deleteUser(int)
+	 */
 	@Transactional
-	public UserInsuranceBean getDetailsInfor(int userID) {
-		StringBuilder sql = new StringBuilder();
-		UserInsuranceBean userInsuranceBean = new UserInsuranceBean();
-		sql.append("SELECT new " + UserInsuranceBean.class.getName()
-				+ "(u.userInternalID, c.companyInternalId, c.companyName, u.fullName, u.sex, u.birthday, i.insuranceNumber, i.insuranceStartDate, i.insuranceEndDate, i.placeOfRegister) ");
-		sql.append(" FROM ");
-		sql.append(UserBean.class.getName() + " u ,");
-		sql.append(CompanyBean.class.getName() + " c ,");
-		sql.append(InsuranceBean.class.getName() + " i ");
-		sql.append(
-				"WHERE u.company.companyInternalId = c.companyInternalId AND u.insuranceInternalId = i.insuranceInternalId AND u.userInternalID = ?");
-		Query query = entityManager.createQuery(sql.toString(), UserInsuranceBean.class);
-		query.setParameter(0, userID);
-		userInsuranceBean = (UserInsuranceBean) query.getSingleResult();
-		return userInsuranceBean;
+	public Boolean deleteUser(int userID) {
+		int insuranceInternalID = userDao.findByUserInternalID(userID).getInsurance().getInsuranceInternalId();
+		insuranceDao.delete(insuranceInternalID);
+		return true;
+	}
+
+	@Override
+	public ScrollableResults getListDataToExport(int companyID, String fullName, String insuranceNumber,
+			String registerPlace, String sortType, String sortBy) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

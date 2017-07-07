@@ -75,14 +75,14 @@ public class UserLogicImplTest {
 		// Test method getTotalRecords
 		when(userDao.getTotalRecords(anyInt(), anyString(), anyString(), anyString())).thenReturn(1);
 		
-		// Test method getDetailsInfor
-		when(userDao.getDetailsInfor(anyInt())).thenAnswer(new Answer<UserInsuranceBean>() {
-
-			@Override
-			public UserInsuranceBean answer(InvocationOnMock invocation) throws Throwable {
-				return new UserInsuranceBean(1, 1, "Luvina", "Thuan", "1", "1995-03-20", "0123456789", "1995-03-12", "1995-03-15", "HN");
-			}
-		});
+//		// Test method getDetailsInfor
+//		when(userDao.getDetailsInfor(anyInt())).thenAnswer(new Answer<UserInsuranceBean>() {
+//
+//			@Override
+//			public UserInsuranceBean answer(InvocationOnMock invocation) throws Throwable {
+//				return new UserInsuranceBean(1, 1, "Luvina", "Thuan", "1", "1995-03-20", "0123456789", "1995-03-12", "1995-03-15", "HN");
+//			}
+//		});
 	}
 	
 	/**
@@ -137,65 +137,65 @@ public class UserLogicImplTest {
 		assertTrue(rsCheck == true);
 	}
 	
-	/**
-	 * [IN]
-	 * userInternalID = 1
-	 * [OUT]
-	 * UserInsranceDto: internalID = 1, companyID = 1, companyName = "Luvina", fullName = "Thuan", sex = "1", birthday = "20/03/1995", insuranceNumber = "0123456789"
-	 * 					insuranceStartDate = "02/03/1995", insuranceEndDate = "02/05/1995", placeOfRegister = "HN"
-	 */
-	@Test
-	public void getDetailsInforTest() {
-		//setup
-		int userInternalID = 1;		
-		UserInsuranceDto expect = new UserInsuranceDto(1, 1, "Luvina", "Thuan", "Nam", "20/03/1995", "0123456789", "12/03/1995", "15/03/1995", "HN");
-		
-		//exercise
-		UserInsuranceDto actual = sut.getDetailsInfor(userInternalID);
-		
-		//verify
-		verify(userDao, times(1)).getDetailsInfor(userInternalID);
-		assertThat(actual, is(expect));
-	}
-	
-	/**
-	 * [IN]
-	 * userInternalID = 1
-	 * [OUT]
-	 * null
-	 */
-	@Test(expected = IllegalAccessException.class)
-	public void getDetailsInforTestThrowIAE() {
-		// setup
-		when(userDao.getDetailsInfor(anyInt())).thenThrow(IllegalAccessException.class);
-		
-		//exercise
-		UserInsuranceDto actual = sut.getDetailsInfor(1);
-		
-		//verify
-		verify(userDao, times(1)).getDetailsInfor(1);
-		assertNull(actual);
-	}
-	
-	/**
-	 * [IN]
-	 * userInternalID = 1
-	 * [OUT]
-	 * null
-	 */
-	@Test(expected = NoSuchMethodException.class)
-	public void getDetailsInforTestThrowNSME() {
-		// setup
-		when(userDao.getDetailsInfor(anyInt())).thenThrow(NoSuchMethodException.class);
-		
-		//exercise
-		UserInsuranceDto actual = sut.getDetailsInfor(1);
-		
-		//verify
-		verify(userDao, times(1)).getDetailsInfor(1);
-		assertNull(actual);
-	}
-	
+//	/**
+//	 * [IN]
+//	 * userInternalID = 1
+//	 * [OUT]
+//	 * UserInsranceDto: internalID = 1, companyID = 1, companyName = "Luvina", fullName = "Thuan", sex = "1", birthday = "20/03/1995", insuranceNumber = "0123456789"
+//	 * 					insuranceStartDate = "02/03/1995", insuranceEndDate = "02/05/1995", placeOfRegister = "HN"
+//	 */
+//	@Test
+//	public void getDetailsInforTest() {
+//		//setup
+//		int userInternalID = 1;		
+//		UserInsuranceDto expect = new UserInsuranceDto(1, 1, "Luvina", "Thuan", "Nam", "20/03/1995", "0123456789", "12/03/1995", "15/03/1995", "HN");
+//		
+//		//exercise
+//		UserInsuranceDto actual = sut.getDetailsInfor(userInternalID);
+//		
+//		//verify
+//		verify(userDao, times(1)).getDetailsInfor(userInternalID);
+//		assertThat(actual, is(expect));
+//	}
+//	
+//	/**
+//	 * [IN]
+//	 * userInternalID = 1
+//	 * [OUT]
+//	 * null
+//	 */
+//	@Test(expected = IllegalAccessException.class)
+//	public void getDetailsInforTestThrowIAE() {
+//		// setup
+//		when(userDao.getDetailsInfor(anyInt())).thenThrow(IllegalAccessException.class);
+//		
+//		//exercise
+//		UserInsuranceDto actual = sut.getDetailsInfor(1);
+//		
+//		//verify
+//		verify(userDao, times(1)).getDetailsInfor(1);
+//		assertNull(actual);
+//	}
+//	
+//	/**
+//	 * [IN]
+//	 * userInternalID = 1
+//	 * [OUT]
+//	 * null
+//	 */
+//	@Test(expected = NoSuchMethodException.class)
+//	public void getDetailsInforTestThrowNSME() {
+//		// setup
+//		when(userDao.getDetailsInfor(anyInt())).thenThrow(NoSuchMethodException.class);
+//		
+//		//exercise
+//		UserInsuranceDto actual = sut.getDetailsInfor(1);
+//		
+//		//verify
+//		verify(userDao, times(1)).getDetailsInfor(1);
+//		assertNull(actual);
+//	}
+//	
 	/**
 	 * [IN]
 	 * userInternalID = 1

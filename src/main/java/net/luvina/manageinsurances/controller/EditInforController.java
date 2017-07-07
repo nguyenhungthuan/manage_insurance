@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -100,6 +101,28 @@ public class EditInforController {
 		}
 		company = companyLogic.getCompanyByID(companyID);
 		return company;
+	}
+	
+	/**
+	 * Phương thức được gọi khi người dùng ấn cập nhật từ MH03
+	 * @param modelMap ModelMap
+	 * @param id userID
+	 * @param request HttpServletRequest
+	 * @return MH04
+	 */
+	@RequestMapping(value="/Update/{id}", method={RequestMethod.POST, RequestMethod.GET})
+	public String editInfor(ModelMap modelMap, @PathVariable("id") String id, HttpSession session, HttpServletRequest request) {
+		try {
+			// lấy id từ url
+			int userId = Integer.parseInt(id);
+			// kiểm tra tồn tại id
+			UserInsuranceFormBean userInsuranceFormBean = userLogic.checkExistUser(userId) == true ? Common.copyPropertyUIDtoToUIFB(userLogic.getUserById(userId)) : new UserInsuranceFormBean();
+			modelMap.addAttribute("ssKey", request.getParameter("ssKey"));
+			modelMap.addAttribute("userInsurance", userInsuranceFormBean);
+		} catch (NumberFormatException ex) {
+			return Constant.RE_NOTFOUND;
+		}
+		return Constant.MH04;
 	}
 	
 	/**

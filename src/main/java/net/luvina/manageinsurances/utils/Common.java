@@ -512,4 +512,19 @@ public class Common {
 		}
 		return inforSearchDto;
 	}
+	
+	public static UserInsuranceDto combineUBAndUIBToUID(UserBean userBean){
+		UserInsuranceDto userInsuranceDto = new UserInsuranceDto();
+		try {
+			PropertyUtils.copyProperties(userInsuranceDto, userBean);
+			PropertyUtils.copyProperties(userInsuranceDto, userBean.getInsurance());
+		} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+			e.printStackTrace();
+		}
+		userInsuranceDto.setBirthday(Common.formatDate(userInsuranceDto.getBirthday()));
+		userInsuranceDto.setInsuranceEndDate(Common.formatDate(userInsuranceDto.getInsuranceEndDate()));
+		userInsuranceDto.setInsuranceStartDate(Common.formatDate(userInsuranceDto.getInsuranceStartDate()));
+		userInsuranceDto.setCompanyInternalID(userBean.getCompany().getCompanyInternalId());
+		return userInsuranceDto;
+	}
 }

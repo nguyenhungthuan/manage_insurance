@@ -7,11 +7,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.hibernate.ScrollableResults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.luvina.manageinsurances.dao.CompanyDao;
+import net.luvina.manageinsurances.dao.InsuranceDao;
 import net.luvina.manageinsurances.dao.UserDao;
 import net.luvina.manageinsurances.entities.UserBean;
 import net.luvina.manageinsurances.entities.UserInsuranceBean;
@@ -35,6 +37,8 @@ public class UserLogicImpl implements UserLogic {
 	private UserDao userDao;
 	@Autowired
 	private CompanyDao companyDao;
+	@Autowired
+	private InsuranceDao insuranceDao;
 	
 	/*
 	 * (non-Javadoc)
@@ -86,13 +90,8 @@ public class UserLogicImpl implements UserLogic {
 	 * @see net.luvina.manageinsurances.logic.UserLogic#getDetailsInfor(int)
 	 */
 	public UserInsuranceDto getDetailsInfor(int userInternalID) {
-		UserInsuranceBean userInsuranceBean = userDao.getDetailsInfor(userInternalID);
-		try {
-			return Common.copyPropertyUIBeanToUIDto(userInsuranceBean);
-		} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-			e.printStackTrace();
-			return null;
-		}
+		UserBean userBean = userDao.findByUserInternalID(userInternalID);
+		return Common.combineUBAndUIBToUID(userBean);
 	}
 
 	/*
@@ -123,5 +122,32 @@ public class UserLogicImpl implements UserLogic {
 		user.setUserName(accountDto.getUserName());
 		user.setPassword(accountDto.getPassword());
 		return userDao.insertOrUpdateUser(user, insurance, company);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see net.luvina.manageinsurances.logic.UserLogic#deleteUser(int)
+	 */
+	public Boolean deleteUser(int userInternalID) {
+		return userDao.deleteUser(userInternalID);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see net.luvina.manageinsurances.logic.UserLogic#getUserById(int)
+	 */
+	public UserInsuranceDto getUserById(int userId) {
+		UserBean userBean = userDao.findByUserInternalID(userId);
+		return Common.combineUBAndUIBToUID(userBean);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see net.luvina.manageinsurances.logic.UserLogic#getListDataToExport(net.luvina.manageinsurances.logic.impl.dto.InforSearchDto, java.lang.String)
+	 */
+	public ScrollableResults getListDataToExport(InforSearchDto inforSearchDto, String sortBy) {
+		int comID = Integer.parseInt(inforSearchDto.getCompanyInternalID());
+		String sortType = Common.checkSortType(inforSearchDto.getSortType());
+		return userDao.getListDataToExport(comID, inforSearchDto.getFullName(), inforSearchDto.getInsuranceNumber(), inforSearchDto.getPlaceOfRegister(), sortType,sortBy);
 	}
 }
