@@ -44,15 +44,17 @@ public class ListInsurancesController {
 	@Autowired
 	private Environment env;
 	/**
-	 * Phương thức sử dụng cho MH02
-	 * @param modelMap model map
-	 * @param userInsurance UserInsuranceFormBean
-	 * @param request HttpServletRequest
+	 * Sử dụng cho MH02
+	 * @param modelMap ModelMap
+	 * @param inforSearchFormBean Thông tin tìm kiếm nhập từ màn hình
+	 * @param lstCompany Danh sách công ty lấy từ DB
 	 * @param session HttpSession
+	 * @param action Action của người dùng
+	 * @param request HttpServletRequest
 	 * @return MH02
 	 */
-	@RequestMapping(value={"ListUser.do","/ListUser/{action}.do"}, method={RequestMethod.GET, RequestMethod.POST})
-	public String manageInsu(ModelMap modelMap,InforSearchFormBean inforSearchFormBean, @ModelAttribute("lstCompany") List<CompanyDto> lstCompany, HttpSession session, @PathVariable Optional<String> action, HttpServletRequest request){
+	@RequestMapping(value={"ListUser.do","/ListUser/{action}.do"}, method={RequestMethod.GET})
+	public String showListUser(ModelMap modelMap,InforSearchFormBean inforSearchFormBean, @ModelAttribute("lstCompany") List<CompanyDto> lstCompany, HttpSession session, @PathVariable Optional<String> action, HttpServletRequest request){
 		try {
 			// nếu có lỗi trong quá trình lấy công ty, đưa đến màn hình lỗi
 			if(lstCompany.size() == 0) throw new Exception();
@@ -114,6 +116,22 @@ public class ListInsurancesController {
 			return Constant.RE_SYSTEM_ERROR;
 		}
 		return Constant.MH02;
+	}
+	
+	/**
+	 * Thay đổi công ty với mehthod Post
+	 * @param modelMap ModelMap
+	 * @param inforSearchFormBean Thông tin tìm kiếm nhập từ màn hình
+	 * @param lstCompany Danh sách công ty lấy từ DB
+	 * @param session HttpSession
+	 * @param action Action của người dùng
+	 * @param request HttpServletRequest
+	 * @return showListUser()
+	 */
+	@RequestMapping(value={"/ListUser/change.do"}, method={RequestMethod.POST})
+	public String changeCompany(ModelMap modelMap,InforSearchFormBean inforSearchFormBean, @ModelAttribute("lstCompany") List<CompanyDto> lstCompany, HttpSession session, @PathVariable Optional<String> action, HttpServletRequest request){
+		inforSearchFormBean = new InforSearchFormBean(inforSearchFormBean.getCompanyInternalID());
+		return showListUser(modelMap, inforSearchFormBean, lstCompany, session, action, request);
 	}
 	
 	/**

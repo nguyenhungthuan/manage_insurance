@@ -5,10 +5,13 @@ package net.luvina.manageinsurances.logic.impl.dto;
 
 import java.util.Objects;
 
+import lombok.EqualsAndHashCode;
+
 /**
  * @author DELL
  *
  */
+@EqualsAndHashCode
 public class CompanyDto {
 	private int companyInternalId;
 	private String companyName;
@@ -81,18 +84,4 @@ public class CompanyDto {
 	public void setTel(String tel) {
 		this.tel = tel;
 	}
-	
-	@Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CompanyDto companyDto = (CompanyDto) o;
-        return companyInternalId == companyDto.companyInternalId &&
-                Objects.equals(companyName, companyDto.companyName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(companyInternalId, companyName);
-    }
 }

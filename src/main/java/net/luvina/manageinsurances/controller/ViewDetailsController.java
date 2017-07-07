@@ -53,11 +53,8 @@ public class ViewDetailsController {
 			// đưa object user insurance và session key sang MH03
 			modelMap.addAttribute("userInsurance", userInsuranceFormBean);
 			modelMap.addAttribute("ssKey", ssKey);
-		}catch(NumberFormatException ex) {
+		}catch(NumberFormatException | NotFoundUserException ex) {
 			// nếu id nhập vào không hợp lệ thì chuyển qua màn hình lỗi
-			return Constant.RE_NOTFOUND;
-		}catch(NotFoundUserException ex) {
-			// nếu không tồn tại user trong DB hiển thị màn hình lỗi
 			return Constant.RE_NOTFOUND;
 		}
 		return Constant.MH03;
