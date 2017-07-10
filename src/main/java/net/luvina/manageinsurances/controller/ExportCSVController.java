@@ -7,6 +7,8 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.hibernate.ScrollableResults;
@@ -22,6 +24,7 @@ import org.supercsv.io.ICsvBeanWriter;
 import org.supercsv.prefs.CsvPreference;
 import net.luvina.manageinsurances.logic.impl.dto.CompanyDto;
 import net.luvina.manageinsurances.controller.formbean.InforSearchFormBean;
+import net.luvina.manageinsurances.entities.UserInsuranceBean;
 import net.luvina.manageinsurances.logic.CompanyLogic;
 import net.luvina.manageinsurances.logic.UserLogic;
 import net.luvina.manageinsurances.utils.Common;
@@ -77,8 +80,8 @@ public class ExportCSVController {
 			while(results.next()){
 				csvBeanWriter.write(results.get(0), headerUser);
 			}
-			results.close();
 			csvBeanWriter.close();
+			results.close();
 			return "";
 		} catch(Exception ex) {
 			ex.printStackTrace();

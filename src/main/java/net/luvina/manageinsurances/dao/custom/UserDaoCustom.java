@@ -65,14 +65,7 @@ public interface UserDaoCustom {
 	 * @throws Exception 
 	 */
 	public Boolean insertOrUpdateUser(UserBean user, InsuranceBean insurance, CompanyBean company);
-	
-	/**
-	 * Phương thức xóa một user
-	 * @param userID user id
-	 * @return true nếu xóa thành công và ngược lại
-	 */
-	public Boolean deleteUser(int userID);
-	
+
 	/**
 	 * Phương thức lấy dữ liệu theo điều kiện tìm kiếm để export csv
 	 * @param companyID

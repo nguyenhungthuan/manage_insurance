@@ -28,7 +28,7 @@ import net.luvina.manageinsurances.dao.custom.UserDaoCustom;
 public interface UserDao extends JpaRepository<UserBean, Integer>, UserDaoCustom {
 
 	/**
-	 * Phương thức tìm kiếm user theo username và password
+	 * Find by user name and password
 	 * @param userName user name
 	 * @param password pass
 	 * @return List<UserBean>
@@ -36,12 +36,10 @@ public interface UserDao extends JpaRepository<UserBean, Integer>, UserDaoCustom
 	public List<UserBean> findByUserNameAndPassword(String userName, String password);
 	
 	/**
-	 * Phương thức lấy ra user theo id
+	 * Find by user internal id
 	 * @param userInternalID userInternalID
 	 * @return UserBean
 	 */
 	public UserBean findByUserInternalID(int userInternalID);
 	
-	@Transactional
-	public int deleteByUserInternalID(int userInternalID);
 }

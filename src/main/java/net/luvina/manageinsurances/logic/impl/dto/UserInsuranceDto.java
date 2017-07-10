@@ -44,7 +44,7 @@ public class UserInsuranceDto {
 	}
 	
 	
-	public UserInsuranceDto(int userInternalID,int companyInternalID,String companyName, String fullName, String sex, String birthday, String insuranceNumber,
+	public UserInsuranceDto(int userInternalID,int companyInternalID, String fullName, String sex, String birthday, String insuranceNumber,
 			String insuranceStartDate, String insuranceEndDate, String placeOfRegister) {
 		this.userInternalID = userInternalID;
 		this.insuranceNumber = insuranceNumber;

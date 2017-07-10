@@ -4,19 +4,14 @@
 package net.luvina.manageinsurances.logic.impl;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-
-import org.apache.commons.beanutils.PropertyUtils;
-import org.hibernate.ScrollableResults;
+import java.util.List;import org.hibernate.ScrollableResults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
 import net.luvina.manageinsurances.dao.CompanyDao;
 import net.luvina.manageinsurances.dao.InsuranceDao;
 import net.luvina.manageinsurances.dao.UserDao;
 import net.luvina.manageinsurances.entities.UserBean;
-import net.luvina.manageinsurances.entities.UserInsuranceBean;
 import net.luvina.manageinsurances.entities.CompanyBean;
 import net.luvina.manageinsurances.entities.InsuranceBean;
 import net.luvina.manageinsurances.logic.impl.dto.AccountDto;
@@ -91,7 +86,10 @@ public class UserLogicImpl implements UserLogic {
 	 */
 	public UserInsuranceDto getDetailsInfor(int userInternalID) {
 		UserBean userBean = userDao.findByUserInternalID(userInternalID);
-		return Common.combineUBAndUIBToUID(userBean);
+		UserInsuranceDto userInsuranceDto = Common.combineUBAndUIBToUID(userBean);
+		userInsuranceDto.setCompanyName(userBean.getCompany().getCompanyName());
+		userInsuranceDto.setSex(Common.sexByString(Integer.parseInt(userBean.getSex())));
+		return userInsuranceDto;
 	}
 
 	/*
@@ -112,13 +110,10 @@ public class UserLogicImpl implements UserLogic {
 			company = new CompanyBean(userInsuranceDto.getCompanyInternalID(), userInsuranceDto.getCompanyName(),
 					userInsuranceDto.getCompanyAddress(), userInsuranceDto.getEmail(), userInsuranceDto.getTelephone());
 		}
-		InsuranceBean insurance = new InsuranceBean(
-				userDao.getInsuranceInternalID(userInsuranceDto.getUserInternalID()),
-				userInsuranceDto.getInsuranceNumber(), Common.convertDateHQL(userInsuranceDto.getInsuranceStartDate()),
-				Common.convertDateHQL(userInsuranceDto.getInsuranceEndDate()), userInsuranceDto.getPlaceOfRegister());
-		UserBean user = new UserBean(userInsuranceDto.getUserInternalID(),
-				Common.convertStringName(userInsuranceDto.getFullName()), String.valueOf(userInsuranceDto.getSex()),
-				Common.convertDateHQL(userInsuranceDto.getBirthday()), company, insurance);
+		InsuranceBean insurance = new InsuranceBean(userDao.getInsuranceInternalID(userInsuranceDto.getUserInternalID()),userInsuranceDto.getInsuranceNumber(), Common.convertDateHQL(userInsuranceDto.getInsuranceStartDate()),
+													Common.convertDateHQL(userInsuranceDto.getInsuranceEndDate()), userInsuranceDto.getPlaceOfRegister());
+		UserBean user = new UserBean(userInsuranceDto.getUserInternalID(),Common.convertStringName(userInsuranceDto.getFullName()), String.valueOf(userInsuranceDto.getSex()),
+									 Common.convertDateHQL(userInsuranceDto.getBirthday()), company, insurance);
 		user.setUserName(accountDto.getUserName());
 		user.setPassword(accountDto.getPassword());
 		return userDao.insertOrUpdateUser(user, insurance, company);
@@ -128,8 +123,15 @@ public class UserLogicImpl implements UserLogic {
 	 * (non-Javadoc)
 	 * @see net.luvina.manageinsurances.logic.UserLogic#deleteUser(int)
 	 */
+	@Transactional
 	public Boolean deleteUser(int userInternalID) {
-		return userDao.deleteUser(userInternalID);
+		UserBean userBean = userDao.findByUserInternalID(userInternalID);
+		if(userBean != null) {
+			InsuranceBean insuranceBean = userBean.getInsurance();
+			insuranceDao.delete(insuranceBean);
+			return true;
+		}
+		return false;
 	}
 
 	/*

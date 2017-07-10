@@ -22,7 +22,7 @@ import net.luvina.manageinsurances.logic.impl.dto.UserInsuranceDto;
 public interface UserLogic {
 	
 	/**
-	 * Phương thức kiểm tra tồn tại account 
+	 * Check exist account 
 	 * @param userName user name
 	 * @param password pass
 	 * @return true, false
@@ -30,7 +30,7 @@ public interface UserLogic {
 	public boolean checkExistedAcc(String userName, String password);
 	
 	/**
-	 * Phương thức lấy ra danh sách người dùng theo tiêu chí tìm kiếm
+	 * Get list user
 	 * @param inforSearchDto InforSearchDto
 	 * @param sortType sortType
 	 * @param limit limit
@@ -40,7 +40,7 @@ public interface UserLogic {
 	public List<UserInsuranceDto> getListInfor(InforSearchDto inforSearchDto, String sortType, int limit, int offset);
 	
 	/**
-	 * Phương thức lấy ra số kết quả phù hợp
+	 * Get total records
 	 * @param companyID companyID
 	 * @param inforSearchDto InforSearchDto
 	 * @return total users
@@ -48,21 +48,21 @@ public interface UserLogic {
 	public int getTotalRecords(InforSearchDto inforSearchDto);
 	
 	/**
-	 * Phương thức kiểm tra tồn tại user trong DB
+	 * Check exist user
 	 * @param userId user id
 	 * @return true nếu có tồn tại và ngược lại
 	 */
 	public Boolean checkExistUser(int userId);
 	
 	/**
-	 * Phương thức lấy thông tin chi tiết hiển thị MH03
+	 * Get details information
 	 * @param userID userInternalID
 	 * @return UserInsuranceBean
 	 */
 	public UserInsuranceDto getDetailsInfor(int userID);
 	
 	/**
-	 * Phương thức kiểm tra tồn tại mã số thẻ bảo hiểm
+	 * Check exist insurance number
 	 * @param insuranceNumber mã số thẻ bảo hiểm
 	 * @param userInternalId id user
 	 * @return true nếu đã tồn tại và ngược lại
@@ -70,7 +70,7 @@ public interface UserLogic {
 	public Boolean checkExistedInsuNum(String insuranceNumber, int userInternalId);
 	
 	/**
-	 * Phương thức insert, update 1 user
+	 * Insert, update 1 user
 	 * @param userInsuranceDto user
 	 * @param accountDto account chứa username và password đã đăng nhập
 	 * @return true nếu thêm thành công và ngược lại
@@ -85,14 +85,14 @@ public interface UserLogic {
 	public Boolean deleteUser(int userID);
 	
 	/**
-	 * Phương thức generic lấy ra thông tin user theo id
+	 * Get user by id
 	 * @param userId id
 	 * @return object
 	 */
 	public UserInsuranceDto getUserById(int userId);
 	
 	/**
-	 * Phương thức lấy dữ liệu theo điều kiện tìm kiếm để export csv
+	 * Get list data to export
 	 * @param inforSearchDto InforSearchDto
 	 * @param sortBy sortBy
 	 * @return ScrollableResults

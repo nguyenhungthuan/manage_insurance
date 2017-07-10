@@ -6,6 +6,8 @@ package net.luvina.manageinsurances.entities;
 
 import javax.persistence.*;
 
+import net.luvina.manageinsurances.utils.Common;
+
 /**
  * Class entity UserBean đại diện cho tbl_user trong DB
  * @author DELL
@@ -64,6 +66,29 @@ public class UserBean {
 		this.insurance = insurance;
 	}
 
+	/**
+	 * Phương thức khởi tạo có tham số
+	 * @param userInternalID user id 
+	 * @param companyInternalID id nội bộ công ty
+	 * @param companyName tên công ty
+	 * @param fullName tên đầy đủ
+	 * @param sex giới tính
+	 * @param birthday ngày sinh
+	 * @param insuranceNumber mã số tbh
+	 * @param insuranceStartDate ngày bắt đầu
+	 * @param insuranceEndDate ngày hết hạn
+	 * @param placeOfRegister địa chỉ đăng ký KCB
+	 */
+	public UserBean(int userInternalID, CompanyBean company, String fullName, String sex,
+			String birthday, InsuranceBean insurance) {
+		this.userInternalID = userInternalID;
+		this.company = company;
+		this.fullName = fullName;
+		this.sex = Common.sexByString(Integer.parseInt(sex));
+		this.birthday = birthday;
+		this.insurance = insurance;
+	}
+	
 	/**
 	 * @param userName
 	 * @param password
@@ -173,7 +198,7 @@ public class UserBean {
 	/**
 	 * @return the insurance
 	 */
-	@OneToOne(cascade=CascadeType.ALL)
+	@OneToOne
 	@JoinColumn(name="insurance_internal_id")
 	public InsuranceBean getInsurance() {
 		return insurance;

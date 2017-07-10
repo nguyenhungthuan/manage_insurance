@@ -51,6 +51,7 @@ public class CompanyLogicImpl implements CompanyLogic{
 	 * @see net.luvina.manageinsurances.logic.CompanyLogic#checkExistedEmail(java.lang.String)
 	 */
 	public Boolean checkExistedEmail(String email) {
+		System.out.println("aaaaaaaaaaa"+companyDao.findByEmail(email));
 		return companyDao.findByEmail(email) != null ? true : false;
 	}
 

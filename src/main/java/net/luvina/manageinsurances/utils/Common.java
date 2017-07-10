@@ -41,18 +41,18 @@ import net.luvina.manageinsurances.controller.formbean.UserInsuranceFormBean;
 public class Common {
 	
 	/**
-	 * Phương thức kiểm tra đăng nhập
-	 * @param session
-	 * @return trả về màn hình login nếu chưa đăng nhập
+	 * Check log in
+	 * @param session HttpSession
+	 * @return view
 	 */
 	public static String checkLogin(HttpSession session) {
         return (session.getAttribute("accountSess") == null) ? Constant.MH01 : "";
     }
 
 	/**
-	 * Phương thức mã hóa mật khẩu
-	 * @param mật khẩu
-	 * @return mật khẩu đã mã hóa
+	 * Encrypt password
+	 * @param password
+	 * @return encrypted
 	 */
 	public static String encryptMD5(String input) {
         try {
@@ -70,18 +70,18 @@ public class Common {
     }
 
 	/**
-	 * Phương thức chuyển đổi giới tính từ số sang chuỗi
-	 * @param sexCode giá trị lấy từ DB
-	 * @return Nam nếu sexCode là  1, Nữ nếu sexCode là  2
+	 * convert sex to string
+	 * @param sexCode sex code
+	 * @return "Nam" if sexCode = 1, "Nữ" if sexCode = 2
 	 */
 	public static String sexByString(int sexCode) {
 		return sexCode == 1 ? "Nam" : "Nữ";
 	}
 
 	/**
-	 * Phương thức xử lý các ký tự đặc biệt trong sql
-	 * @param inputString chuỗi vào
-	 * @return chuỗi đã thay đổi
+	 * Process wildcard
+	 * @param inputString input string
+	 * @return processed string
 	 */
 	public static String processWildcard(String inputString) {
 		String result = inputString.replace("\\", "\\\\");
@@ -91,9 +91,9 @@ public class Common {
 	}
 
 	/**
-	 * Phương thức xử lý các ký tự đặc biệt trong HTMl
-	 * @param content chuẩn truyền vào
-	 * @return chuỗi đã xử lý
+	 * Escape HTML
+	 * @param content input string
+	 * @return escaped string
 	 */
 	public static String escapeHTML(String content) {
 	if(content != null) {
@@ -123,11 +123,11 @@ public class Common {
     }
 
 	/**
-     * Tạo chuỗi paging
-     * @param totalUsers tổng số user
-     * @param limit số bản ghi trên 1 trang
-     * @param currentPage trang hiện tại
-     * @return
+     * Get list paging
+     * @param totalUsers total users
+     * @param limit records per page
+     * @param currentPage current page
+     * @return list paging
      */
     public static List<Integer> getListPaging (int totalRecords, int limit, int currentPage) {
     	List<Integer> lstPaging = new ArrayList<Integer>();
@@ -151,10 +151,10 @@ public class Common {
     }
     
     /**
-     * Thay đổi giá trị currentPage nếu input không hợp lệ
-     * @param currentPage trang hiện tại
-     * @param totalPages tổng số trang
-     * @return trang hợp lệ
+     * Exchange current page
+     * @param currentPage current page
+     * @param totalPages total pages
+     * @return output page
      */
     public static int exchangeCurrentPage(int currentPage, int totalPages) {
     	if(currentPage > totalPages) {
@@ -166,8 +166,8 @@ public class Common {
     }
 
     /**
-     * Lấy số lượng bản ghi trên 1 trang lưu trong file properties
-     * @return số bản ghi trên 1 trang
+     * Get record per page
+     * @return record per page
      */
     public static int getLimit() {
     	int recordPerPage = 1;
@@ -180,29 +180,29 @@ public class Common {
     }
 
     /**
-     * Tổng số trang
-     * @param totalUsers tổng số User
-     * @param limit số bản ghi trên 1 trang
-     * @return tổng số trang
+     * Get total page
+     * @param totalUsers total User
+     * @param limit record per page
+     * @return total page
      */
     public static int getTotalPage(int totalUsers, int limit) {
     	return (int) Math.ceil((double) totalUsers / limit);
     }
 
     /**
-     * Lấy vị trí bắt đầu lấy dữ liệu trong DB
-     * @param currentPage Trang hiện tại
-     * @param limit số bản ghi trên 1 trang
-     * @return vị trí bắt đầu
+     * Get offset
+     * @param currentPage current page
+     * @param limit record per page
+     * @return offset
      */
     public static int getOffset(int currentPage,int limit) {
     	return limit * (currentPage - 1);
     }
     
     /**
-     * Phương thức chuyển định dạng ngày tháng
-     * @param date chuỗi ngày tháng vào
-     * @return chuỗi theo format
+     * Convert format date
+     * @param date input date
+     * @return converted string
      */
     public static String formatDate(String date) {
     	if(date != null) {
@@ -213,8 +213,8 @@ public class Common {
     }
     
     /**
-     * Lấy ra icon theo thứ tự sắp xếp
-     * @param orderBy trạng thái sắp xếp hiện tại
+     * Get icon order by
+     * @param orderBy current order by
      * @return icon
      */
     public static String getIcon(String orderBy) {
@@ -222,10 +222,10 @@ public class Common {
     }
     
     /**
-     * So sánh 2 chuỗi ngày tháng
-     * @param date1 ngày tháng 1 
-     * @param date2 ngày tháng 2
-     * @return true nếu ngày thứ 1 sớm hơn ngày thứ 2 và ngược lại
+     * Compare string date
+     * @param date1 date 1 
+     * @param date2 date 2
+     * @return true if date 1 early 2
      */
     public static Boolean compareDate(String date1, String date2) {
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/DD");
@@ -244,9 +244,9 @@ public class Common {
     }
     
     /**
-     * Convert lại ngày tháng để đưa vào DB
-     * @param date ngày
-     * @return ngày đã convert
+     * Convert date to insert to DB
+     * @param date string date
+     * @return converted string
      */
     public static String convertDateHQL(String date) {
     	if(date.length() > 0) {
@@ -257,9 +257,9 @@ public class Common {
     }
     
     /**
-     * Phương thức kiểm tra tồn tại ngày
-     * @param date chuỗi ngày nhập vào
-     * @return return 1 nếu có tồn tại, 0 nếu không tồn tại và  return 2 nếu sai format
+     * Check exist date
+     * @param date string date
+     * @return return 1 if exist, 0 if not exist và  return 2 invalid format
      */
 	public static int checkExistDate(String date) {
 		if(date.length() != 0) { 
@@ -309,9 +309,9 @@ public class Common {
 	}
 	
 	/**
-	 * Phương thức chuyển hóa tên người dùng theo yêu cầu
-	 * @param name tên người dùng
-	 * @return chuỗi đã chuyển hóa 
+	 * Convert name
+	 * @param name user name
+	 * @return converted string
 	 */
 	public static String convertStringName(String name) {
 		String convertedName = VNCharacterUtils.removeAccent(name);
@@ -327,7 +327,7 @@ public class Common {
 	}
 	
 	/**
-	 * Phương thức lấy ra key bất kỳ để đưa lên session
+	 * Get random key
 	 * @return String key
 	 */
 	public static String getKey() {
@@ -342,25 +342,25 @@ public class Common {
 	}
 	
 	/**
-	 * Phương thức thay đổi trang thái sắp xếp
-	 * @param crSortType sortType hiện tại
-	 * @return sortType mới
+	 * Change sort type
+	 * @param crSortType current sortType
+	 * @return sortType
 	 */
 	public static String changeSortType(String crSortType) {
 		return crSortType.equals(Constant.ASC) ? Constant.DESC : Constant.ASC;
 	}
 	
 	/**
-	 * Phương thức kiểm tra thứ tự sắp xếp
-	 * @param sortType kiểu sắp xếp
-	 * @return kiểu sắp xếp
+	 * Check sort type
+	 * @param sortType sort type
+	 * @return sort type
 	 */
 	public static String checkSortType(String sortType) {
 		return sortType.equals(Constant.DESC) ? Constant.DESC : Constant.ASC;
 	}
 	
 	/**
-	 * Phương thức escape xss
+	 * Escape xss
 	 * @param userInsuranceFormBean UserInsuranceFormBean
 	 * @return UserInsuranceFormBean
 	 */
@@ -373,7 +373,7 @@ public class Common {
 	}
 	
 	/**
-	 * Escape xss cho 1 list UserInsuranceFormBean
+	 * Escape xss list UserInsuranceFormBean
 	 * @param listUser List<UserInsuranceFormBean>
 	 * @return List<UserInsuranceFormBean>
 	 */
@@ -386,7 +386,7 @@ public class Common {
 	}
 	
 	/**
-	 * Phương thức xử lý các ký tự đặc biệt cho 1 đối tượng
+	 * Process wildcard object
 	 * @param inforSearchDto InforSearchDto
 	 * @return inforSearchDto
 	 */
@@ -398,7 +398,7 @@ public class Common {
 	}
 	
 	/**
-	 * Copy thuộc tính
+	 * Copy properties
 	 * @param userInsuranceBean UserInsuranceBean
 	 * @return UserInsuranceDto
 	 * @throws NoSuchMethodException 
@@ -412,7 +412,7 @@ public class Common {
 	}
 	
 	/**
-	 * Copy thuộc tính
+	 * Copy properties
 	 * @param list List<UserInsuranceBean>
 	 * @return List<UserInsuranceDto>
 	 * @throws NoSuchMethodException 
@@ -428,7 +428,7 @@ public class Common {
 	}
 	
 	/**
-	 * Copy thuộc tính
+	 * Copy properties
 	 * @param userInsuranceFormBean UserInsuranceFormBean
 	 * @return UserInsuranceDto
 	 */
@@ -442,7 +442,7 @@ public class Common {
 		return userInsuranceDto;
 	}
 	/**
-	 * Copy thuộc tính
+	 * Copy properties
 	 * @param userInsuranceDto UserInsuranceDto
 	 * @return UserInsuranceFormBean
 	 */
@@ -457,7 +457,7 @@ public class Common {
 	}
 	
 	/**
-	 * Copy thuộc tính
+	 * Copy properties
 	 * @param accountFormBean AccountFormBean
 	 * @return AccountDto
 	 */
@@ -471,7 +471,7 @@ public class Common {
 		return accountDto;
 	}
 	/**
-	 * Copy thuộc tính 1 list
+	 * Copy properties 1 list
 	 * @param lstcompanyBean List<CompanyBean>
 	 * @return List<CompanyDto>
 	 */
@@ -484,7 +484,7 @@ public class Common {
 	}
 	
 	/**
-	 * Copy thuộc tính
+	 * Copy properties
 	 * @param companyBean CompanyBean
 	 * @return CompanyDto
 	 */
@@ -499,7 +499,7 @@ public class Common {
 	}
 	
 	/**
-	 * Copy thuộc tính
+	 * Copy properties
 	 * @param inforSearchFormBean InforSearchFormBean
 	 * @return InforSearchDto
 	 */

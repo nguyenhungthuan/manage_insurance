@@ -15,6 +15,5 @@ import net.luvina.manageinsurances.entities.InsuranceBean;
  *
  */
 public interface InsuranceDao extends JpaRepository<InsuranceBean, Integer> {
-	@Transactional
-	public void deleteByInsuranceInternalId(int insuranceInternalId);
+	
 }

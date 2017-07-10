@@ -3,6 +3,7 @@ package net.luvina.manageinsurances.logic.impl;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -26,8 +27,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
 import net.luvina.manageinsurances.dao.CompanyDao;
+import net.luvina.manageinsurances.dao.InsuranceDao;
 import net.luvina.manageinsurances.dao.UserDao;
 import net.luvina.manageinsurances.entities.CompanyBean;
+import net.luvina.manageinsurances.entities.InsuranceBean;
 import net.luvina.manageinsurances.entities.UserBean;
 import net.luvina.manageinsurances.entities.UserInsuranceBean;
 import net.luvina.manageinsurances.logic.impl.dto.AccountDto;
@@ -44,6 +47,8 @@ public class UserLogicImplTest {
 	private UserDao userDao;
 	@Mock
 	private CompanyDao companyDao;
+	@Mock
+	private InsuranceDao insuranceDao;
 	
 	@Before
 	public void setUp() {
@@ -74,15 +79,7 @@ public class UserLogicImplTest {
 		
 		// Test method getTotalRecords
 		when(userDao.getTotalRecords(anyInt(), anyString(), anyString(), anyString())).thenReturn(1);
-		
-//		// Test method getDetailsInfor
-//		when(userDao.getDetailsInfor(anyInt())).thenAnswer(new Answer<UserInsuranceBean>() {
-//
-//			@Override
-//			public UserInsuranceBean answer(InvocationOnMock invocation) throws Throwable {
-//				return new UserInsuranceBean(1, 1, "Luvina", "Thuan", "1", "1995-03-20", "0123456789", "1995-03-12", "1995-03-15", "HN");
-//			}
-//		});
+
 	}
 	
 	/**
@@ -137,65 +134,6 @@ public class UserLogicImplTest {
 		assertTrue(rsCheck == true);
 	}
 	
-//	/**
-//	 * [IN]
-//	 * userInternalID = 1
-//	 * [OUT]
-//	 * UserInsranceDto: internalID = 1, companyID = 1, companyName = "Luvina", fullName = "Thuan", sex = "1", birthday = "20/03/1995", insuranceNumber = "0123456789"
-//	 * 					insuranceStartDate = "02/03/1995", insuranceEndDate = "02/05/1995", placeOfRegister = "HN"
-//	 */
-//	@Test
-//	public void getDetailsInforTest() {
-//		//setup
-//		int userInternalID = 1;		
-//		UserInsuranceDto expect = new UserInsuranceDto(1, 1, "Luvina", "Thuan", "Nam", "20/03/1995", "0123456789", "12/03/1995", "15/03/1995", "HN");
-//		
-//		//exercise
-//		UserInsuranceDto actual = sut.getDetailsInfor(userInternalID);
-//		
-//		//verify
-//		verify(userDao, times(1)).getDetailsInfor(userInternalID);
-//		assertThat(actual, is(expect));
-//	}
-//	
-//	/**
-//	 * [IN]
-//	 * userInternalID = 1
-//	 * [OUT]
-//	 * null
-//	 */
-//	@Test(expected = IllegalAccessException.class)
-//	public void getDetailsInforTestThrowIAE() {
-//		// setup
-//		when(userDao.getDetailsInfor(anyInt())).thenThrow(IllegalAccessException.class);
-//		
-//		//exercise
-//		UserInsuranceDto actual = sut.getDetailsInfor(1);
-//		
-//		//verify
-//		verify(userDao, times(1)).getDetailsInfor(1);
-//		assertNull(actual);
-//	}
-//	
-//	/**
-//	 * [IN]
-//	 * userInternalID = 1
-//	 * [OUT]
-//	 * null
-//	 */
-//	@Test(expected = NoSuchMethodException.class)
-//	public void getDetailsInforTestThrowNSME() {
-//		// setup
-//		when(userDao.getDetailsInfor(anyInt())).thenThrow(NoSuchMethodException.class);
-//		
-//		//exercise
-//		UserInsuranceDto actual = sut.getDetailsInfor(1);
-//		
-//		//verify
-//		verify(userDao, times(1)).getDetailsInfor(1);
-//		assertNull(actual);
-//	}
-//	
 	/**
 	 * [IN]
 	 * userInternalID = 1
@@ -277,5 +215,73 @@ public class UserLogicImplTest {
 		verify(userDao, times(1)).insertOrUpdateUser(anyObject(), anyObject(), anyObject());
 		verify(companyDao, times(1)).findByCompanyInternalId(anyInt());
 		assertTrue(rsInsert);
+	}
+	
+	/**
+	 * [IN]
+	 * userInternalID = 1
+	 * [OUT]
+	 * false
+	 */
+	@Test
+	public void deleteTestFailure() {
+		// setup
+		when(userDao.findByUserInternalID(anyInt())).thenReturn(null);
+		
+		// exercise
+		Boolean resultDel = sut.deleteUser(1);
+		
+		// verify
+		verify(userDao, times(1)).findByUserInternalID(anyInt());
+		verify(insuranceDao, times(0)).delete(new InsuranceBean());
+		assertFalse(resultDel);
+	}
+	
+	/**
+	 * [IN]
+	 * userInternalID = 1
+	 * [OUT]
+	 * true
+	 */
+	@Test
+	public void deleteTest() {
+		// setup
+		UserBean userBean = new UserBean();
+		when(userDao.findByUserInternalID(anyInt())).thenReturn(userBean);
+
+		// exercise
+		Boolean resultDel = sut.deleteUser(1);
+		
+		// verify
+		verify(userDao, times(1)).findByUserInternalID(anyInt());
+		verify(insuranceDao, times(1)).delete(userBean.getInsurance());
+		assertTrue(resultDel);
+	}
+	
+	/**
+	 * [IN]
+	 * userInternalID = 1
+	 * [OUT]
+	 * UserInternalDto: userInternalID = 1, companyInternalID = 1, fullName = "Thuan",  birthday = "20/03/1995", insuranceNumber = "0123456789",
+	 * 					insuranceStartDate = "12/03/1995", insuranceEndDate = "15/03/1995", placeOfRegister = "HN"
+	 */
+	@Test
+	public void getUserByIDTest() {
+		// setup 
+		when(userDao.findByUserInternalID(anyInt())).thenAnswer(new Answer<UserBean>() {
+			@Override
+			public UserBean answer(InvocationOnMock invocation) throws Throwable {
+				InsuranceBean insuranceBean = new InsuranceBean(1,"0123456789", "1995-03-12", "1995-03-15", "HN");
+				return new UserBean(1, new CompanyBean(1, "Luvina"), "Thuan", "1", "1995-03-20",insuranceBean);
+			}
+		});
+		UserInsuranceDto expect = new UserInsuranceDto(1, 1, "Thuan", "Nam", "20/03/1995", "0123456789", "12/03/1995", "15/03/1995", "HN");
+		
+		// exercise
+		UserInsuranceDto actual = sut.getUserById(1);
+		
+		// verify
+		verify(userDao, times(1)).findByUserInternalID(anyInt());
+		assertThat(actual, is(expect));
 	}
 }

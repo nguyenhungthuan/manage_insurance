@@ -12,6 +12,8 @@ import javax.persistence.Query;
 
 import org.hibernate.ScrollMode;
 import org.hibernate.ScrollableResults;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.StatelessSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,8 +36,6 @@ public class UserDaoImpl implements UserDaoCustom {
 	private UserDao userDao;
 	@Autowired
 	private InsuranceDao insuranceDao;
-	@Autowired
-    private StatelessSession statelessSession;
 	/*
 	 * (non-Javadoc)
 	 * @see net.luvina.manageinsurances.dao.UserDao#getListInfor(int, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
@@ -172,7 +172,7 @@ public class UserDaoImpl implements UserDaoCustom {
 			hqlCommand.append(UserBean.class.getName() + " u, ");
 			hqlCommand.append(InsuranceBean.class.getName() + " i ");
 			hqlCommand.append(
-					"WHERE u.insuranceInternalId = i.insuranceInternalId AND u.userInternalID <> :userInternalId AND i.insuranceNumber = :insuranceNumber ");
+					"WHERE u.insurance.insuranceInternalId = i.insuranceInternalId AND u.userInternalID <> :userInternalId AND i.insuranceNumber = :insuranceNumber ");
 			Query query = entityManager.createQuery(hqlCommand.toString());
 			query.setParameter("userInternalId", userInternalId);
 			query.setParameter("insuranceNumber", insuranceNumber);
@@ -193,18 +193,10 @@ public class UserDaoImpl implements UserDaoCustom {
 	 */
 	@Transactional
 	public int getInsuranceInternalID(int userID) {
-		StringBuilder hqlCommand = new StringBuilder();
-		int insuranceNumber = 0;
-		try {
-			hqlCommand.append("SELECT u.insuranceInternalId FROM "+UserBean.class.getName()+" u ");
-			hqlCommand.append("WHERE u.userInternalID =:userID ");
-			Query query = entityManager.createQuery(hqlCommand.toString());
-			query.setParameter("userID", userID);
-			insuranceNumber = (Integer) query.getSingleResult();			
-		} catch(Exception ex) {
-			ex.printStackTrace();
+		if(userDao.findByUserInternalID(userID) == null) {
+			return 0;
 		}
-		return insuranceNumber;
+		return userDao.findByUserInternalID(userID).getInsurance().getInsuranceInternalId();
 	}
 	
 	/*
@@ -218,26 +210,71 @@ public class UserDaoImpl implements UserDaoCustom {
 			companyDao.save(company);
 		}
 		insuranceDao.save(insurance);
-		user.setInsurance(insurance);
 		userDao.save(user);
-		return true;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see net.luvina.manageinsurances.dao.custom.UserDaoCustom#deleteUser(int)
-	 */
-	@Transactional
-	public Boolean deleteUser(int userID) {
-		int insuranceInternalID = userDao.findByUserInternalID(userID).getInsurance().getInsuranceInternalId();
-		insuranceDao.delete(insuranceInternalID);
 		return true;
 	}
 
 	@Override
 	public ScrollableResults getListDataToExport(int companyID, String fullName, String insuranceNumber,
 			String registerPlace, String sortType, String sortBy) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			StatelessSession statelessSession = entityManager.unwrap(Session.class).getSessionFactory().openStatelessSession();
+			statelessSession.beginTransaction();
+				StringBuilder sqlCommand = new StringBuilder();
+				sqlCommand.append(
+						"SELECT new "+UserInsuranceBean.class.getName()+"(u.fullName, u.sex, u.birthday, i.insuranceNumber, i.insuranceStartDate, i.insuranceEndDate, i.placeOfRegister) ");
+				sqlCommand.append("FROM ");
+				sqlCommand.append(UserBean.class.getName() + " u ,");
+				sqlCommand.append(InsuranceBean.class.getName() + " i ");
+				sqlCommand.append(
+						"WHERE u.insurance.insuranceInternalId = i.insuranceInternalId AND u.company.companyInternalId =:company ");
+				Map<String, List<String>> mapAttri = new HashMap<String, List<String>>();
+				List<String> listAttr;
+				Set set = mapAttri.entrySet();
+				Iterator iterator;
+				if (fullName.length() > 0) {
+					listAttr = new ArrayList<>();
+					listAttr.add(fullName);
+					listAttr.add("fullName");
+					mapAttri.put("u.fullName", listAttr);
+				}
+				if (insuranceNumber.length() > 0) {
+					listAttr = new ArrayList<>();
+					listAttr.add(insuranceNumber);
+					listAttr.add("insuranceNumber");
+					mapAttri.put("i.insuranceNumber", listAttr);
+				}
+				if (registerPlace.length() > 0) {
+					listAttr = new ArrayList<>();
+					listAttr.add(registerPlace);
+					listAttr.add("registerPlace");
+					mapAttri.put("i.placeOfRegister", listAttr);
+				}
+				if (mapAttri.size() > 0) {
+					iterator = set.iterator();
+					while (iterator.hasNext()) {
+						Map.Entry mapEntry = (Map.Entry) iterator.next();
+						sqlCommand.append(" AND ");
+						listAttr = mapAttri.get(mapEntry.getKey());
+						sqlCommand.append(mapEntry.getKey() + " LIKE :"+listAttr.get(1));
+					}
+				}
+				sqlCommand.append(" ORDER BY "+sortBy +" "+ sortType);
+				org.hibernate.query.Query<UserInsuranceBean> query = statelessSession.createQuery(sqlCommand.toString(), UserInsuranceBean.class).setReadOnly(true).setFetchSize(Integer.MIN_VALUE);
+				query.setParameter("company", companyID);
+				if (mapAttri.size() > 0) {
+					iterator = set.iterator();
+					while (iterator.hasNext()) {
+						Map.Entry mapEntry = (Map.Entry) iterator.next();
+						listAttr = mapAttri.get(mapEntry.getKey());
+						query.setParameter(listAttr.get(1), "%"+listAttr.get(0)+"%");
+					}
+				}
+				ScrollableResults results = query.scroll(ScrollMode.FORWARD_ONLY);
+				return results;
+			}  catch (Exception ex) {
+				ex.printStackTrace();
+				return null;
+			}		
+		}
 	}
-}
