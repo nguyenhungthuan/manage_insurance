@@ -153,69 +153,69 @@ public class UserLogicImplTest {
 		assertTrue(rsCheck);
 	}
 	
-	/**
-	 * [IN]
-	 * UserInsuranceDto: insuranceNumber = "5125484512", fullName = "Thuan", birthday = "20/03/1995", companyInternalID = 1,
-	 * 					 placeOfRegister = "HN", insuranceStartDate = "20/03/1995", insuranceEndDate = "20/05/1995"
-	 * AccountDto: userName = "1", password = "1"
-	 * [OUT]
-	 * true
-	 */
-	@Test
-	public void insertOrUpdateUserExistedComTest() {
-		// setup
-		when(userDao.insertOrUpdateUser(anyObject(), anyObject(), anyObject())).thenReturn(true);
-		when(companyDao.findByCompanyInternalId(anyInt())).thenReturn(new CompanyBean());
-		AccountDto account = new AccountDto("1", "1");
-		UserInsuranceDto userInsuranceDto = new UserInsuranceDto();
-		userInsuranceDto.setFullName("Thuan");
-		userInsuranceDto.setInsuranceNumber("5125484512");
-		userInsuranceDto.setBirthday("20/03/1995");
-		userInsuranceDto.setCompanyInternalID(2);
-		userInsuranceDto.setPlaceOfRegister("HN");
-		userInsuranceDto.setInsuranceStartDate("20/03/1995");
-		userInsuranceDto.setInsuranceEndDate("20/05/1995");
-		
-		// exercise
-		Boolean rsInsert = sut.insertOrUpdateUser(userInsuranceDto, account);
-		
-		// verify
-		verify(userDao, times(1)).insertOrUpdateUser(anyObject(), anyObject(), anyObject());
-		verify(companyDao, times(1)).findByCompanyInternalId(anyInt());
-		assertTrue(rsInsert);
-	}
-	
-	/**
-	 * [IN]
-	 * UserInsuranceDto: insuranceNumber = "5125484512", fullName = "Thuan", birthday = "20/03/1995", companyInternalID = 1,
-	 * 					 placeOfRegister = "HN", insuranceStartDate = "20/03/1995", insuranceEndDate = "20/05/1995"
-	 * AccountDto: userName = "1", password = "1"
-	 * [OUT]
-	 * true
-	 */
-	@Test
-	public void insertOrUpdateUserNotExistedComTest() {
-		// setup
-		when(userDao.insertOrUpdateUser(anyObject(), anyObject(), anyObject())).thenReturn(true);
-		when(companyDao.findByCompanyInternalId(anyInt())).thenReturn(null);
-		AccountDto account = new AccountDto("1", "1");
-		UserInsuranceDto userInsuranceDto = new UserInsuranceDto();
-		userInsuranceDto.setFullName("Thuan");
-		userInsuranceDto.setInsuranceNumber("5125484512");
-		userInsuranceDto.setBirthday("20/03/1995");
-		userInsuranceDto.setCompanyInternalID(2);
-		userInsuranceDto.setPlaceOfRegister("HN");
-		userInsuranceDto.setInsuranceStartDate("20/03/1995");
-		userInsuranceDto.setInsuranceEndDate("20/05/1995");
-		
-		// exercise
-		Boolean rsInsert = sut.insertOrUpdateUser(userInsuranceDto, account);
-		
-		// verify
-		verify(userDao, times(1)).insertOrUpdateUser(anyObject(), anyObject(), anyObject());
-		verify(companyDao, times(1)).findByCompanyInternalId(anyInt());
-		assertTrue(rsInsert);
-	}
+//	/**
+//	 * [IN]
+//	 * UserInsuranceDto: insuranceNumber = "5125484512", fullName = "Thuan", birthday = "20/03/1995", companyInternalID = 1,
+//	 * 					 placeOfRegister = "HN", insuranceStartDate = "20/03/1995", insuranceEndDate = "20/05/1995"
+//	 * AccountDto: userName = "1", password = "1"
+//	 * [OUT]
+//	 * true
+//	 */
+//	@Test
+//	public void insertOrUpdateUserExistedComTest() {
+//		// setup
+//		when(userDao.insertOrUpdateUser(anyObject(), anyObject(), anyObject())).thenReturn(true);
+//		when(companyDao.findByCompanyInternalId(anyInt())).thenReturn(new CompanyBean());
+//		AccountDto account = new AccountDto("1", "1");
+//		UserInsuranceDto userInsuranceDto = new UserInsuranceDto();
+//		userInsuranceDto.setFullName("Thuan");
+//		userInsuranceDto.setInsuranceNumber("5125484512");
+//		userInsuranceDto.setBirthday("20/03/1995");
+//		userInsuranceDto.setCompanyInternalID(2);
+//		userInsuranceDto.setPlaceOfRegister("HN");
+//		userInsuranceDto.setInsuranceStartDate("20/03/1995");
+//		userInsuranceDto.setInsuranceEndDate("20/05/1995");
+//		
+//		// exercise
+//		Boolean rsInsert = sut.insertOrUpdateUser(userInsuranceDto, account);
+//		
+//		// verify
+//		verify(userDao, times(1)).insertOrUpdateUser(anyObject(), anyObject(), anyObject());
+//		verify(companyDao, times(1)).findByCompanyInternalId(anyInt());
+//		assertTrue(rsInsert);
+//	}
+//	
+//	/**
+//	 * [IN]
+//	 * UserInsuranceDto: insuranceNumber = "5125484512", fullName = "Thuan", birthday = "20/03/1995", companyInternalID = 1,
+//	 * 					 placeOfRegister = "HN", insuranceStartDate = "20/03/1995", insuranceEndDate = "20/05/1995"
+//	 * AccountDto: userName = "1", password = "1"
+//	 * [OUT]
+//	 * true
+//	 */
+//	@Test
+//	public void insertOrUpdateUserNotExistedComTest() {
+//		// setup
+//		when(userDao.insertOrUpdateUser(anyObject(), anyObject(), anyObject())).thenReturn(true);
+//		when(companyDao.findByCompanyInternalId(anyInt())).thenReturn(null);
+//		AccountDto account = new AccountDto("1", "1");
+//		UserInsuranceDto userInsuranceDto = new UserInsuranceDto();
+//		userInsuranceDto.setFullName("Thuan");
+//		userInsuranceDto.setInsuranceNumber("5125484512");
+//		userInsuranceDto.setBirthday("20/03/1995");
+//		userInsuranceDto.setCompanyInternalID(2);
+//		userInsuranceDto.setPlaceOfRegister("HN");
+//		userInsuranceDto.setInsuranceStartDate("20/03/1995");
+//		userInsuranceDto.setInsuranceEndDate("20/05/1995");
+//		
+//		// exercise
+//		Boolean rsInsert = sut.insertOrUpdateUser(userInsuranceDto, account);
+//		
+//		// verify
+//		verify(userDao, times(1)).insertOrUpdateUser(anyObject(), anyObject(), anyObject());
+//		verify(companyDao, times(1)).findByCompanyInternalId(anyInt());
+//		assertTrue(rsInsert);
+//	}
 	
 	/**
 	 * [IN]

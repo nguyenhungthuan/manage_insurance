@@ -94,11 +94,11 @@ public class EditInforController {
 		try{
 			// lấy companyID truyền từ ajax
 			companyID = Integer.parseInt(request.getParameter("companyID"));
-			// kiểm tra xem có tồn tại ID vừa lấy không, nếu không có thì set là 1
-			companyID = companyLogic.checkExistedCom(companyID) ? companyID : 1;
 		} catch(NumberFormatException ex) {
 			ex.printStackTrace();
 		}
+		// kiểm tra xem có tồn tại ID vừa lấy không, nếu không có thì set là 1
+		companyID = companyLogic.checkExistCompany(companyID) ? companyID : 1;		
 		company = companyLogic.getCompanyByID(companyID);
 		return company;
 	}
@@ -116,9 +116,9 @@ public class EditInforController {
 			// lấy id từ url
 			int userId = Integer.parseInt(id);
 			// kiểm tra tồn tại id
-			UserInsuranceFormBean userInsuranceFormBean = userLogic.checkExistUser(userId) == true ? Common.copyPropertyUIDtoToUIFB(userLogic.getUserById(userId)) : new UserInsuranceFormBean();
+			UserInsuranceFormBean userInsurance = userLogic.checkExistUser(userId) == true ? Common.copyPropertyUIDtoToUIFB(userLogic.getUserById(userId)) : new UserInsuranceFormBean();
 			modelMap.addAttribute("ssKey", request.getParameter("ssKey"));
-			modelMap.addAttribute("userInsurance", userInsuranceFormBean);
+			modelMap.addAttribute("userInsurance", userInsurance);
 		} catch (NumberFormatException ex) {
 			return Constant.RE_NOTFOUND;
 		}

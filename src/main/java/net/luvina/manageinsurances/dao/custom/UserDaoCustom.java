@@ -58,16 +58,6 @@ public interface UserDaoCustom {
 	public int getInsuranceInternalID(int userID);
 	
 	/**
-	 * Insert, update user
-	 * @param user user
-	 * @param insurance insurance
-	 * @param company company
-	 * @return
-	 * @throws Exception 
-	 */
-	public Boolean insertOrUpdateUser(UserBean user, InsuranceBean insurance, CompanyBean company);
-
-	/**
 	 * Get list data export
 	 * @param companyID
 	 * @param fullName

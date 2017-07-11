@@ -63,7 +63,7 @@ public class RegisterFormValidator {
 		}		
 		
 		// Validate thông tin công ty nhập
-		if(!companyLogic.checkExistedCom(userInsuranceFormBean.getCompanyInternalID())) {
+		if(!companyLogic.checkExistCompany(userInsuranceFormBean.getCompanyInternalID())) {
 			// Validate tên công ty
 			if(userInsuranceFormBean.getCompanyName().equals("")){
 				errors.rejectValue("companyName", "NotEmpty.userInsurance.companyName");
@@ -75,13 +75,13 @@ public class RegisterFormValidator {
 			// validate email
 			if(!Pattern.matches(ConfigProperties.getMessage("emailPattern"), userInsuranceFormBean.getEmail())) {
 				errors.rejectValue("email", "Email.userInsurance.email");
-			} else if(companyLogic.checkExistedEmail(userInsuranceFormBean.getEmail())) {
+			} else if(companyLogic.checkExistEmail(userInsuranceFormBean.getEmail())) {
 				errors.rejectValue("email", "Existed.userInsurance.email");
 			}
 			// validate số điện thoại
 			if(!Pattern.matches(ConfigProperties.getMessage("telPattern"), userInsuranceFormBean.getTelephone())) {
 				errors.rejectValue("telephone", "Pattern.userInsurance.telephone");
-			} else if(companyLogic.checkExistedTel(userInsuranceFormBean.getTelephone())) {
+			} else if(companyLogic.checkExistTel(userInsuranceFormBean.getTelephone())) {
 				errors.rejectValue("telephone", "Existed.userInsurance.telephone");
 			}
 		}

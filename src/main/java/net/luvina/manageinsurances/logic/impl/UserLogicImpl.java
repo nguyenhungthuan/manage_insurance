@@ -3,6 +3,8 @@
  */
 package net.luvina.manageinsurances.logic.impl;
 
+import static org.assertj.core.api.Assertions.in;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;import org.hibernate.ScrollableResults;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,21 +103,53 @@ public class UserLogicImpl implements UserLogic {
 	 * (non-Javadoc)
 	 * @see net.luvina.manageinsurances.logic.UserLogic#insertOrUpdateUser(net.luvina.manageinsurances.entities.UserInsuranceFormBean, net.luvina.manageinsurances.entities.AccountFormBean)
 	 */
+	@Transactional
 	public Boolean insertOrUpdateUser(UserInsuranceDto userInsuranceDto, AccountDto accountDto) {
-		CompanyBean company = new CompanyBean(userInsuranceDto.getCompanyInternalID());
-		if (companyDao.findByCompanyInternalId(userInsuranceDto.getCompanyInternalID()) == null) {
-			company = new CompanyBean(userInsuranceDto.getCompanyInternalID(), userInsuranceDto.getCompanyName(),
-					userInsuranceDto.getCompanyAddress(), userInsuranceDto.getEmail(), userInsuranceDto.getTelephone());
+		CompanyBean company = setAttributeForCompany(userInsuranceDto);
+		InsuranceBean insurance = setAttributeForInsurance(userInsuranceDto); 
+		UserBean user = setAttributeForUser(userInsuranceDto, company, insurance, accountDto);
+		if (company.getCompanyInternalId() == 0) {
+			companyDao.save(company);
 		}
-		InsuranceBean insurance = new InsuranceBean(userDao.getInsuranceInternalID(userInsuranceDto.getUserInternalID()),userInsuranceDto.getInsuranceNumber(), Common.convertDateHQL(userInsuranceDto.getInsuranceStartDate()),
-													Common.convertDateHQL(userInsuranceDto.getInsuranceEndDate()), userInsuranceDto.getPlaceOfRegister());
-		UserBean user = new UserBean(userInsuranceDto.getUserInternalID(),Common.convertName(userInsuranceDto.getFullName()), String.valueOf(userInsuranceDto.getSex()),
-									 Common.convertDateHQL(userInsuranceDto.getBirthday()), company, insurance);
-		user.setUserName(accountDto.getUserName());
-		user.setPassword(accountDto.getPassword());
-		return userDao.insertOrUpdateUser(user, insurance, company);
+		insuranceDao.save(insurance);
+		userDao.save(user);
+		return true;
 	}
 
+	private CompanyBean setAttributeForCompany(UserInsuranceDto userInsurance) {
+		CompanyBean company = new CompanyBean(userInsurance.getCompanyInternalID());
+		if (companyDao.findByCompanyInternalId(userInsurance.getCompanyInternalID()) == null) {
+			company.setCompanyInternalId(userInsurance.getCompanyInternalID());
+			company.setCompanyName(userInsurance.getCompanyName());
+			company.setAddress(userInsurance.getCompanyAddress());
+			company.setEmail(userInsurance.getEmail());
+			company.setTel(userInsurance.getTelephone());
+		}
+		return company;
+	}
+	
+	private InsuranceBean setAttributeForInsurance(UserInsuranceDto userInsurance) {
+		InsuranceBean insurance = new InsuranceBean();
+		insurance.setInsuranceInternalId(userDao.getInsuranceInternalID(userInsurance.getUserInternalID()));
+		insurance.setInsuranceNumber(userInsurance.getInsuranceNumber());
+		insurance.setInsuranceStartDate(Common.convertDateHQL(userInsurance.getInsuranceStartDate()));
+		insurance.setInsuranceEndDate(Common.convertDateHQL(userInsurance.getInsuranceEndDate()));
+		insurance.setPlaceOfRegister(userInsurance.getPlaceOfRegister());
+		return insurance;
+	}
+	
+	private UserBean setAttributeForUser(UserInsuranceDto userInsurance, CompanyBean company, InsuranceBean insurance, AccountDto account) {
+		UserBean user = new UserBean();
+		user.setUserName(account.getUserName());
+		user.setPassword(account.getPassword());
+		user.setUserInternalID(userInsurance.getUserInternalID());
+		user.setFullName(Common.convertName(userInsurance.getFullName()));
+		user.setSex(String.valueOf(userInsurance.getSex()));
+		user.setBirthday(Common.convertDateHQL(userInsurance.getBirthday()));
+		user.setCompany(company);
+		user.setInsurance(insurance);
+		return user;
+	}
 	/*
 	 * (non-Javadoc)
 	 * @see net.luvina.manageinsurances.logic.UserLogic#deleteUser(int)
@@ -136,8 +170,7 @@ public class UserLogicImpl implements UserLogic {
 	 * @see net.luvina.manageinsurances.logic.UserLogic#getUserById(int)
 	 */
 	public UserInsuranceDto getUserById(int userId) {
-		UserBean userBean = userDao.findByUserInternalID(userId);
-		return Common.combineUBAndUIBToUID(userBean);
+		return Common.combineUBAndUIBToUID(userDao.findByUserInternalID(userId));
 	}
 
 	/*

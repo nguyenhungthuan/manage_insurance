@@ -42,26 +42,20 @@ public class ExportCSVController {
 	private Environment env;
 	
 	@RequestMapping(value = Constant.DOWNLOADCSV_URL, method=RequestMethod.GET)
-	public String downloadCSV(HttpServletResponse response, @ModelAttribute("inforSearchFormBean") InforSearchFormBean  inforSearch, HttpServletRequest request)throws IOException {
-		try {
-			String sortBy = Constant.SORTBY;
-			String fileName = Constant.FILE_NAME;
-			String headerKey = "Content-Disposition";
-			String headerValue = String.format("attachment; filename=\"%s\"", fileName);
-			// Cấu hình header cho file export
-			response.setHeader(headerKey, headerValue);
-			response.setContentType("text/csv; character:UTF-8");
-			BufferedWriter writer = addBOM(response);
-			ScrollableResults results =  userLogic.getListDataToExport(Common.copProISFBToISDto(inforSearch),sortBy);
-			// Tạo đối tượng csvbeanwriter với writer vừa thêm BOM
-			ICsvBeanWriter csvBeanWriter = new CsvBeanWriter(writer,CsvPreference.STANDARD_PREFERENCE);
-			int comID = Integer.parseInt(inforSearch.getCompanyInternalID());
-			writeFile(csvBeanWriter, comID, results);
-			return "";
-		} catch(Exception ex) {
-			ex.printStackTrace();
-			return Constant.RE_SYSTEM_ERROR;
-		}
+	public void downloadCSV(HttpServletResponse response, @ModelAttribute("inforSearchFormBean") InforSearchFormBean  inforSearch, HttpServletRequest request)throws IOException {
+		String sortBy = Constant.SORTBY;
+		String fileName = Constant.FILE_NAME;
+		String headerKey = "Content-Disposition";
+		String headerValue = String.format("attachment; filename=\"%s\"", fileName);
+		// Cấu hình header cho file export
+		response.setHeader(headerKey, headerValue);
+		response.setContentType("text/csv; character:UTF-8");
+		BufferedWriter writer = addBOM(response);
+		ScrollableResults results =  userLogic.getListDataToExport(Common.copProISFBToISDto(inforSearch),sortBy);
+		// Tạo đối tượng csvbeanwriter với writer vừa thêm BOM
+		ICsvBeanWriter csvBeanWriter = new CsvBeanWriter(writer,CsvPreference.STANDARD_PREFERENCE);
+		int comID = Integer.parseInt(inforSearch.getCompanyInternalID());
+		writeFile(csvBeanWriter, comID, results);
 	}
 	
 	private BufferedWriter addBOM(HttpServletResponse response) {
@@ -90,7 +84,7 @@ public class ExportCSVController {
 			csvBeanWriter.writeComment(env.getProperty("COMPANY_NAME")+","+company.getCompanyName());
 			csvBeanWriter.writeComment(env.getProperty("ADDRESS")+","+company.getAddress());
 			csvBeanWriter.writeComment(env.getProperty("EMAIL")+","+company.getEmail());
-			csvBeanWriter.writeComment(env.getProperty("TEL")+", '"+company.getTel()+"");
+			csvBeanWriter.writeComment(env.getProperty("TEL")+", "+company.getTel());
 			csvBeanWriter.writeComment("\n");
 			csvBeanWriter.writeHeader(headerShow);
 			while(results.next()){

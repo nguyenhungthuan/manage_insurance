@@ -31,19 +31,19 @@ public interface CompanyLogic {
 	 * @param id id
 	 * @return boolean
 	 */
-	public Boolean checkExistedCom(int id);
+	public Boolean checkExistCompany(int id);
 	
 	/**
 	 * Check exist email
 	 * @param userID userInternalID
 	 * @return boolean
 	 */
-	public Boolean checkExistedEmail(String email);
+	public Boolean checkExistEmail(String email);
 	
 	/**
 	 * Check exist tel
 	 * @param tel telephone
 	 * @return boolean
 	 */
-	public Boolean checkExistedTel(String tel);
+	public Boolean checkExistTel(String tel);
 }
