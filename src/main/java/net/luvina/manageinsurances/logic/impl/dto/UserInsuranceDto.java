@@ -48,7 +48,6 @@ public class UserInsuranceDto {
 			String insuranceStartDate, String insuranceEndDate, String placeOfRegister) {
 		this.userInternalID = userInternalID;
 		this.insuranceNumber = insuranceNumber;
-		this.companyName = companyName;
 		this.fullName = fullName;
 		this.sex = sex;
 		this.birthday = birthday;

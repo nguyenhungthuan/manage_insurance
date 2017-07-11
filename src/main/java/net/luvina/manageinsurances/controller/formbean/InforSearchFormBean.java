@@ -100,9 +100,5 @@ public class InforSearchFormBean {
 	 */
 	public void setCurrentPage(String currentPage) {
 		this.currentPage = currentPage;
-	}
-	
-	
-	
-	
+	}	
 }

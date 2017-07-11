@@ -4,6 +4,7 @@
 package net.luvina.manageinsurances.logic.impl;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -51,7 +52,6 @@ public class CompanyLogicImpl implements CompanyLogic{
 	 * @see net.luvina.manageinsurances.logic.CompanyLogic#checkExistedEmail(java.lang.String)
 	 */
 	public Boolean checkExistedEmail(String email) {
-		System.out.println("aaaaaaaaaaa"+companyDao.findByEmail(email));
 		return companyDao.findByEmail(email) != null ? true : false;
 	}
 

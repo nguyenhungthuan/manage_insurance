@@ -4,19 +4,9 @@
 package net.luvina.manageinsurances.dao;
 
 import java.util.List;
-import java.util.stream.Stream;
-
-import org.hibernate.ScrollableResults;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import net.luvina.manageinsurances.entities.CompanyBean;
-import net.luvina.manageinsurances.entities.InsuranceBean;
 import net.luvina.manageinsurances.entities.UserBean;
-import net.luvina.manageinsurances.entities.UserInsuranceBean;
-import net.luvina.manageinsurances.controller.formbean.UserInsuranceFormBean;
 import net.luvina.manageinsurances.dao.custom.UserDaoCustom;
 
 /**

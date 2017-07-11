@@ -166,7 +166,4 @@ public class CompanyBean {
 	public void setUser(List<UserBean> user) {
 		this.user = user;
 	}
-
-	
-
 }

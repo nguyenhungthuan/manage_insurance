@@ -101,4 +101,23 @@ public class CommonTest {
 		//verify
 		assertThat(actual, not(list));
 	}
+	
+	/**
+	 * [IN]
+	 * date = "2017-03-15"
+	 * [OUT]
+	 * 15/03/2017
+	 */
+	@Test
+	public void testFormatDate() {
+		// setup
+		String date = "2017-03-15";
+		String expect = "15/03/2017";
+		
+		// exercise
+		String convertedDate = Common.convertFormatDate(date);
+		
+		// verify
+		assertThat(convertedDate, is(expect));
+	}
 }

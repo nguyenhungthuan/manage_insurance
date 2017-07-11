@@ -13,7 +13,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import net.luvina.manageinsurances.logic.impl.dto.UserInsuranceDto;
 import net.luvina.manageinsurances.controller.formbean.InforSearchFormBean;
 import net.luvina.manageinsurances.controller.formbean.UserInsuranceFormBean;
 import net.luvina.manageinsurances.logic.UserLogic;

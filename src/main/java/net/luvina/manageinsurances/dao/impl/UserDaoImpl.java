@@ -9,11 +9,9 @@ import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-
 import org.hibernate.ScrollMode;
 import org.hibernate.ScrollableResults;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.StatelessSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,61 +34,33 @@ public class UserDaoImpl implements UserDaoCustom {
 	private UserDao userDao;
 	@Autowired
 	private InsuranceDao insuranceDao;
+	int i;
+	List<String> listAttr;
 	/*
 	 * (non-Javadoc)
 	 * @see net.luvina.manageinsurances.dao.UserDao#getListInfor(int, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Transactional
-	public List<UserInsuranceBean> getListInfor(int company, String fullName, String code, String registerPlace,
+	public List<UserInsuranceBean> getListInfor(int company, String fullName, String insuranceNumber, String placeOfRegister,
 			String sortBy, String sortType, int limit, int offset) {
 		List<UserInsuranceBean> listUserIn = new ArrayList<UserInsuranceBean>();
 		try {
 			StringBuilder sqlCommand = new StringBuilder();
-			sqlCommand.append(
-					"SELECT new "+UserInsuranceBean.class.getName()+"(u.userInternalID, u.company.companyInternalId, u.company.companyName, u.fullName, u.sex, u.birthday, i.insuranceNumber, i.insuranceStartDate, i.insuranceEndDate, i.placeOfRegister) ");
+			sqlCommand.append("SELECT new "+UserInsuranceBean.class.getName()+""
+							+ "(u.userInternalID, u.company.companyInternalId, u.company.companyName, "
+							+ "u.fullName, u.sex, u.birthday, i.insuranceNumber, i.insuranceStartDate, "
+							+ "i.insuranceEndDate, i.placeOfRegister) ");
 			sqlCommand.append("FROM ");
 			sqlCommand.append(UserBean.class.getName() + " u ,");
 			sqlCommand.append(InsuranceBean.class.getName() + " i ");
-			sqlCommand.append(
-					"WHERE u.insurance.insuranceInternalId = i.insuranceInternalId AND u.company.companyInternalId = ? ");
-			Map<String, Object> mapAttri = new HashMap<String, Object>();
-			Set set = mapAttri.entrySet();
-			Iterator iterator;
-			if (fullName.length() > 0) {
-				mapAttri.put("u.fullName", fullName);
-			}
-			if (code.length() > 0) {
-				mapAttri.put("i.insuranceNumber", code);
-			}
-			if (registerPlace.length() > 0) {
-				mapAttri.put("i.placeOfRegister", registerPlace);
-
-			}
-			if (mapAttri.size() > 0) {
-				iterator = set.iterator();
-				while (iterator.hasNext()) {
-					Map.Entry mapEntry = (Map.Entry) iterator.next();
-					sqlCommand.append(" AND ");
-					sqlCommand.append(mapEntry.getKey() + " LIKE ? ");
-				}
-			}
+			sqlCommand.append("WHERE u.insurance.insuranceInternalId = i.insuranceInternalId AND u.company.companyInternalId = ? ");
+			Map<String, Object> mapAttri = checkAndSetDataToCommand(fullName, insuranceNumber, placeOfRegister, sqlCommand);
 			sqlCommand.append(" ORDER BY "+sortType +" "+ sortBy);
 			Query query = entityManager.createQuery(sqlCommand.toString());
 			query.setFirstResult(offset);
 			query.setMaxResults(limit);
 			query.setParameter(0, company);
-			if (mapAttri.size() > 0) {
-				iterator = set.iterator();
-				int i = 1;
-				while (iterator.hasNext()) {
-					Map.Entry mapEntry = (Map.Entry) iterator.next();
-					if(mapEntry.getKey().equals("i.insuranceNumber")) {
-						query.setParameter(i++, mapEntry.getValue());
-					} else {
-						query.setParameter(i++, "%"+mapEntry.getValue()+"%");
-					}
-				}
-			}
+			setValueOfParam(mapAttri, query);
 			listUserIn = query.getResultList();
 		}  catch (Exception ex) {
 			ex.printStackTrace();
@@ -103,7 +73,7 @@ public class UserDaoImpl implements UserDaoCustom {
 	 * @see net.luvina.manageinsurances.dao.UserDao#getTotalUser(int, java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Transactional
-	public int getTotalRecords(int companyID, String fullName, String insuranceNumber, String registerPlace) {
+	public int getTotalRecords(int companyID, String fullName, String insuranceNumber, String placeOfRegister) {
 		StringBuilder sqlCommand = new StringBuilder();
 		long result = 0;
 		try {
@@ -111,47 +81,12 @@ public class UserDaoImpl implements UserDaoCustom {
 		sqlCommand.append("FROM ");
 		sqlCommand.append(UserBean.class.getName() + " u ,");
 		sqlCommand.append(InsuranceBean.class.getName() + " i ");
-		sqlCommand.append(
-				"WHERE u.insurance.insuranceInternalId = i.insuranceInternalId AND u.company.companyInternalId = ? ");
-		Map<String, Object> mapAttri = new HashMap<String, Object>();
-		Set set =  mapAttri.entrySet();
-		Iterator iterator;
-		// kiểm tra các giá trị input, nếu không phải rỗng thì đưa vào map
-		if (fullName.length() > 0) {
-			mapAttri.put("u.fullName", fullName);
-		}
-		if (insuranceNumber.length() > 0) {
-			mapAttri.put("i.insuranceNumber", insuranceNumber);
-		}
-		if (registerPlace.length() > 0) {
-			mapAttri.put("i.placeOfRegister", registerPlace);
-		}
-		// nếu map.size > 0, add thêm các thuộc tính cần tìm kiếm
-		if (mapAttri.size() > 0) {
-			iterator = set.iterator();
-			// duyệt map
-			while (iterator.hasNext()) {
-				Map.Entry mapEntry = (Map.Entry) iterator.next();
-				// thêm AND, sử dụng like tìm kiếm tương đối
-				sqlCommand.append(" AND ");
-				sqlCommand.append(mapEntry.getKey() + " LIKE ? ");
-			}
-		}
+		sqlCommand.append("WHERE u.insurance.insuranceInternalId = i.insuranceInternalId AND u.company.companyInternalId = ? ");
+		Map<String, Object> mapAttri = checkAndSetDataToCommand(fullName, insuranceNumber, placeOfRegister, sqlCommand);
 		Query query = entityManager.createQuery(sqlCommand.toString());
 		// set giá trị cho các thuộc tính
 		query.setParameter(0, companyID);
-		if (mapAttri.size() > 0) {
-			iterator = set.iterator();
-			int i = 1;
-			while (iterator.hasNext()) {
-				Map.Entry mapEntry = (Map.Entry) iterator.next();
-				if(mapEntry.getKey().equals("i.insuranceNumber")) {
-					query.setParameter(i++, mapEntry.getValue());
-				} else {
-					query.setParameter(i++, "%"+mapEntry.getValue()+"%");
-				}
-			}
-		}
+		setValueOfParam(mapAttri, query);
 		// lấy số lượng bản ghi phù hợp
 		result = (Long) query.getSingleResult();
 		} catch(Exception e) {
@@ -193,10 +128,8 @@ public class UserDaoImpl implements UserDaoCustom {
 	 */
 	@Transactional
 	public int getInsuranceInternalID(int userID) {
-		if(userDao.findByUserInternalID(userID) == null) {
-			return 0;
-		}
-		return userDao.findByUserInternalID(userID).getInsurance().getInsuranceInternalId();
+		UserBean user = userDao.findByUserInternalID(userID);
+		return user == null ? 0 : user.getInsurance().getInsuranceInternalId();
 	}
 	
 	/*
@@ -218,63 +151,106 @@ public class UserDaoImpl implements UserDaoCustom {
 	public ScrollableResults getListDataToExport(int companyID, String fullName, String insuranceNumber,
 			String registerPlace, String sortType, String sortBy) {
 		try {
-			StatelessSession statelessSession = entityManager.unwrap(Session.class).getSessionFactory().openStatelessSession();
+			StatelessSession statelessSession =
+					entityManager.unwrap(Session.class).getSessionFactory().openStatelessSession();
 			statelessSession.beginTransaction();
-				StringBuilder sqlCommand = new StringBuilder();
-				sqlCommand.append(
-						"SELECT new "+UserInsuranceBean.class.getName()+"(u.fullName, u.sex, u.birthday, i.insuranceNumber, i.insuranceStartDate, i.insuranceEndDate, i.placeOfRegister) ");
-				sqlCommand.append("FROM ");
-				sqlCommand.append(UserBean.class.getName() + " u ,");
-				sqlCommand.append(InsuranceBean.class.getName() + " i ");
-				sqlCommand.append(
-						"WHERE u.insurance.insuranceInternalId = i.insuranceInternalId AND u.company.companyInternalId =:company ");
-				Map<String, List<String>> mapAttri = new HashMap<String, List<String>>();
-				List<String> listAttr;
-				Set set = mapAttri.entrySet();
-				Iterator iterator;
-				if (fullName.length() > 0) {
-					listAttr = new ArrayList<>();
-					listAttr.add(fullName);
-					listAttr.add("fullName");
-					mapAttri.put("u.fullName", listAttr);
-				}
-				if (insuranceNumber.length() > 0) {
-					listAttr = new ArrayList<>();
-					listAttr.add(insuranceNumber);
-					listAttr.add("insuranceNumber");
-					mapAttri.put("i.insuranceNumber", listAttr);
-				}
-				if (registerPlace.length() > 0) {
-					listAttr = new ArrayList<>();
-					listAttr.add(registerPlace);
-					listAttr.add("registerPlace");
-					mapAttri.put("i.placeOfRegister", listAttr);
-				}
-				if (mapAttri.size() > 0) {
-					iterator = set.iterator();
-					while (iterator.hasNext()) {
-						Map.Entry mapEntry = (Map.Entry) iterator.next();
-						sqlCommand.append(" AND ");
-						listAttr = mapAttri.get(mapEntry.getKey());
-						sqlCommand.append(mapEntry.getKey() + " LIKE :"+listAttr.get(1));
-					}
-				}
-				sqlCommand.append(" ORDER BY "+sortBy +" "+ sortType);
-				org.hibernate.query.Query<UserInsuranceBean> query = statelessSession.createQuery(sqlCommand.toString(), UserInsuranceBean.class).setReadOnly(true).setFetchSize(Integer.MIN_VALUE);
-				query.setParameter("company", companyID);
-				if (mapAttri.size() > 0) {
-					iterator = set.iterator();
-					while (iterator.hasNext()) {
-						Map.Entry mapEntry = (Map.Entry) iterator.next();
-						listAttr = mapAttri.get(mapEntry.getKey());
-						query.setParameter(listAttr.get(1), "%"+listAttr.get(0)+"%");
-					}
-				}
-				ScrollableResults results = query.scroll(ScrollMode.FORWARD_ONLY);
-				return results;
-			}  catch (Exception ex) {
-				ex.printStackTrace();
-				return null;
-			}		
+			StringBuilder sqlCommand = new StringBuilder();
+			sqlCommand.append("SELECT new " + UserInsuranceBean.class.getName()
+							+ "(u.fullName, u.sex, u.birthday, i.insuranceNumber, i.insuranceStartDate, "
+							+ "i.insuranceEndDate, i.placeOfRegister) ");
+			sqlCommand.append("FROM ");
+			sqlCommand.append(UserBean.class.getName() + " u ,");
+			sqlCommand.append(InsuranceBean.class.getName() + " i ");
+			sqlCommand.append("WHERE u.insurance.insuranceInternalId = i.insuranceInternalId AND u.company.companyInternalId =:company ");
+			Map<String, List<String>> mapAttri = new HashMap<String, List<String>>();
+			if (fullName.length() > 0) {
+				listAttr = new ArrayList<>();
+				listAttr.add(fullName);
+				listAttr.add("fullName");
+				mapAttri.put("u.fullName", listAttr);
+			}
+			if (insuranceNumber.length() > 0) {
+				listAttr = new ArrayList<>();
+				listAttr.add(insuranceNumber);
+				listAttr.add("insuranceNumber");
+				mapAttri.put("i.insuranceNumber", listAttr);
+			}
+			if (registerPlace.length() > 0) {
+				listAttr = new ArrayList<>();
+				listAttr.add(registerPlace);
+				listAttr.add("registerPlace");
+				mapAttri.put("i.placeOfRegister", listAttr);
+			}
+			if (!mapAttri.isEmpty()) {
+				mapAttri.forEach((key, value) -> {
+					sqlCommand.append(" AND ");
+					listAttr = mapAttri.get(key);
+					sqlCommand.append(key + " LIKE :" + listAttr.get(1));
+				});
+			}
+			sqlCommand.append(" ORDER BY " + sortBy + " " + sortType);
+			org.hibernate.query.Query<UserInsuranceBean> query =
+					statelessSession.createQuery(sqlCommand.toString(), UserInsuranceBean.class).setReadOnly(true)
+						.setFetchSize(Integer.MIN_VALUE);
+			query.setParameter("company", companyID);
+			if (!mapAttri.isEmpty()) {
+				mapAttri.forEach((key, value) -> {
+					listAttr = mapAttri.get(key);
+					query.setParameter(listAttr.get(1), "%" + listAttr.get(0) + "%");
+				});
+			}
+			ScrollableResults results = query.scroll(ScrollMode.FORWARD_ONLY);
+			return results;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
 		}
 	}
+	
+	/**
+	 * Check parameter and set to command
+	 * @param fullName full name
+	 * @param insuranceNumber insurance number
+	 * @param placeOfRegister place of register
+	 * @param sqlCommand command
+	 * @return Map<String, object>
+	 */
+	private Map<String, Object> checkAndSetDataToCommand(String fullName, String insuranceNumber, String placeOfRegister, StringBuilder sqlCommand) {
+		Map<String, Object> mapAttri = new HashMap<String, Object>();
+		// kiểm tra các giá trị input, nếu không phải rỗng thì đưa vào map
+		if (fullName.length() > 0) {
+			mapAttri.put("u.fullName", fullName);
+		}
+		if (insuranceNumber.length() > 0) {
+			mapAttri.put("i.insuranceNumber", insuranceNumber);
+		}
+		if (placeOfRegister.length() > 0) {
+			mapAttri.put("i.placeOfRegister", placeOfRegister);
+		}
+		// nếu map.size > 0, add thêm các thuộc tính cần tìm kiếm
+		if (!mapAttri.isEmpty()) {
+			mapAttri.forEach((key,value) -> {
+				sqlCommand.append(" AND ");
+				sqlCommand.append(key + " LIKE ? ");
+			});
+		}
+		return mapAttri;
+	}
+	/**
+	 * Set value to parameter of command
+	 * @param mapAttri Map attribute
+	 * @param query 
+	 */
+	private void setValueOfParam(Map<String, Object> mapAttri, Query query) {
+		i = 1;
+		if (!mapAttri.isEmpty()) {	
+			mapAttri.forEach((key,value) -> {
+				if(key.equals("i.insuranceNumber")) {
+					query.setParameter(i++, value);
+				} else {
+					query.setParameter(i++, "%"+value+"%");
+				}
+			});
+		}
+	}
+}

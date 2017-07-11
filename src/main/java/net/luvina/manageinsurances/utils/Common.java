@@ -8,22 +8,15 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.text.Normalizer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
-import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
 import org.apache.commons.beanutils.PropertyUtils;
-
 import net.luvina.manageinsurances.entities.CompanyBean;
-import net.luvina.manageinsurances.entities.InsuranceBean;
 import net.luvina.manageinsurances.entities.UserBean;
 import net.luvina.manageinsurances.entities.UserInsuranceBean;
 import net.luvina.manageinsurances.logic.impl.dto.AccountDto;
@@ -204,7 +197,7 @@ public class Common {
      * @param date input date
      * @return converted string
      */
-    public static String formatDate(String date) {
+    public static String convertFormatDate(String date) {
     	if(date != null) {
 	    	String[] arrDate = date.split("-");
 	    	return arrDate[2]+"/"+arrDate[1]+"/"+arrDate[0];
@@ -229,18 +222,14 @@ public class Common {
      */
     public static Boolean compareDate(String date1, String date2) {
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/DD");
-		boolean resultCompare;
 		try {
 			Date dt1 = sdf.parse(date1);
 			Date dt2 = sdf.parse(date2);
-			resultCompare = dt1.before(dt2);
-			if(resultCompare) {
-				return true;
-			}
+			return dt1.before(dt2);
 		} catch (ParseException e) {
 			System.out.println("error: " + e.getMessage());
+			return false;
 		}
-		return false;
     }
     
     /**
@@ -268,7 +257,6 @@ public class Common {
 				int year = Integer.parseInt(partOfDate[2]);
 				int month = Integer.parseInt(partOfDate[1]);
 				int day = Integer.parseInt(partOfDate[0]);
-		
 				switch (month) {
 				case 1:
 				case 3:
@@ -313,17 +301,16 @@ public class Common {
 	 * @param name user name
 	 * @return converted string
 	 */
-	public static String convertStringName(String name) {
-		String convertedName = VNCharacterUtils.removeAccent(name);
-        String temp1[] = convertedName.split(" ");
-        convertedName = ""; 
-        for (int i = 0; i < temp1.length; i++) {
-        	convertedName += String.valueOf(temp1[i].charAt(0)).toUpperCase() + temp1[i].substring(1);
-            if (i < temp1.length - 1) {
-            	convertedName += " ";
+	public static String convertName(String name) {
+		String arrayName[] = VNCharacterUtils.removeAccent(name).split(" ");
+        StringBuilder convertedName = new StringBuilder();
+        for (int i = 0; i < arrayName.length; i++) {
+        	convertedName.append(String.valueOf(arrayName[i].charAt(0)).toUpperCase() + arrayName[i].substring(1));
+            if (i < arrayName.length - 1) {
+            	convertedName.append(" ");
             }
         }
-        return convertedName;
+        return convertedName.toString();
 	}
 	
 	/**
@@ -364,25 +351,12 @@ public class Common {
 	 * @param userInsuranceFormBean UserInsuranceFormBean
 	 * @return UserInsuranceFormBean
 	 */
-	public static UserInsuranceFormBean escapeXSSUser(UserInsuranceFormBean userInsuranceFormBean) {
-		userInsuranceFormBean.setFullName(escapeHTML(userInsuranceFormBean.getFullName()));
-		userInsuranceFormBean.setSex(escapeHTML(userInsuranceFormBean.getSex()));
-		userInsuranceFormBean.setCompanyName(escapeHTML(userInsuranceFormBean.getCompanyName()));
-		userInsuranceFormBean.setPlaceOfRegister(escapeHTML(userInsuranceFormBean.getPlaceOfRegister()));
-		return userInsuranceFormBean;
-	}
-	
-	/**
-	 * Escape xss list UserInsuranceFormBean
-	 * @param listUser List<UserInsuranceFormBean>
-	 * @return List<UserInsuranceFormBean>
-	 */
-	public static List<UserInsuranceFormBean> escapeListUser(List<UserInsuranceFormBean> listUser) {
-		List<UserInsuranceFormBean> list = new ArrayList<>();
-		for(UserInsuranceFormBean user : listUser) {
-			list.add(escapeXSSUser(user));
-		}
-		return list;
+	public static UserInsuranceFormBean escapeXSSUser(UserInsuranceFormBean userInsurance) {
+		userInsurance.setFullName(escapeHTML(userInsurance.getFullName()));
+		userInsurance.setSex(escapeHTML(userInsurance.getSex()));
+		userInsurance.setCompanyName(escapeHTML(userInsurance.getCompanyName()));
+		userInsurance.setPlaceOfRegister(escapeHTML(userInsurance.getPlaceOfRegister()));
+		return userInsurance;
 	}
 	
 	/**
@@ -390,11 +364,11 @@ public class Common {
 	 * @param inforSearchDto InforSearchDto
 	 * @return inforSearchDto
 	 */
-	public static InforSearchDto processWildcardOb(InforSearchDto inforSearchDto) {
-		inforSearchDto.setFullName(processWildcard(inforSearchDto.getFullName()));
-		inforSearchDto.setInsuranceNumber(processWildcard(inforSearchDto.getInsuranceNumber()));
-		inforSearchDto.setPlaceOfRegister(processWildcard(inforSearchDto.getPlaceOfRegister()));
-		return inforSearchDto;
+	public static InforSearchDto processWildcardOb(InforSearchDto inforSearch) {
+		inforSearch.setFullName(processWildcard(inforSearch.getFullName()));
+		inforSearch.setInsuranceNumber(processWildcard(inforSearch.getInsuranceNumber()));
+		inforSearch.setPlaceOfRegister(processWildcard(inforSearch.getPlaceOfRegister()));
+		return inforSearch;
 	}
 	
 	/**
@@ -420,11 +394,11 @@ public class Common {
 	 * @throws IllegalAccessException 
 	 */
 	public static List<UserInsuranceDto> copyProListDtoToBean(List<UserInsuranceBean> list) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-		List<UserInsuranceDto> lstuserInsuranceDto = new ArrayList<>();
+		List<UserInsuranceDto> userInsuranceDtos = new ArrayList<>();
 		for(UserInsuranceBean bean : list) {
-			lstuserInsuranceDto.add(copyPropertyUIBeanToUIDto(bean));
+			userInsuranceDtos.add(copyPropertyUIBeanToUIDto(bean));
 		}
-		return lstuserInsuranceDto;
+		return userInsuranceDtos;
 	}
 	
 	/**
@@ -475,12 +449,10 @@ public class Common {
 	 * @param lstcompanyBean List<CompanyBean>
 	 * @return List<CompanyDto>
 	 */
-	public static List<CompanyDto> castListCom(List<CompanyBean> lstcompanyBean) {
-		List<CompanyDto> list = new ArrayList<>();
-		for(CompanyBean bean : lstcompanyBean) {
-			list.add(copyProCom(bean));
-		}
-		return list;
+	public static List<CompanyDto> castListCom(List<CompanyBean> companyBeans) {
+		List<CompanyDto> companyDtos = new ArrayList<>();
+		companyBeans.forEach(company -> companyDtos.add(copyProCom(company)));
+		return companyDtos;
 	}
 	
 	/**
@@ -521,9 +493,9 @@ public class Common {
 		} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
 			e.printStackTrace();
 		}
-		userInsuranceDto.setBirthday(Common.formatDate(userInsuranceDto.getBirthday()));
-		userInsuranceDto.setInsuranceEndDate(Common.formatDate(userInsuranceDto.getInsuranceEndDate()));
-		userInsuranceDto.setInsuranceStartDate(Common.formatDate(userInsuranceDto.getInsuranceStartDate()));
+		userInsuranceDto.setBirthday(Common.convertFormatDate(userInsuranceDto.getBirthday()));
+		userInsuranceDto.setInsuranceEndDate(Common.convertFormatDate(userInsuranceDto.getInsuranceEndDate()));
+		userInsuranceDto.setInsuranceStartDate(Common.convertFormatDate(userInsuranceDto.getInsuranceStartDate()));
 		userInsuranceDto.setCompanyInternalID(userBean.getCompany().getCompanyInternalId());
 		return userInsuranceDto;
 	}

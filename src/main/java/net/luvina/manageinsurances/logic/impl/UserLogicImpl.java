@@ -65,11 +65,8 @@ public class UserLogicImpl implements UserLogic {
 	 * @see net.luvina.manageinsurances.logic.UserLogic#getTotalRecords(int, java.lang.String, java.lang.String, java.lang.String)
 	 */
 	public int getTotalRecords(InforSearchDto inforSearchDto) {
-		String fullName = Common.processWildcard(inforSearchDto.getFullName());
-		String insuranceNumber = Common.processWildcard(inforSearchDto.getInsuranceNumber());
-		String placeOfRegister = Common.processWildcard(inforSearchDto.getPlaceOfRegister());
 		int comID = Integer.parseInt(inforSearchDto.getCompanyInternalID());
-		return userDao.getTotalRecords(comID, fullName, insuranceNumber, placeOfRegister);
+		return userDao.getTotalRecords(comID, Common.processWildcard(inforSearchDto.getFullName()), Common.processWildcard(inforSearchDto.getInsuranceNumber()), Common.processWildcard(inforSearchDto.getPlaceOfRegister()));
 	}
 	
 	/*
@@ -112,7 +109,7 @@ public class UserLogicImpl implements UserLogic {
 		}
 		InsuranceBean insurance = new InsuranceBean(userDao.getInsuranceInternalID(userInsuranceDto.getUserInternalID()),userInsuranceDto.getInsuranceNumber(), Common.convertDateHQL(userInsuranceDto.getInsuranceStartDate()),
 													Common.convertDateHQL(userInsuranceDto.getInsuranceEndDate()), userInsuranceDto.getPlaceOfRegister());
-		UserBean user = new UserBean(userInsuranceDto.getUserInternalID(),Common.convertStringName(userInsuranceDto.getFullName()), String.valueOf(userInsuranceDto.getSex()),
+		UserBean user = new UserBean(userInsuranceDto.getUserInternalID(),Common.convertName(userInsuranceDto.getFullName()), String.valueOf(userInsuranceDto.getSex()),
 									 Common.convertDateHQL(userInsuranceDto.getBirthday()), company, insurance);
 		user.setUserName(accountDto.getUserName());
 		user.setPassword(accountDto.getPassword());

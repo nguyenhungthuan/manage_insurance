@@ -9,6 +9,9 @@ package net.luvina.manageinsurances.utils;
  *
  */
 public class NotFoundUserException extends Exception {
+
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Phương thức khởi tạo Exception
 	 * @param message thông báo

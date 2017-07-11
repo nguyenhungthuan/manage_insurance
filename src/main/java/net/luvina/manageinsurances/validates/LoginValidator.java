@@ -3,13 +3,10 @@
  */
 package net.luvina.manageinsurances.validates;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import net.luvina.manageinsurances.controller.formbean.AccountFormBean;
-import net.luvina.manageinsurances.entities.UserBean;
 import net.luvina.manageinsurances.logic.UserLogic;
 import net.luvina.manageinsurances.utils.Common;
 
@@ -31,6 +28,5 @@ public class LoginValidator{
 				error.rejectValue("userName", "Account.validate.failed");
 			}
 		}
-	}
-	
+	}	
 }

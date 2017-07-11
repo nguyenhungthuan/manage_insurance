@@ -3,19 +3,14 @@
  */
 package net.luvina.manageinsurances.entities;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-
-import org.hibernate.annotations.GenericGenerator;
 
 /**
  * Class entity InsuranceBean đại diện cho tbl_insurance trong DB
@@ -130,7 +125,5 @@ public class InsuranceBean {
 	 */
 	public void setUser(UserBean user) {
 		this.user = user;
-	}
-	
-	
+	}	
 }

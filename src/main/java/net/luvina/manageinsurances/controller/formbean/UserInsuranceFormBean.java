@@ -7,9 +7,7 @@ package net.luvina.manageinsurances.controller.formbean;
 import java.io.Serializable;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import javax.validation.groups.Default;
 import org.hibernate.validator.constraints.NotEmpty;
-import net.luvina.manageinsurances.utils.Common;
 
 /**
  * Class entity UserInsuranceFormBean sử dụng làm modelAttribute cho MH03, MH04
@@ -18,10 +16,6 @@ import net.luvina.manageinsurances.utils.Common;
  */
 public class UserInsuranceFormBean implements Serializable {
 	
-	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	@NotNull
@@ -185,40 +179,30 @@ public class UserInsuranceFormBean implements Serializable {
 	public String getCompanyAddress() {
 		return companyAddress;
 	}
-
-
 	/**
 	 * @param companyAddress the companyAddress to set
 	 */
 	public void setCompanyAddress(String companyAddress) {
 		this.companyAddress = companyAddress;
 	}
-
-
 	/**
 	 * @return the email
 	 */
 	public String getEmail() {
 		return email;
 	}
-
-
 	/**
 	 * @param email the email to set
 	 */
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
-
 	/**
 	 * @return the telephone
 	 */
 	public String getTelephone() {
 		return telephone;
 	}
-
-
 	/**
 	 * @param telephone the telephone to set
 	 */

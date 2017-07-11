@@ -17,8 +17,9 @@ import net.luvina.manageinsurances.entities.UserBean;
  *
  */
 public interface UserDaoCustom {
+	
 	/**
-	 * Phương thức lấy ra 1 list User theo điều  kiện tìm kiếm
+	 * Get list user
 	 * @param company companyID
 	 * @param fullName fullName
 	 * @param code insuranceNumber
@@ -32,7 +33,7 @@ public interface UserDaoCustom {
 	public List<UserInsuranceBean> getListInfor(int company, String fullName, String code, String place, String sortBy, String sortType, int limit, int offset);
 	
 	/**
-	 * Phương thức lấy tổng số user theo điều kiện tìm kiếm
+	 * Get total record
 	 * @param companyID companyID
 	 * @param fullName full name search
 	 * @param insuranceNumber insurance number search
@@ -42,7 +43,7 @@ public interface UserDaoCustom {
 	public int getTotalRecords(int companyID, String fullName, String insuranceNumber, String registerPlace);
 	
 	/**
-	 * Phương thức kiểm tra tồn tại mã số thẻ bảo hiểm
+	 * Check exist insurance number
 	 * @param insuranceNumber mã số thẻ bảo hiểm
 	 * @param userInternalId id user
 	 * @return true nếu đã tồn tại và ngược lại
@@ -50,14 +51,14 @@ public interface UserDaoCustom {
 	public Boolean checkExistedInsuNum(String insuranceNumber, int userInternalId);
 	
 	/**
-	 * Phương thức lấy ra insuranceInternalID theo userInternalID
+	 * Get insurance internal id
 	 * @param userID userInternalID
 	 * @return insuranceInternalID
 	 */
 	public int getInsuranceInternalID(int userID);
 	
 	/**
-	 * Phương thức insert, update thông tin user
+	 * Insert, update user
 	 * @param user user
 	 * @param insurance insurance
 	 * @param company company
@@ -67,7 +68,7 @@ public interface UserDaoCustom {
 	public Boolean insertOrUpdateUser(UserBean user, InsuranceBean insurance, CompanyBean company);
 
 	/**
-	 * Phương thức lấy dữ liệu theo điều kiện tìm kiếm để export csv
+	 * Get list data export
 	 * @param companyID
 	 * @param fullName
 	 * @param insuranceNumber

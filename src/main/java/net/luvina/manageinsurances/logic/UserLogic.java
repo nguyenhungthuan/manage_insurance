@@ -4,12 +4,7 @@
 package net.luvina.manageinsurances.logic;
 
 import java.util.List;
-import java.util.stream.Stream;
-
 import org.hibernate.ScrollableResults;
-
-import net.luvina.manageinsurances.entities.UserBean;
-import net.luvina.manageinsurances.entities.UserInsuranceBean;
 import net.luvina.manageinsurances.logic.impl.dto.AccountDto;
 import net.luvina.manageinsurances.logic.impl.dto.InforSearchDto;
 import net.luvina.manageinsurances.logic.impl.dto.UserInsuranceDto;

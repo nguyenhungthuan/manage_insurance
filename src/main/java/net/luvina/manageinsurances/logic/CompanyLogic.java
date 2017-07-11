@@ -4,8 +4,6 @@
 package net.luvina.manageinsurances.logic;
 
 import java.util.List;
-
-import net.luvina.manageinsurances.entities.CompanyBean;
 import net.luvina.manageinsurances.logic.impl.dto.CompanyDto;
 
 /**
