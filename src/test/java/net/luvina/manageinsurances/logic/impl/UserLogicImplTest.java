@@ -130,7 +130,7 @@ public class UserLogicImplTest {
 	 */
 	@Test
 	public void checkExistedAccount() {
-		boolean rsCheck = sut.checkExistedAcc("1", "1");
+		boolean rsCheck = sut.checkExistAccount("1", "1");
 		assertTrue(rsCheck == true);
 	}
 	

@@ -22,7 +22,7 @@ public interface UserLogic {
 	 * @param password pass
 	 * @return true, false
 	 */
-	public boolean checkExistedAcc(String userName, String password);
+	public boolean checkExistAccount(String userName, String password);
 	
 	/**
 	 * Get list user

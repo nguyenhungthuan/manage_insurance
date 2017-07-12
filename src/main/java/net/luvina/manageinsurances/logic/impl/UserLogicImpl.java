@@ -3,10 +3,10 @@
  */
 package net.luvina.manageinsurances.logic.impl;
 
-import static org.assertj.core.api.Assertions.in;
-
 import java.lang.reflect.InvocationTargetException;
-import java.util.List;import org.hibernate.ScrollableResults;
+import java.util.ArrayList;
+import java.util.List;
+import org.hibernate.ScrollableResults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,7 +41,7 @@ public class UserLogicImpl implements UserLogic {
 	 * (non-Javadoc)
 	 * @see net.luvina.manageinsurances.logic.UserLogic#checkExistedAcc(java.lang.String, java.lang.String)
 	 */
-	public boolean checkExistedAcc(String userName, String password){
+	public boolean checkExistAccount(String userName, String password){
 		return userDao.findByUserNameAndPassword(userName, password).size() > 0 ? true : false;
 	}
 
@@ -58,7 +58,7 @@ public class UserLogicImpl implements UserLogic {
 			return Common.copyProListDtoToBean(userDao.getListInfor(comID, fullName, insuranceNumber, placeOfRegister, inforSearchDto.getSortType(), sortBy, limit, offset));
 		} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
 			e.printStackTrace();
-			return null;
+			return new ArrayList<UserInsuranceDto>();
 		}
 	}
 	
