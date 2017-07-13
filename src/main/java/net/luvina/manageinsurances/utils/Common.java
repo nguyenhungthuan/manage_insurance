@@ -10,12 +10,21 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 import javax.servlet.http.HttpSession;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.slf4j.Logger;
+
 import net.luvina.manageinsurances.entities.CompanyBean;
 import net.luvina.manageinsurances.entities.UserBean;
 import net.luvina.manageinsurances.entities.UserInsuranceBean;
@@ -221,7 +230,7 @@ public class Common {
      * @return true if date 1 early 2
      */
     public static Boolean compareDate(String date1, String date2) {
-    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/DD");
+    	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		try {
 			Date dt1 = sdf.parse(date1);
 			Date dt2 = sdf.parse(date2);
@@ -248,52 +257,18 @@ public class Common {
     /**
      * Check exist date
      * @param date string date
-     * @return return 1 if exist, 0 if not exist và  return 2 invalid format
+     * @return return true if exist, false if not valid
      */
-	public static int checkExistDate(String date) {
-		if(date.length() != 0) { 
-			try {
-				String[] partOfDate = date.split("/");
-				int year = Integer.parseInt(partOfDate[2]);
-				int month = Integer.parseInt(partOfDate[1]);
-				int day = Integer.parseInt(partOfDate[0]);
-				switch (month) {
-				case 1:
-				case 3:
-				case 5:
-				case 7:
-				case 8:
-				case 10:
-				case 12: {
-					if (day <= 31)
-						return 1;
-				}
-				case 4:
-				case 6:
-				case 9:
-				case 11: {
-					if (day <= 30)
-						return 1;
-				}
-				case 2: {
-					if (year % 400 == 0 || (year % 4 == 0 && year % 100 != 0)) {
-						if (day <= 29) {
-							return 1;
-						}
-					} else {
-						if (day <= 28) {
-							return 1;
-						}
-					}
-				}
-				}
-			} catch(ArrayIndexOutOfBoundsException ex) {
-				System.out.println("Lỗi ngày nhập vào không đúng định dạng");
-				return 2;
-			}
-			return 0;
-			}
-		return 1;
+	public static boolean checkExistDate(String date) {
+		String dateFormat = "dd/MM/uuuu";
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(dateFormat).withResolverStyle(ResolverStyle.STRICT);
+        try {
+            LocalDate parsedDate = LocalDate.parse(date, dateTimeFormatter);
+            return true;
+        } catch (DateTimeParseException e) {
+            e.printStackTrace();
+            return false;
+        } 
 	}
 	
 	/**
@@ -302,6 +277,7 @@ public class Common {
 	 * @return converted string
 	 */
 	public static String convertName(String name) {
+		name = name.toLowerCase().trim();
 		String arrayName[] = VNCharacterUtils.removeAccent(name).split(" ");
         StringBuilder convertedName = new StringBuilder();
         for (int i = 0; i < arrayName.length; i++) {

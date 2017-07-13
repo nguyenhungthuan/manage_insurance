@@ -11,6 +11,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;
@@ -136,10 +137,10 @@ public class CommonTest {
 		String date = "20/03/1995";
 		
 		// exercise
-		int actual = Common.checkExistDate(date);
+		boolean actual = Common.checkExistDate(date);
 		
 		// verify
-		assertEquals(1, actual);
+		assertTrue(actual);
 	}
 	
 	/**
@@ -154,10 +155,10 @@ public class CommonTest {
 		String date = "20/03";
 		
 		// exercise
-		int actual = Common.checkExistDate(date);
+		boolean actual = Common.checkExistDate(date);
 		
 		// verify
-		assertEquals(2, actual);
+		assertFalse(actual);
 	}
 	
 	/**
@@ -167,28 +168,28 @@ public class CommonTest {
 	 * 0
 	 */
 	@Test
-	public void checkExistDate() {
+	public void testCheckExistDateLeapYear() {
 		// setup
-		String date = "32/03/1995";
+		String date = "29/02/1995";
 		
 		// exercise
-		int actual = Common.checkExistDate(date);
+		boolean actual = Common.checkExistDate(date);
 		
 		// verify
-		assertEquals(0, actual);
+		assertTrue(actual);
 	}
 	
 	/**
 	 * [IN]
-	 * name = "Nguyễn Hưng Thuận"
+	 * name = "    Tr加加加ầN  2加  vi12Ệt hÙ&*@nG    "
 	 * [OUT]
 	 * Nguyen Hung Thuan
 	 */
 	@Test
 	public void testConvertName() {
 		// setup 
-		String name = "Nguyễn Hưng Thuận";
-		String expect = "Nguyen Hung Thuan";
+		String name = "    Tr加加加ầN  2加  vi12Ệt hÙ&*@nG    ";
+		String expect = "Tran Viet Hung";
 		
 		// exercise
 		String actual = Common.convertName(name);
@@ -207,8 +208,8 @@ public class CommonTest {
 	@Test
 	public void testCompareDate() {
 		// setup
-		String date1 = "20/03/1995";
-		String date2 = "22/03/1995";
+		String date1 = "20/03/2016";
+		String date2 = "22/03/2017";
 		
 		// exercise
 		Boolean rsCompare = Common.compareDate(date1, date2);

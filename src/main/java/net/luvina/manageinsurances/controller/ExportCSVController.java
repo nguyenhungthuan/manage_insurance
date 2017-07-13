@@ -21,6 +21,7 @@ import org.supercsv.io.CsvBeanWriter;
 import org.supercsv.io.ICsvBeanWriter;
 import org.supercsv.prefs.CsvPreference;
 import net.luvina.manageinsurances.controller.formbean.InforSearchFormBean;
+import net.luvina.manageinsurances.entities.UserInsuranceBean;
 import net.luvina.manageinsurances.logic.CompanyLogic;
 import net.luvina.manageinsurances.logic.UserLogic;
 import net.luvina.manageinsurances.logic.impl.dto.CompanyDto;
@@ -84,16 +85,25 @@ public class ExportCSVController {
 			csvBeanWriter.writeComment(env.getProperty("COMPANY_NAME")+","+company.getCompanyName());
 			csvBeanWriter.writeComment(env.getProperty("ADDRESS")+","+company.getAddress());
 			csvBeanWriter.writeComment(env.getProperty("EMAIL")+","+company.getEmail());
-			csvBeanWriter.writeComment(env.getProperty("TEL")+", "+company.getTel());
+			csvBeanWriter.writeComment(env.getProperty("TEL")+", \t"+company.getTel());
 			csvBeanWriter.writeComment("\n");
 			csvBeanWriter.writeHeader(headerShow);
 			while(results.next()){
-				csvBeanWriter.write(results.get(0), headerUser);
+				csvBeanWriter.write(addCharToField((UserInsuranceBean) results.get(0)), headerUser);
 			}
 			csvBeanWriter.close();
 			results.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private UserInsuranceBean addCharToField(UserInsuranceBean userInsurance) {
+		userInsurance.setBirthday("\t" + userInsurance.getBirthday());
+		userInsurance.setTelephone("\t" + userInsurance.getTelephone());
+		userInsurance.setInsuranceNumber("\t" + userInsurance.getInsuranceNumber());
+		userInsurance.setInsuranceStartDate("\t" + userInsurance.getInsuranceStartDate());
+		userInsurance.setInsuranceEndDate("\t" + userInsurance.getInsuranceEndDate());
+		return userInsurance;
 	}
 }

@@ -30,6 +30,25 @@ function loadData() {
     }
 }
 
+function processName() {
+	var fullName = $('#fullName').val();
+	if(fullName.trim()) {
+		$.ajax({
+			type :  "GET",
+			contentType : "application/json",
+			url : baseUrl+"/processName.do",
+			data : {
+				fullName : fullName
+			},
+			dataType : 'text',
+			success : function(json) {
+				$("#fullName").val(json);
+			},
+			error: function(ts) { alert(ts.responseText) }
+		})
+	}
+}
+
 function loadCBB() {
 	var comID = $('#companyID').val();
 	$.ajax({

@@ -104,6 +104,17 @@ public class EditInforController {
 	}
 	
 	/**
+	 * Process name
+	 * @param request HttpServletRequest
+	 * @return name
+	 */
+	@RequestMapping(value="processName.do", method = RequestMethod.GET)
+	public @ResponseBody String processName(HttpServletRequest request) {
+		String fullName = request.getParameter("fullName");
+		return Common.convertName(fullName);
+	}
+	
+	/**
 	 * Phương thức được gọi khi người dùng ấn cập nhật từ MH03
 	 * @param modelMap ModelMap
 	 * @param id userID

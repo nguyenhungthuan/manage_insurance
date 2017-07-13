@@ -14,6 +14,7 @@ import net.luvina.manageinsurances.dao.CompanyDao;
 import net.luvina.manageinsurances.dao.InsuranceDao;
 import net.luvina.manageinsurances.dao.UserDao;
 import net.luvina.manageinsurances.entities.UserBean;
+import net.luvina.manageinsurances.entities.UserInsuranceBean;
 import net.luvina.manageinsurances.entities.CompanyBean;
 import net.luvina.manageinsurances.entities.InsuranceBean;
 import net.luvina.manageinsurances.logic.impl.dto.AccountDto;
@@ -144,7 +145,7 @@ public class UserLogicImpl implements UserLogic {
 		user.setPassword(account.getPassword());
 		user.setUserInternalID(userInsurance.getUserInternalID());
 		user.setFullName(Common.convertName(userInsurance.getFullName()));
-		user.setSex(String.valueOf(userInsurance.getSex()));
+		user.setSex(String.valueOf(userInsurance.getSex().equals("1") ? "1" : "2"));
 		user.setBirthday(Common.convertDateHQL(userInsurance.getBirthday()));
 		user.setCompany(company);
 		user.setInsurance(insurance);
