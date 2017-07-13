@@ -3,6 +3,7 @@
  */
 package net.luvina.manageinsurances.validates;
 
+import java.time.LocalDate;
 import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -31,70 +32,73 @@ public class RegisterFormValidator {
 	 * @param userInsuranceFormBean UserInsuranceFormBean
 	 * @param errors Errors
 	 */
-	public void validate(UserInsuranceFormBean userInsuranceFormBean, Errors errors) {
+	public void validate(UserInsuranceFormBean userInsurance, Errors errors) {
+		// validate tên
+		if(!errors.hasFieldErrors("fullName")) {
+			if(userInsurance.getFullName().length() > 50) {
+				errors.rejectValue("fullName","Length.userInsurance.fullName");
+			}
+		}
+		
 		// validate ngày sinh
-		if(!errors.hasFieldErrors("birthday")) {
-			String birthday = userInsuranceFormBean.getBirthday();
-			if(Common.checkExistDate(birthday) == 0) {
-				errors.rejectValue("birthday", "NotExist.userInsurance.birthday");
-			} else if (Common.checkExistDate(birthday) == 2) {
+		if(!userInsurance.getBirthday().isEmpty()) {
+			String birthday = userInsurance.getBirthday();
+			if (!Common.checkExistDate(birthday)) {
 				errors.rejectValue("birthday", "Invalid.userInsurance.birthday");
+			} else if (Common.compareDate(Common.convertFormatDate(LocalDate.now().toString()), birthday)) {
+				errors.rejectValue("birthday", "Later.userInsurance.birthday");
 			}
 		}
 		
 		// validate ngày bắt đầu thẻ BH
 		if(!errors.hasFieldErrors("insuranceStartDate")) {
-			String insuranceStartDate = userInsuranceFormBean.getInsuranceStartDate();
-			if(Common.checkExistDate(insuranceStartDate) == 0) {
-				errors.rejectValue("insuranceStartDate", "NotExist.userInsurance.insuranceStartDate");
-			} else if (Common.checkExistDate(insuranceStartDate) == 2) {
+			String insuranceStartDate = userInsurance.getInsuranceStartDate();
+			if (!Common.checkExistDate(insuranceStartDate)) {
 				errors.rejectValue("insuranceStartDate", "Invalid.userInsurance.insuranceStartDate");		
 			}
 		}
 			
 		// validate ngày kết thúc thẻ BH
 		if(!errors.hasFieldErrors("insuranceEndDate")) {
-			String insuranceEndDate = userInsuranceFormBean.getInsuranceEndDate();
-			if(Common.checkExistDate(insuranceEndDate) == 0) {
-				errors.rejectValue("insuranceEndDate", "NotExist.userInsurance.insuranceEndDate");
-			} else if (Common.checkExistDate(insuranceEndDate) == 2) {
+			String insuranceEndDate = userInsurance.getInsuranceEndDate();
+			if (!Common.checkExistDate(insuranceEndDate)) {
 				errors.rejectValue("insuranceEndDate", "Invalid.userInsurance.insuranceEndDate");	
 			}
 		}		
 		
 		// Validate thông tin công ty nhập
-		if(!companyLogic.checkExistedCom(userInsuranceFormBean.getCompanyInternalID())) {
+		if(!companyLogic.checkExistCompany(userInsurance.getCompanyInternalID())) {
 			// Validate tên công ty
-			if(userInsuranceFormBean.getCompanyName().equals("")){
+			if(userInsurance.getCompanyName().equals("")){
 				errors.rejectValue("companyName", "NotEmpty.userInsurance.companyName");
 			}
 			// validate địa chỉ công ty
-			if (userInsuranceFormBean.getCompanyAddress().equals("")) {
+			if (userInsurance.getCompanyAddress().equals("")) {
 				errors.rejectValue("companyAddress", "NotEmpty.userInsurance.companyAddress");
 			}
 			// validate email
-			if(!Pattern.matches(ConfigProperties.getMessage("emailPattern"), userInsuranceFormBean.getEmail())) {
+			if(!Pattern.matches(ConfigProperties.getMessage("emailPattern"), userInsurance.getEmail())) {
 				errors.rejectValue("email", "Email.userInsurance.email");
-			} else if(companyLogic.checkExistedEmail(userInsuranceFormBean.getEmail())) {
+			} else if(companyLogic.checkExistEmail(userInsurance.getEmail())) {
 				errors.rejectValue("email", "Existed.userInsurance.email");
 			}
 			// validate số điện thoại
-			if(!Pattern.matches(ConfigProperties.getMessage("telPattern"), userInsuranceFormBean.getTelephone())) {
+			if(!Pattern.matches(ConfigProperties.getMessage("telPattern"), userInsurance.getTelephone())) {
 				errors.rejectValue("telephone", "Pattern.userInsurance.telephone");
-			} else if(companyLogic.checkExistedTel(userInsuranceFormBean.getTelephone())) {
+			} else if(companyLogic.checkExistTel(userInsurance.getTelephone())) {
 				errors.rejectValue("telephone", "Existed.userInsurance.telephone");
 			}
 		}
 		// Validate tồn tại mã số thẻ bảo hiểm
 		if (!errors.hasFieldErrors("insuranceNumber")) {
-			if(userLogic.checkExistedInsuNum(userInsuranceFormBean.getInsuranceNumber(), userInsuranceFormBean.getUserInternalID())) {
+			if(userLogic.checkExistedInsuNum(userInsurance.getInsuranceNumber(), userInsurance.getUserInternalID())) {
 				errors.rejectValue("insuranceNumber", "UserInsurance.validate.ExistedNumber");
 			}
 		}
 		
 		// Validate so sánh ngày bắt đầu thẻ bảo hiểm và ngày kết thúc
 		if(!errors.hasFieldErrors("insuranceStartDate") && !errors.hasFieldErrors("insuranceEndDate")) {
-			Boolean rsCompare = Common.compareDate(userInsuranceFormBean.getInsuranceStartDate(), userInsuranceFormBean.getInsuranceEndDate());
+			Boolean rsCompare = Common.compareDate(userInsurance.getInsuranceStartDate(), userInsurance.getInsuranceEndDate());
 			if(!rsCompare) {
 				errors.rejectValue("insuranceStartDate", "UserInsurance.validate.InvalidDate");
 			}

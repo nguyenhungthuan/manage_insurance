@@ -4,7 +4,6 @@
 package net.luvina.manageinsurances.logic.impl;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import net.luvina.manageinsurances.dao.CompanyDao;
@@ -40,25 +39,25 @@ public class CompanyLogicImpl implements CompanyLogic{
 
 	/*
 	 * (non-Javadoc)
-	 * @see net.luvina.manageinsurances.logic.CompanyLogic#checkExistedCom(int)
+	 * @see net.luvina.manageinsurances.logic.CompanyLogic#checkExistCompany(int)
 	 */
-	public Boolean checkExistedCom(int companyInternalId) {
+	public Boolean checkExistCompany(int companyInternalId) {
 		return companyDao.findByCompanyInternalId(companyInternalId) != null ? true : false;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see net.luvina.manageinsurances.logic.CompanyLogic#checkExistedEmail(java.lang.String)
+	 * @see net.luvina.manageinsurances.logic.CompanyLogic#checkExistEmail(java.lang.String)
 	 */
-	public Boolean checkExistedEmail(String email) {
+	public Boolean checkExistEmail(String email) {
 		return companyDao.findByEmail(email) != null ? true : false;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see net.luvina.manageinsurances.logic.CompanyLogic#checkExistedTel(java.lang.String)
+	 * @see net.luvina.manageinsurances.logic.CompanyLogic#checkExistTel(java.lang.String)
 	 */
-	public Boolean checkExistedTel(String tel) {
+	public Boolean checkExistTel(String tel) {
 		return companyDao.findByTel(tel) != null ? true : false;
 	}
 }

@@ -54,32 +54,15 @@ public class ListInsurancesController {
 	 * @return MH02
 	 */
 	@RequestMapping(value={"ListUser.do","/ListUser/{action}.do"}, method={RequestMethod.GET})
-	public String showListUser(ModelMap modelMap,InforSearchFormBean inforSearch, @ModelAttribute("companies") List<CompanyDto> companies, HttpSession session, @PathVariable Optional<String> action, HttpServletRequest request){
+	public String showListUser(ModelMap modelMap,InforSearchFormBean inforSearch, @ModelAttribute("companies") List<CompanyDto> companies, @PathVariable Optional<String> action, HttpServletRequest request){
 		try {
+			HttpSession session = request.getSession();
 			// nếu có lỗi trong quá trình lấy công ty, đưa đến màn hình lỗi
 			if(companies.size() == 0) throw new Exception();
-			int limit, offset, totalRecords;
+			int limit, offset, totalRecords, totalPage;
 			int currentPage = 1;
 			String sortBy = Constant.SORTBY;
-			// nếu là các trường hợp search, back, sort, change
-			if (action.isPresent()) {
-				String actionValue = action.get();
-				// nếu là search, set lại số trang và thứ tự sắp xếp
-				if (actionValue.equals(Constant.SEARCH)) {
-					inforSearch.setCurrentPage("1");
-					inforSearch.setSortType(Constant.ASC);
-					// nếu là sort, set lại sortType
-				} else if (actionValue.equals(Constant.SORT)) {
-					inforSearch.setSortType(Common.changeSortType(inforSearch.getSortType()));
-					// nếu là back, lấy object từ session
-				} else if (actionValue.equals(Constant.BACK)) {
-					InforSearchFormBean search = ((InforSearchFormBean) session.getAttribute(request.getParameter("ssKey")));
-					inforSearch = (search == null ? new InforSearchFormBean() : search);
-					// trường hợp thay đổi công ty, set lại company ID
-				} else if (actionValue.equals(Constant.CHANGE)) {
-					inforSearch = new InforSearchFormBean(inforSearch.getCompanyInternalID());
-				}
-			}
+			inforSearch = processUserAction(action, request, inforSearch);
 			// số bản ghi trên 1 trang
 			limit = Common.getLimit();
 			// tổng số bản ghi phù hợp
@@ -87,7 +70,7 @@ public class ListInsurancesController {
 			// tổng số bản ghi
 			totalRecords = userLogic.getTotalRecords(searchDto);
 			// tổng số trang
-			int totalPage = Common.getTotalPage(totalRecords, limit);
+			totalPage = Common.getTotalPage(totalRecords, limit);
 			// convert page
 			currentPage = Common.exchangeCurrentPage(Integer.parseInt(inforSearch.getCurrentPage()), totalPage);
 			// vị trí bản ghi phục vụ phân trang
@@ -96,9 +79,7 @@ public class ListInsurancesController {
 			List<Integer> listPaging = Common.getListPaging(totalRecords, limit, currentPage);
 			// list user infor
 			List<UserInsuranceDto> listInfor = userLogic.getListInfor(searchDto, sortBy, limit, offset);
-			String ssKey = request.getParameter("ssKey");
-			// tạo mới session hoặc lấy từ request
-			String key = ssKey == null ? Common.getKey() : ssKey;
+			String key = getSessionKey(request);
 			// đưa đối tượng lên session
 			session.setAttribute(key, inforSearch);
 			// đưa lên request
@@ -129,9 +110,9 @@ public class ListInsurancesController {
 	 * @return showListUser()
 	 */
 	@RequestMapping(value={"/ListUser/change.do"}, method={RequestMethod.POST})
-	public String changeCompany(ModelMap modelMap,InforSearchFormBean inforSearch, @ModelAttribute("companies") List<CompanyDto> companies, HttpSession session, @PathVariable Optional<String> action, HttpServletRequest request){
+	public String changeCompany(ModelMap modelMap,InforSearchFormBean inforSearch, @ModelAttribute("companies") List<CompanyDto> companies, @PathVariable Optional<String> action, HttpServletRequest request){
 		inforSearch = new InforSearchFormBean(inforSearch.getCompanyInternalID());
-		return showListUser(modelMap, inforSearch, companies, session, action, request);
+		return showListUser(modelMap, inforSearch, companies, action, request);
 	}
 	
 	/**
@@ -145,5 +126,47 @@ public class ListInsurancesController {
 		} catch(Exception ex) {
 			return new ArrayList<CompanyDto>();
 		}
+	}
+
+	/**
+	 * Process action of user from view
+	 * @param action Optional<String>
+	 * @param request HttpServletRequest
+	 * @param inforSearch InforSearchFormBean
+	 * @return InforSearchFormBean
+	 */
+	private InforSearchFormBean processUserAction(Optional<String> action, HttpServletRequest request, InforSearchFormBean inforSearch) {
+		HttpSession session = request.getSession();
+		if (action.isPresent()) {
+			String actionValue = action.get();
+			// nếu là search, set lại số trang và thứ tự sắp xếp
+			if (actionValue.equals(Constant.SEARCH)) {
+				inforSearch.setCurrentPage("1");
+				inforSearch.setSortType(Constant.ASC);
+				// nếu là sort, set lại sortType
+			} else if (actionValue.equals(Constant.SORT)) {
+				inforSearch.setSortType(Common.changeSortType(inforSearch.getSortType()));
+				// nếu là back, lấy object từ session
+			} else if (actionValue.equals(Constant.BACK)) {
+				InforSearchFormBean search = ((InforSearchFormBean) session.getAttribute(request.getParameter("ssKey")));
+				inforSearch = (search == null ? new InforSearchFormBean() : search);
+				// trường hợp thay đổi công ty, set lại company ID
+			} else if (actionValue.equals(Constant.CHANGE)) {
+				inforSearch = new InforSearchFormBean(inforSearch.getCompanyInternalID());
+			}
+		}
+		return inforSearch;
+	}
+	
+	/**
+	 * Get session key
+	 * @param request HttpServletRequest
+	 * @return ssKey
+	 */
+	private String getSessionKey(HttpServletRequest request) {
+		// get session key on session
+		String ssKey = request.getParameter("ssKey");
+		// create new or get from request
+		return ssKey == null ? Common.getKey() : ssKey;
 	}
 }

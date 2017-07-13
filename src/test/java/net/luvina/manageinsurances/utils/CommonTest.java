@@ -7,7 +7,11 @@ package net.luvina.manageinsurances.utils;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;
@@ -100,5 +104,137 @@ public class CommonTest {
 		
 		//verify
 		assertThat(actual, not(list));
+	}
+	
+	/**
+	 * [IN]
+	 * date = "2017-03-15"
+	 * [OUT]
+	 * 15/03/2017
+	 */
+	@Test
+	public void testFormatDate() {
+		// setup
+		String date = "2017-03-15";
+		String expect = "15/03/2017";
+		
+		// exercise
+		String convertedDate = Common.convertFormatDate(date);
+		
+		// verify
+		assertThat(convertedDate, is(expect));
+	}
+	
+	/**
+	 * [IN]
+	 * date = "20/03/1995"
+	 * [OUT]
+	 * 1
+	 */
+	@Test
+	public void testCheckExistDate() {
+		// setup
+		String date = "20/03/1995";
+		
+		// exercise
+		boolean actual = Common.checkExistDate(date);
+		
+		// verify
+		assertTrue(actual);
+	}
+	
+	/**
+	 * [IN]
+	 * date = "20/03"
+	 * [OUT]
+	 * 2
+	 */
+	@Test
+	public void testCheckExistDateInvalid() {
+		// setup
+		String date = "20/03";
+		
+		// exercise
+		boolean actual = Common.checkExistDate(date);
+		
+		// verify
+		assertFalse(actual);
+	}
+	
+	/**
+	 * [IN]
+	 * date = "32/03/1995"
+	 * [OUT]
+	 * 0
+	 */
+	@Test
+	public void testCheckExistDateLeapYear() {
+		// setup
+		String date = "29/02/1995";
+		
+		// exercise
+		boolean actual = Common.checkExistDate(date);
+		
+		// verify
+		assertTrue(actual);
+	}
+	
+	/**
+	 * [IN]
+	 * name = "    Tr加加加ầN  2加  vi12Ệt hÙ&*@nG    "
+	 * [OUT]
+	 * Nguyen Hung Thuan
+	 */
+	@Test
+	public void testConvertName() {
+		// setup 
+		String name = "    Tr加加加ầN  2加  vi12Ệt hÙ&*@nG    ";
+		String expect = "Tran Viet Hung";
+		
+		// exercise
+		String actual = Common.convertName(name);
+		
+		// verify
+		assertThat(actual, is(expect));
+	}
+	
+	/**
+	 * [IN]
+	 * date1 = "20/03/1995"
+	 * date2 = "22/03/1995"
+	 * [OUT]
+	 * true
+	 */
+	@Test
+	public void testCompareDate() {
+		// setup
+		String date1 = "20/03/2016";
+		String date2 = "22/03/2017";
+		
+		// exercise
+		Boolean rsCompare = Common.compareDate(date1, date2);
+		
+		// verify
+		assertTrue(rsCompare);
+	}
+	
+	/**
+	 * [IN]
+	 * date1 = "20/03/1995"
+	 * date2 = "20/03/1995"
+	 * [OUT]
+	 * true
+	 */
+	@Test
+	public void testCompareDateFailure() {
+		// setup
+		String date1 = "20/03/1995";
+		String date2 = "20/03/1995";
+		
+		// exercise
+		Boolean rsCompare = Common.compareDate(date1, date2);
+		
+		// verify
+		assertFalse(rsCompare);
 	}
 }

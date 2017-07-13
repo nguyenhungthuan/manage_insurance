@@ -73,9 +73,9 @@ public class CompanyLogicImplTest {
 	 * true
 	 */
 	@Test
-	public void checkExistedCom() {
+	public void checkExistCompany() {
 		// exercise
-		Boolean rsCheck = sut.checkExistedCom(1);
+		Boolean rsCheck = sut.checkExistCompany(1);
 		
 		// verify
 		assertTrue(rsCheck);
@@ -88,12 +88,12 @@ public class CompanyLogicImplTest {
 	 * false
 	 */
 	@Test
-	public void checkExistedComFailure() {
+	public void checkExistCompanyFailure() {
 		// setup
 		when(companyDao.findByCompanyInternalId(anyInt())).thenReturn(null);
 		
 		// exercise
-		Boolean rsCheck = sut.checkExistedCom(1);
+		Boolean rsCheck = sut.checkExistCompany(1);
 		
 		// verify
 		assertFalse(rsCheck);
@@ -106,12 +106,12 @@ public class CompanyLogicImplTest {
 	 * true
 	 */
 	@Test
-	public void checkExistedEmail() {
+	public void checkExistEmail() {
 		// setup
 		when(companyDao.findByEmail(anyString())).thenReturn(new CompanyBean());
 		
 		// exercise
-		Boolean rsCheck = sut.checkExistedEmail("example@gmail.com");
+		Boolean rsCheck = sut.checkExistEmail("example@gmail.com");
 		
 		// verify
 		assertTrue(rsCheck);
@@ -124,12 +124,12 @@ public class CompanyLogicImplTest {
 	 * true
 	 */
 	@Test
-	public void checkExistedTel() {
+	public void checkExistTel() {
 		// setup
 		when(companyDao.findByTel(anyString())).thenReturn(new CompanyBean());
 		
 		// exercise
-		Boolean rsCheck = sut.checkExistedTel("0903320395");
+		Boolean rsCheck = sut.checkExistTel("0903320395");
 		
 		// verify
 		assertTrue(rsCheck);

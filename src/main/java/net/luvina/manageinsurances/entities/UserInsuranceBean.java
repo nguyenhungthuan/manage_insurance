@@ -36,6 +36,7 @@ public class UserInsuranceBean {
 	private String insuranceEndDate;
 	
 	private int companyInternalID;
+	
 	private int insuranceInternalID;
 	
 	public UserInsuranceBean(){};
@@ -66,10 +67,10 @@ public class UserInsuranceBean {
 		this.companyName = companyName;
 		this.fullName = fullName;
 		this.sex = Common.sexByString(Integer.parseInt(sex));
-		this.birthday = Common.formatDate(birthday);
+		this.birthday = Common.convertFormatDate(birthday);
 		this.insuranceNumber = insuranceNumber;
-		this.insuranceStartDate = Common.formatDate(insuranceStartDate);
-		this.insuranceEndDate = Common.formatDate(insuranceEndDate);
+		this.insuranceStartDate = Common.convertFormatDate(insuranceStartDate);
+		this.insuranceEndDate = Common.convertFormatDate(insuranceEndDate);
 		this.placeOfRegister = placeOfRegister;
 	}
 	
@@ -86,11 +87,11 @@ public class UserInsuranceBean {
 			String insuranceStartDate, String insuranceEndDate, String placeOfRegister) {
 		this.fullName = fullName;
 		this.sex = Common.sexByString(Integer.parseInt(sex));
-		this.birthday = Common.formatDate(birthday);
+		this.birthday = Common.convertFormatDate(birthday);
 		this.insuranceNumber = insuranceNumber;
 		this.placeOfRegister = placeOfRegister;
-		this.insuranceStartDate = Common.formatDate(insuranceStartDate);
-		this.insuranceEndDate = Common.formatDate(insuranceEndDate);
+		this.insuranceStartDate = Common.convertFormatDate(insuranceStartDate);
+		this.insuranceEndDate = Common.convertFormatDate(insuranceEndDate);
 	}
 	
 	/**
@@ -112,10 +113,10 @@ public class UserInsuranceBean {
 		this.insuranceInternalID = insuranceInternalID;
 		this.fullName = fullName;
 		this.sex = sex;
-		this.birthday = Common.formatDate(birthday);
+		this.birthday = Common.convertFormatDate(birthday);
 		this.insuranceNumber = insuranceNumber;
-		this.insuranceStartDate = Common.formatDate(insuranceStartDate);
-		this.insuranceEndDate = Common.formatDate(insuranceEndDate);
+		this.insuranceStartDate = Common.convertFormatDate(insuranceStartDate);
+		this.insuranceEndDate = Common.convertFormatDate(insuranceEndDate);
 		this.placeOfRegister = placeOfRegister;
 	}	
 	/**
@@ -286,5 +287,4 @@ public class UserInsuranceBean {
 	public void setInsuranceInternalID(int insuranceInternalID) {
 		this.insuranceInternalID = insuranceInternalID;
 	}	
-	
 }

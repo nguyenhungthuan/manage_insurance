@@ -18,32 +18,34 @@
 <title><spring:message code="ADD_INSURANCE" /></title>
 </head>
 <body>
-	<H3><p><spring:message code="ADD_INSURANCE" /></p></H3>
+	<H3><spring:message code="ADD_INSURANCE" /></H3>
 <form:form action="${pageContext.servletContext.contextPath}/Update.do" method="POST" modelAttribute="userInsurance" id="registerMain">
 <form:hidden path="userInternalID"/>
 <input type="hidden" id="companyID" value="${userInsurance.companyInternalID}" />
 <input type="hidden" name="ssKey" value="${ssKey}">
-<table width="40%">
-	<tr><td align="center"><form:errors cssClass="errMsg" path="insuranceNumber"  /></td></tr>
-	<tr><td align="center"><form:errors cssClass="errMsg" path="fullName"  /></td></tr>
-	<tr><td align="center"><form:errors cssClass="errMsg" path="sex"  /></td></tr>
-	<tr><td align="center"><form:errors cssClass="errMsg" path="birthday"  /></td></tr>
-	<tr><td align="center"><form:errors cssClass="errMsg" path="companyName"  /></td></tr>
-	<tr><td align="center"><form:errors cssClass="errMsg" path="companyAddress"  /></td></tr>
-	<tr><td align="center"><form:errors cssClass="errMsg" path="email"  /></td></tr>
-	<tr><td align="center"><form:errors cssClass="errMsg" path="telephone"  /></td></tr>
-	<tr><td align="center"><form:errors cssClass="errMsg" path="placeOfRegister"  /></td></tr>
-	<tr><td align="center"><form:errors cssClass="errMsg" path="insuranceStartDate"  /></td></tr>
-	<tr><td align="center"><form:errors cssClass="errMsg" path="insuranceEndDate"  /></td></tr>
-</table>
+<div align="center">
     <table class="tbl_input" cellpadding="6px" width="100%" >
+    <tr>
+	    <td>
+		    <p><form:errors cssClass="errMsg" path="insuranceNumber"  />
+			<p><form:errors cssClass="errMsg" path="fullName"  />
+			<p><form:errors cssClass="errMsg" path="birthday"  />
+			<p><form:errors cssClass="errMsg" path="companyName"  />
+			<p><form:errors cssClass="errMsg" path="companyAddress"  />
+			<p><form:errors cssClass="errMsg" path="email"  />
+			<p><form:errors cssClass="errMsg" path="telephone"  />
+			<p><form:errors cssClass="errMsg" path="placeOfRegister"  />
+			<p><form:errors cssClass="errMsg" path="insuranceStartDate"  />
+			<p><form:errors cssClass="errMsg" path="insuranceEndDate"  />
+	    </td>
+    </tr>
     	<tr>
         	<td width="15%"><spring:message code="INSURANCE_CODE" /></td>
             <td><form:input path="insuranceNumber"/></td>
         </tr>
         <tr>
        		<td><spring:message code="FULLNAME" /></td>
-            <td><form:input path="fullName"/></td>
+            <td><form:input path="fullName" onblur="javascript:processName();"/></td>
         </tr>
         <tr>
         	<td><spring:message code="SEX" /></td>
@@ -138,6 +140,7 @@
         	</td>
         </tr>
     </table>
+    </div>
 </form:form>
 </body>
 </html>

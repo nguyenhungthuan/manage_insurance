@@ -5,8 +5,6 @@
 package net.luvina.manageinsurances.dao;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import net.luvina.manageinsurances.entities.CompanyBean;
 import net.luvina.manageinsurances.entities.InsuranceBean;
 
 /**

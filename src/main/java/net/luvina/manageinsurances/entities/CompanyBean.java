@@ -52,8 +52,6 @@ public class CompanyBean {
 		this.tel = tel;
 	}
 
-
-
 	/**
 	 * Phương thức khởi tạo có tham số
 	 * @param companyInternalID
@@ -62,9 +60,7 @@ public class CompanyBean {
 	public CompanyBean(int companyInternalID, String companyName) {
 		this.companyInternalId = companyInternalID;
 		this.companyName = companyName;
-	}
-	
-	
+	}	
 
 	/**
 	 * Phương thức khởi tạo có tham số
@@ -81,7 +77,6 @@ public class CompanyBean {
 		this.email = email;
 		this.tel = tel;
 	}
-
 
 	/**
 	 * @return the id
@@ -166,7 +161,4 @@ public class CompanyBean {
 	public void setUser(List<UserBean> user) {
 		this.user = user;
 	}
-
-	
-
 }

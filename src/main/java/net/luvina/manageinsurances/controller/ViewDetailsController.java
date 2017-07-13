@@ -13,7 +13,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import net.luvina.manageinsurances.logic.impl.dto.UserInsuranceDto;
 import net.luvina.manageinsurances.controller.formbean.InforSearchFormBean;
 import net.luvina.manageinsurances.controller.formbean.UserInsuranceFormBean;
 import net.luvina.manageinsurances.logic.UserLogic;
@@ -58,5 +57,36 @@ public class ViewDetailsController {
 			return Constant.RE_NOTFOUND;
 		}
 		return Constant.MH03;
+	}
+	
+	/**
+	 * Phương thức được gọi khi xóa user
+	 * @param modelMap ModelMap
+	 * @param request HttpServletRequest
+	 * @param session HttpSession
+	 * @return MH02
+	 */
+	@RequestMapping(value="/DeleteUser.do", method=RequestMethod.POST)
+	public String deleteUser(ModelMap modelMap, HttpServletRequest request, HttpSession session) {
+		try{
+			String ssKey = request.getParameter("ssKey");
+			// thực hiện xóa user
+			boolean rs = userLogic.deleteUser(Integer.parseInt(request.getParameter("userInternalID")));
+			// nếu xóa thành công
+			if(rs) {
+				// lấy đối tượng lưu trên session xuống
+				InforSearchFormBean inforSearchFormBean = (InforSearchFormBean) session.getAttribute(ssKey);
+				// reset các giá trị theo yêu cầu, chỉ giữ lại companyID
+				inforSearchFormBean = new InforSearchFormBean(inforSearchFormBean.getCompanyInternalID());
+				// đưa lại lên session
+				session.setAttribute(ssKey, inforSearchFormBean);
+				// chuyển qua MH02
+				return "redirect:/ListUser/back.do?ssKey="+ssKey;
+			} else {
+				return Constant.RE_SYSTEM_ERROR;
+			}
+		}catch(NumberFormatException ex) {
+			return Constant.RE_NOTFOUND;
+		}		
 	}
 }

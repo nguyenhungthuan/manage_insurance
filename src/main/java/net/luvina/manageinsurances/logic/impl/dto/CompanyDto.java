@@ -3,8 +3,6 @@
  */
 package net.luvina.manageinsurances.logic.impl.dto;
 
-import java.util.Objects;
-
 import lombok.EqualsAndHashCode;
 
 /**

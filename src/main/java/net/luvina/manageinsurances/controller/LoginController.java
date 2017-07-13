@@ -12,7 +12,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
 import net.luvina.manageinsurances.controller.formbean.AccountFormBean;
 import net.luvina.manageinsurances.utils.Common;
 import net.luvina.manageinsurances.utils.Constant;

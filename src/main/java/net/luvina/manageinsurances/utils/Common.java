@@ -8,22 +8,24 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.text.Normalizer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
-import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
 import org.apache.commons.beanutils.PropertyUtils;
+import org.slf4j.Logger;
 
 import net.luvina.manageinsurances.entities.CompanyBean;
-import net.luvina.manageinsurances.entities.InsuranceBean;
 import net.luvina.manageinsurances.entities.UserBean;
 import net.luvina.manageinsurances.entities.UserInsuranceBean;
 import net.luvina.manageinsurances.logic.impl.dto.AccountDto;
@@ -41,18 +43,18 @@ import net.luvina.manageinsurances.controller.formbean.UserInsuranceFormBean;
 public class Common {
 	
 	/**
-	 * Phương thức kiểm tra đăng nhập
-	 * @param session
-	 * @return trả về màn hình login nếu chưa đăng nhập
+	 * Check log in
+	 * @param session HttpSession
+	 * @return view
 	 */
 	public static String checkLogin(HttpSession session) {
         return (session.getAttribute("accountSess") == null) ? Constant.MH01 : "";
     }
 
 	/**
-	 * Phương thức mã hóa mật khẩu
-	 * @param mật khẩu
-	 * @return mật khẩu đã mã hóa
+	 * Encrypt password
+	 * @param password
+	 * @return encrypted
 	 */
 	public static String encryptMD5(String input) {
         try {
@@ -70,18 +72,18 @@ public class Common {
     }
 
 	/**
-	 * Phương thức chuyển đổi giới tính từ số sang chuỗi
-	 * @param sexCode giá trị lấy từ DB
-	 * @return Nam nếu sexCode là  1, Nữ nếu sexCode là  2
+	 * convert sex to string
+	 * @param sexCode sex code
+	 * @return "Nam" if sexCode = 1, "Nữ" if sexCode = 2
 	 */
 	public static String sexByString(int sexCode) {
 		return sexCode == 1 ? "Nam" : "Nữ";
 	}
 
 	/**
-	 * Phương thức xử lý các ký tự đặc biệt trong sql
-	 * @param inputString chuỗi vào
-	 * @return chuỗi đã thay đổi
+	 * Process wildcard
+	 * @param inputString input string
+	 * @return processed string
 	 */
 	public static String processWildcard(String inputString) {
 		String result = inputString.replace("\\", "\\\\");
@@ -91,9 +93,9 @@ public class Common {
 	}
 
 	/**
-	 * Phương thức xử lý các ký tự đặc biệt trong HTMl
-	 * @param content chuẩn truyền vào
-	 * @return chuỗi đã xử lý
+	 * Escape HTML
+	 * @param content input string
+	 * @return escaped string
 	 */
 	public static String escapeHTML(String content) {
 	if(content != null) {
@@ -123,11 +125,11 @@ public class Common {
     }
 
 	/**
-     * Tạo chuỗi paging
-     * @param totalUsers tổng số user
-     * @param limit số bản ghi trên 1 trang
-     * @param currentPage trang hiện tại
-     * @return
+     * Get list paging
+     * @param totalUsers total users
+     * @param limit records per page
+     * @param currentPage current page
+     * @return list paging
      */
     public static List<Integer> getListPaging (int totalRecords, int limit, int currentPage) {
     	List<Integer> lstPaging = new ArrayList<Integer>();
@@ -151,10 +153,10 @@ public class Common {
     }
     
     /**
-     * Thay đổi giá trị currentPage nếu input không hợp lệ
-     * @param currentPage trang hiện tại
-     * @param totalPages tổng số trang
-     * @return trang hợp lệ
+     * Exchange current page
+     * @param currentPage current page
+     * @param totalPages total pages
+     * @return output page
      */
     public static int exchangeCurrentPage(int currentPage, int totalPages) {
     	if(currentPage > totalPages) {
@@ -166,8 +168,8 @@ public class Common {
     }
 
     /**
-     * Lấy số lượng bản ghi trên 1 trang lưu trong file properties
-     * @return số bản ghi trên 1 trang
+     * Get record per page
+     * @return record per page
      */
     public static int getLimit() {
     	int recordPerPage = 1;
@@ -180,31 +182,31 @@ public class Common {
     }
 
     /**
-     * Tổng số trang
-     * @param totalUsers tổng số User
-     * @param limit số bản ghi trên 1 trang
-     * @return tổng số trang
+     * Get total page
+     * @param totalUsers total User
+     * @param limit record per page
+     * @return total page
      */
     public static int getTotalPage(int totalUsers, int limit) {
     	return (int) Math.ceil((double) totalUsers / limit);
     }
 
     /**
-     * Lấy vị trí bắt đầu lấy dữ liệu trong DB
-     * @param currentPage Trang hiện tại
-     * @param limit số bản ghi trên 1 trang
-     * @return vị trí bắt đầu
+     * Get offset
+     * @param currentPage current page
+     * @param limit record per page
+     * @return offset
      */
     public static int getOffset(int currentPage,int limit) {
     	return limit * (currentPage - 1);
     }
     
     /**
-     * Phương thức chuyển định dạng ngày tháng
-     * @param date chuỗi ngày tháng vào
-     * @return chuỗi theo format
+     * Convert format date
+     * @param date input date
+     * @return converted string
      */
-    public static String formatDate(String date) {
+    public static String convertFormatDate(String date) {
     	if(date != null) {
 	    	String[] arrDate = date.split("-");
 	    	return arrDate[2]+"/"+arrDate[1]+"/"+arrDate[0];
@@ -213,8 +215,8 @@ public class Common {
     }
     
     /**
-     * Lấy ra icon theo thứ tự sắp xếp
-     * @param orderBy trạng thái sắp xếp hiện tại
+     * Get icon order by
+     * @param orderBy current order by
      * @return icon
      */
     public static String getIcon(String orderBy) {
@@ -222,31 +224,27 @@ public class Common {
     }
     
     /**
-     * So sánh 2 chuỗi ngày tháng
-     * @param date1 ngày tháng 1 
-     * @param date2 ngày tháng 2
-     * @return true nếu ngày thứ 1 sớm hơn ngày thứ 2 và ngược lại
+     * Compare string date
+     * @param date1 date 1 
+     * @param date2 date 2
+     * @return true if date 1 early 2
      */
     public static Boolean compareDate(String date1, String date2) {
-    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/DD");
-		boolean resultCompare;
+    	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		try {
 			Date dt1 = sdf.parse(date1);
 			Date dt2 = sdf.parse(date2);
-			resultCompare = dt1.before(dt2);
-			if(resultCompare) {
-				return true;
-			}
+			return dt1.before(dt2);
 		} catch (ParseException e) {
 			System.out.println("error: " + e.getMessage());
+			return false;
 		}
-		return false;
     }
     
     /**
-     * Convert lại ngày tháng để đưa vào DB
-     * @param date ngày
-     * @return ngày đã convert
+     * Convert date to insert to DB
+     * @param date string date
+     * @return converted string
      */
     public static String convertDateHQL(String date) {
     	if(date.length() > 0) {
@@ -257,77 +255,42 @@ public class Common {
     }
     
     /**
-     * Phương thức kiểm tra tồn tại ngày
-     * @param date chuỗi ngày nhập vào
-     * @return return 1 nếu có tồn tại, 0 nếu không tồn tại và  return 2 nếu sai format
+     * Check exist date
+     * @param date string date
+     * @return return true if exist, false if not valid
      */
-	public static int checkExistDate(String date) {
-		if(date.length() != 0) { 
-			try {
-				String[] partOfDate = date.split("/");
-				int year = Integer.parseInt(partOfDate[2]);
-				int month = Integer.parseInt(partOfDate[1]);
-				int day = Integer.parseInt(partOfDate[0]);
-		
-				switch (month) {
-				case 1:
-				case 3:
-				case 5:
-				case 7:
-				case 8:
-				case 10:
-				case 12: {
-					if (day <= 31)
-						return 1;
-				}
-				case 4:
-				case 6:
-				case 9:
-				case 11: {
-					if (day <= 30)
-						return 1;
-				}
-				case 2: {
-					if (year % 400 == 0 || (year % 4 == 0 && year % 100 != 0)) {
-						if (day <= 29) {
-							return 1;
-						}
-					} else {
-						if (day <= 28) {
-							return 1;
-						}
-					}
-				}
-				}
-			} catch(ArrayIndexOutOfBoundsException ex) {
-				System.out.println("Lỗi ngày nhập vào không đúng định dạng");
-				return 2;
-			}
-			return 0;
-			}
-		return 1;
+	public static boolean checkExistDate(String date) {
+		String dateFormat = "dd/MM/uuuu";
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(dateFormat).withResolverStyle(ResolverStyle.STRICT);
+        try {
+            LocalDate parsedDate = LocalDate.parse(date, dateTimeFormatter);
+            return true;
+        } catch (DateTimeParseException e) {
+            e.printStackTrace();
+            return false;
+        } 
 	}
 	
 	/**
-	 * Phương thức chuyển hóa tên người dùng theo yêu cầu
-	 * @param name tên người dùng
-	 * @return chuỗi đã chuyển hóa 
+	 * Convert name
+	 * @param name user name
+	 * @return converted string
 	 */
-	public static String convertStringName(String name) {
-		String convertedName = VNCharacterUtils.removeAccent(name);
-        String temp1[] = convertedName.split(" ");
-        convertedName = ""; 
-        for (int i = 0; i < temp1.length; i++) {
-        	convertedName += String.valueOf(temp1[i].charAt(0)).toUpperCase() + temp1[i].substring(1);
-            if (i < temp1.length - 1) {
-            	convertedName += " ";
+	public static String convertName(String name) {
+		name = name.toLowerCase().trim();
+		String arrayName[] = VNCharacterUtils.removeAccent(name).split(" ");
+        StringBuilder convertedName = new StringBuilder();
+        for (int i = 0; i < arrayName.length; i++) {
+        	convertedName.append(String.valueOf(arrayName[i].charAt(0)).toUpperCase() + arrayName[i].substring(1));
+            if (i < arrayName.length - 1) {
+            	convertedName.append(" ");
             }
         }
-        return convertedName;
+        return convertedName.toString();
 	}
 	
 	/**
-	 * Phương thức lấy ra key bất kỳ để đưa lên session
+	 * Get random key
 	 * @return String key
 	 */
 	public static String getKey() {
@@ -342,63 +305,50 @@ public class Common {
 	}
 	
 	/**
-	 * Phương thức thay đổi trang thái sắp xếp
-	 * @param crSortType sortType hiện tại
-	 * @return sortType mới
+	 * Change sort type
+	 * @param crSortType current sortType
+	 * @return sortType
 	 */
 	public static String changeSortType(String crSortType) {
 		return crSortType.equals(Constant.ASC) ? Constant.DESC : Constant.ASC;
 	}
 	
 	/**
-	 * Phương thức kiểm tra thứ tự sắp xếp
-	 * @param sortType kiểu sắp xếp
-	 * @return kiểu sắp xếp
+	 * Check sort type
+	 * @param sortType sort type
+	 * @return sort type
 	 */
 	public static String checkSortType(String sortType) {
 		return sortType.equals(Constant.DESC) ? Constant.DESC : Constant.ASC;
 	}
 	
 	/**
-	 * Phương thức escape xss
+	 * Escape xss
 	 * @param userInsuranceFormBean UserInsuranceFormBean
 	 * @return UserInsuranceFormBean
 	 */
-	public static UserInsuranceFormBean escapeXSSUser(UserInsuranceFormBean userInsuranceFormBean) {
-		userInsuranceFormBean.setFullName(escapeHTML(userInsuranceFormBean.getFullName()));
-		userInsuranceFormBean.setSex(escapeHTML(userInsuranceFormBean.getSex()));
-		userInsuranceFormBean.setCompanyName(escapeHTML(userInsuranceFormBean.getCompanyName()));
-		userInsuranceFormBean.setPlaceOfRegister(escapeHTML(userInsuranceFormBean.getPlaceOfRegister()));
-		return userInsuranceFormBean;
+	public static UserInsuranceFormBean escapeXSSUser(UserInsuranceFormBean userInsurance) {
+		userInsurance.setFullName(escapeHTML(userInsurance.getFullName()));
+		userInsurance.setSex(escapeHTML(userInsurance.getSex()));
+		userInsurance.setCompanyName(escapeHTML(userInsurance.getCompanyName()));
+		userInsurance.setPlaceOfRegister(escapeHTML(userInsurance.getPlaceOfRegister()));
+		return userInsurance;
 	}
 	
 	/**
-	 * Escape xss cho 1 list UserInsuranceFormBean
-	 * @param listUser List<UserInsuranceFormBean>
-	 * @return List<UserInsuranceFormBean>
-	 */
-	public static List<UserInsuranceFormBean> escapeListUser(List<UserInsuranceFormBean> listUser) {
-		List<UserInsuranceFormBean> list = new ArrayList<>();
-		for(UserInsuranceFormBean user : listUser) {
-			list.add(escapeXSSUser(user));
-		}
-		return list;
-	}
-	
-	/**
-	 * Phương thức xử lý các ký tự đặc biệt cho 1 đối tượng
+	 * Process wildcard object
 	 * @param inforSearchDto InforSearchDto
 	 * @return inforSearchDto
 	 */
-	public static InforSearchDto processWildcardOb(InforSearchDto inforSearchDto) {
-		inforSearchDto.setFullName(processWildcard(inforSearchDto.getFullName()));
-		inforSearchDto.setInsuranceNumber(processWildcard(inforSearchDto.getInsuranceNumber()));
-		inforSearchDto.setPlaceOfRegister(processWildcard(inforSearchDto.getPlaceOfRegister()));
-		return inforSearchDto;
+	public static InforSearchDto processWildcardOb(InforSearchDto inforSearch) {
+		inforSearch.setFullName(processWildcard(inforSearch.getFullName()));
+		inforSearch.setInsuranceNumber(processWildcard(inforSearch.getInsuranceNumber()));
+		inforSearch.setPlaceOfRegister(processWildcard(inforSearch.getPlaceOfRegister()));
+		return inforSearch;
 	}
 	
 	/**
-	 * Copy thuộc tính
+	 * Copy properties
 	 * @param userInsuranceBean UserInsuranceBean
 	 * @return UserInsuranceDto
 	 * @throws NoSuchMethodException 
@@ -412,7 +362,7 @@ public class Common {
 	}
 	
 	/**
-	 * Copy thuộc tính
+	 * Copy properties
 	 * @param list List<UserInsuranceBean>
 	 * @return List<UserInsuranceDto>
 	 * @throws NoSuchMethodException 
@@ -420,15 +370,15 @@ public class Common {
 	 * @throws IllegalAccessException 
 	 */
 	public static List<UserInsuranceDto> copyProListDtoToBean(List<UserInsuranceBean> list) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-		List<UserInsuranceDto> lstuserInsuranceDto = new ArrayList<>();
+		List<UserInsuranceDto> userInsuranceDtos = new ArrayList<>();
 		for(UserInsuranceBean bean : list) {
-			lstuserInsuranceDto.add(copyPropertyUIBeanToUIDto(bean));
+			userInsuranceDtos.add(copyPropertyUIBeanToUIDto(bean));
 		}
-		return lstuserInsuranceDto;
+		return userInsuranceDtos;
 	}
 	
 	/**
-	 * Copy thuộc tính
+	 * Copy properties
 	 * @param userInsuranceFormBean UserInsuranceFormBean
 	 * @return UserInsuranceDto
 	 */
@@ -442,7 +392,7 @@ public class Common {
 		return userInsuranceDto;
 	}
 	/**
-	 * Copy thuộc tính
+	 * Copy properties
 	 * @param userInsuranceDto UserInsuranceDto
 	 * @return UserInsuranceFormBean
 	 */
@@ -457,7 +407,7 @@ public class Common {
 	}
 	
 	/**
-	 * Copy thuộc tính
+	 * Copy properties
 	 * @param accountFormBean AccountFormBean
 	 * @return AccountDto
 	 */
@@ -471,20 +421,18 @@ public class Common {
 		return accountDto;
 	}
 	/**
-	 * Copy thuộc tính 1 list
+	 * Copy properties 1 list
 	 * @param lstcompanyBean List<CompanyBean>
 	 * @return List<CompanyDto>
 	 */
-	public static List<CompanyDto> castListCom(List<CompanyBean> lstcompanyBean) {
-		List<CompanyDto> list = new ArrayList<>();
-		for(CompanyBean bean : lstcompanyBean) {
-			list.add(copyProCom(bean));
-		}
-		return list;
+	public static List<CompanyDto> castListCom(List<CompanyBean> companyBeans) {
+		List<CompanyDto> companyDtos = new ArrayList<>();
+		companyBeans.forEach(company -> companyDtos.add(copyProCom(company)));
+		return companyDtos;
 	}
 	
 	/**
-	 * Copy thuộc tính
+	 * Copy properties
 	 * @param companyBean CompanyBean
 	 * @return CompanyDto
 	 */
@@ -499,7 +447,7 @@ public class Common {
 	}
 	
 	/**
-	 * Copy thuộc tính
+	 * Copy properties
 	 * @param inforSearchFormBean InforSearchFormBean
 	 * @return InforSearchDto
 	 */
@@ -511,5 +459,20 @@ public class Common {
 			ex.printStackTrace();
 		}
 		return inforSearchDto;
+	}
+	
+	public static UserInsuranceDto combineUBAndUIBToUID(UserBean userBean){
+		UserInsuranceDto userInsuranceDto = new UserInsuranceDto();
+		try {
+			PropertyUtils.copyProperties(userInsuranceDto, userBean);
+			PropertyUtils.copyProperties(userInsuranceDto, userBean.getInsurance());
+		} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+			e.printStackTrace();
+		}
+		userInsuranceDto.setBirthday(Common.convertFormatDate(userInsuranceDto.getBirthday()));
+		userInsuranceDto.setInsuranceEndDate(Common.convertFormatDate(userInsuranceDto.getInsuranceEndDate()));
+		userInsuranceDto.setInsuranceStartDate(Common.convertFormatDate(userInsuranceDto.getInsuranceStartDate()));
+		userInsuranceDto.setCompanyInternalID(userBean.getCompany().getCompanyInternalId());
+		return userInsuranceDto;
 	}
 }

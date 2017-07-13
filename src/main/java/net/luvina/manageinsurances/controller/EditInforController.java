@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -93,13 +94,46 @@ public class EditInforController {
 		try{
 			// lấy companyID truyền từ ajax
 			companyID = Integer.parseInt(request.getParameter("companyID"));
-			// kiểm tra xem có tồn tại ID vừa lấy không, nếu không có thì set là 1
-			companyID = companyLogic.checkExistedCom(companyID) ? companyID : 1;
 		} catch(NumberFormatException ex) {
 			ex.printStackTrace();
 		}
+		// kiểm tra xem có tồn tại ID vừa lấy không, nếu không có thì set là 1
+		companyID = companyLogic.checkExistCompany(companyID) ? companyID : 1;		
 		company = companyLogic.getCompanyByID(companyID);
 		return company;
+	}
+	
+	/**
+	 * Process name
+	 * @param request HttpServletRequest
+	 * @return name
+	 */
+	@RequestMapping(value="processName.do", method = RequestMethod.GET)
+	public @ResponseBody String processName(HttpServletRequest request) {
+		String fullName = request.getParameter("fullName");
+		return Common.convertName(fullName);
+	}
+	
+	/**
+	 * Phương thức được gọi khi người dùng ấn cập nhật từ MH03
+	 * @param modelMap ModelMap
+	 * @param id userID
+	 * @param request HttpServletRequest
+	 * @return MH04
+	 */
+	@RequestMapping(value="/Update/{id}", method={RequestMethod.POST, RequestMethod.GET})
+	public String editInfor(ModelMap modelMap, @PathVariable("id") String id, HttpSession session, HttpServletRequest request) {
+		try {
+			// lấy id từ url
+			int userId = Integer.parseInt(id);
+			// kiểm tra tồn tại id
+			UserInsuranceFormBean userInsurance = userLogic.checkExistUser(userId) == true ? Common.copyPropertyUIDtoToUIFB(userLogic.getUserById(userId)) : new UserInsuranceFormBean();
+			modelMap.addAttribute("ssKey", request.getParameter("ssKey"));
+			modelMap.addAttribute("userInsurance", userInsurance);
+		} catch (NumberFormatException ex) {
+			return Constant.RE_NOTFOUND;
+		}
+		return Constant.MH04;
 	}
 	
 	/**
